@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Blue Collar Fishing Guide - Prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&family=Oswald:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#0b1930;color:#f8f7f3;font-family:'Inter',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#a9bedf}
+button{font-family:inherit}
+:focus-visible{outline:2px solid #e05c22;outline-offset:2px}
+</style>
+</helmet>
+
+<div style="min-height:100vh;background:radial-gradient(1200px 600px at 50% -10%,#16305c 0%,#0b1930 60%);padding:0 0 64px">
+
+  <div style="position:sticky;top:0;z-index:20;background:rgba(11,25,48,.86);backdrop-filter:blur(12px);border-bottom:1px solid rgba(169,190,223,.16)">
+    <div style="max-width:1320px;margin:0 auto;padding:14px clamp(16px,3vw,32px);display:flex;align-items:center;gap:20px;flex-wrap:wrap">
+      <div style="display:grid;gap:2px;margin-right:auto">
+        <span style="font:700 10.5px/1 'Inter',sans-serif;letter-spacing:.26em;text-transform:uppercase;color:#e05c22">Responsive Prototype</span>
+        <span style="font-family:'Anton',Impact,sans-serif;font-size:20px;letter-spacing:.6px;text-transform:uppercase;color:#f8f7f3">Blue Collar Fishing Guide</span>
+      </div>
+      <div style="display:flex;gap:4px;padding:4px;background:rgba(169,190,223,.12);border-radius:999px">
+        <button onClick="{{ setBoth }}" style="min-height:38px;padding:0 18px;border:none;border-radius:999px;cursor:pointer;font:500 12.5px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;background:{{ bgBoth }};color:{{ fgBoth }}">Both</button>
+        <button onClick="{{ setDesktop }}" style="min-height:38px;padding:0 18px;border:none;border-radius:999px;cursor:pointer;font:500 12.5px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;background:{{ bgDesktop }};color:{{ fgDesktop }}">Desktop</button>
+        <button onClick="{{ setMobile }}" style="min-height:38px;padding:0 18px;border:none;border-radius:999px;cursor:pointer;font:500 12.5px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;background:{{ bgMobile }};color:{{ fgMobile }}">Mobile</button>
+      </div>
+      <div style="display:flex;gap:4px;padding:4px;background:rgba(169,190,223,.12);border-radius:999px">
+        <button onClick="{{ setFit }}" style="min-height:38px;padding:0 16px;border:none;border-radius:999px;cursor:pointer;font:500 12.5px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;background:{{ bgFit }};color:{{ fgFit }}">Fit</button>
+        <button onClick="{{ setFull }}" style="min-height:38px;padding:0 16px;border:none;border-radius:999px;cursor:pointer;font:500 12.5px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;background:{{ bgFull }};color:{{ fgFull }}">1:1</button>
+      </div>
+      <button onClick="{{ reload }}" style="min-height:38px;padding:0 18px;border:1px solid rgba(169,190,223,.35);border-radius:999px;background:none;color:#a9bedf;cursor:pointer;font:500 12.5px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase">Reload</button>
+      <button onClick="{{ openFs }}" style="display:inline-flex;align-items:center;gap:8px;min-height:38px;padding:0 18px;border:none;border-radius:999px;background:#e05c22;color:#0b1930;cursor:pointer;font:600 12.5px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10V4h6M20 14v6h-6M20 10V4h-6M4 14v6h6"></path></svg>Full Screen
+      </button>
+    </div>
+  </div>
+
+  <div style="max-width:{{ stageMax }};margin:0 auto;padding:38px clamp(16px,3vw,32px) 0;display:flex;gap:clamp(24px,3vw,48px);align-items:flex-start;justify-content:{{ stageJustify }};flex-wrap:wrap;overflow-x:{{ stageOverflow }}">
+
+    <figure style="margin:0;display:{{ showDesktop }};flex:0 0 auto;margin-inline:{{ figMargin }}">
+      <figcaption style="display:flex;align-items:baseline;gap:10px;margin-bottom:14px">
+        <span style="font:500 13px/1 'Oswald',sans-serif;letter-spacing:1.6px;text-transform:uppercase;color:#f8f7f3">Desktop</span>
+        <span style="font-size:12px;color:#8ea3c6">1440 &times; 900</span>
+      </figcaption>
+      <div style="width:{{ deskW }};max-width:100%;border-radius:12px;overflow:hidden;background:#1b2b4a;border:1px solid rgba(169,190,223,.22);box-shadow:0 40px 80px -40px rgba(0,0,0,.8)">
+        <div style="height:36px;display:flex;align-items:center;gap:8px;padding:0 14px;background:#152443;border-bottom:1px solid rgba(169,190,223,.16)">
+          <span style="width:10px;height:10px;border-radius:50%;background:#ff5f57;display:block"></span>
+          <span style="width:10px;height:10px;border-radius:50%;background:#febc2e;display:block"></span>
+          <span style="width:10px;height:10px;border-radius:50%;background:#28c840;display:block"></span>
+          <span style="margin:0 auto;padding:3px 16px;border-radius:999px;background:rgba(11,25,48,.6);font-size:11px;color:#8ea3c6">bluecollarfishingguide.com</span>
+        </div>
+        <div style="width:{{ deskW }};height:{{ deskH }};overflow:hidden;position:relative">
+          <iframe key="{{ frameKey }}" src="Blue%20Collar%20Fishing%20Guide.dc.html" title="Desktop preview" style="width:1440px;height:900px;border:none;transform:scale({{ deskScale }});transform-origin:0 0;display:block;background:#f8f7f3"></iframe>
+        </div>
+      </div>
+    </figure>
+
+    <figure style="margin:0;display:{{ showMobile }};flex:0 0 auto">
+      <figcaption style="display:flex;align-items:baseline;gap:10px;margin-bottom:14px">
+        <span style="font:500 13px/1 'Oswald',sans-serif;letter-spacing:1.6px;text-transform:uppercase;color:#f8f7f3">Mobile</span>
+        <span style="font-size:12px;color:#8ea3c6">390 &times; 844</span>
+      </figcaption>
+      <div style="width:414px;padding:12px;border-radius:50px;background:#0e1a30;border:1px solid rgba(169,190,223,.22);box-shadow:0 40px 80px -40px rgba(0,0,0,.85)">
+        <div style="position:relative;width:390px;height:844px;border-radius:38px;overflow:hidden;background:#f8f7f3">
+          <iframe key="{{ frameKey }}" src="Blue%20Collar%20Fishing%20Guide.dc.html" title="Mobile preview" style="width:390px;height:844px;border:none;display:block;background:#f8f7f3"></iframe>
+          <div style="position:absolute;top:10px;left:50%;transform:translateX(-50%);width:112px;height:28px;border-radius:999px;background:#0e1a30;pointer-events:none"></div>
+          <div style="position:absolute;bottom:7px;left:50%;transform:translateX(-50%);width:130px;height:5px;border-radius:999px;background:rgba(14,34,68,.4);pointer-events:none"></div>
+        </div>
+      </div>
+    </figure>
+
+  </div>
+
+  <sc-if value="{{ fs }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed;inset:0;z-index:200;background:#0b1930;display:flex;flex-direction:column">
+      <div style="flex:0 0 auto;display:flex;align-items:center;gap:14px;padding:9px clamp(12px,2vw,20px);background:#0e1a30;border-bottom:1px solid rgba(169,190,223,.18)">
+        <span style="font:500 12px/1 'Oswald',sans-serif;letter-spacing:1.5px;text-transform:uppercase;color:#a9bedf;margin-right:auto">Full Screen &mdash; Live Site</span>
+        <button onClick="{{ closeFs }}" style="display:inline-flex;align-items:center;gap:8px;min-height:36px;padding:0 16px;border:1px solid rgba(169,190,223,.35);border-radius:999px;background:none;color:#f8f7f3;cursor:pointer;font:500 12px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase">Close &nbsp;&times;</button>
+      </div>
+      <iframe key="{{ frameKey }}" src="Blue%20Collar%20Fishing%20Guide.dc.html" title="Full screen desktop preview" style="flex:1 1 auto;width:100%;border:none;display:block;background:#f8f7f3"></iframe>
+    </div>
+  </sc-if>
+
+  <div style="max-width:900px;margin:44px auto 0;padding:0 clamp(16px,3vw,32px)">
+    <h2 style="font:600 15px/1 'Oswald',sans-serif;letter-spacing:1.8px;text-transform:uppercase;color:#a9bedf;margin:0 0 18px">What changed for mobile</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px">
+      <div style="background:rgba(169,190,223,.08);border:1px solid rgba(169,190,223,.16);border-radius:12px;padding:16px 18px">
+        <h3 style="font:600 14px/1.2 'Oswald',sans-serif;letter-spacing:1px;text-transform:uppercase;color:#f8f7f3;margin:0 0 7px">Right-sized photography</h3>
+        <p style="margin:0;font-size:13.5px;line-height:1.6;color:#b9c8e0">Gallery shots are now uniform 3:4 tiles in a snap-scrolling rail instead of 320px free-height images. The contact photo went from a 560px slab to a 3:2 frame, and Chris's portrait is capped at 430px.</p>
+      </div>
+      <div style="background:rgba(169,190,223,.08);border:1px solid rgba(169,190,223,.16);border-radius:12px;padding:16px 18px">
+        <h3 style="font:600 14px/1.2 'Oswald',sans-serif;letter-spacing:1px;text-transform:uppercase;color:#f8f7f3;margin:0 0 7px">Lakes collapse</h3>
+        <p style="margin:0;font-size:13.5px;line-height:1.6;color:#b9c8e0">Eight stacked lake cards became an accordion. Tapping a map pin, or a lake chip under the map, opens that lake and scrolls to it. All copy, acreage, and drive times are unchanged.</p>
+      </div>
+      <div style="background:rgba(169,190,223,.08);border:1px solid rgba(169,190,223,.16);border-radius:12px;padding:16px 18px">
+        <h3 style="font:600 14px/1.2 'Oswald',sans-serif;letter-spacing:1px;text-transform:uppercase;color:#f8f7f3;margin:0 0 7px">Hero that fits a phone</h3>
+        <p style="margin:0;font-size:13.5px;line-height:1.6;color:#b9c8e0">On mobile the slideshow becomes a full-bleed 58vh image with the headline set over it; on desktop it stays the original two-column layout.</p>
+      </div>
+      <div style="background:rgba(169,190,223,.08);border:1px solid rgba(169,190,223,.16);border-radius:12px;padding:16px 18px">
+        <h3 style="font:600 14px/1.2 'Oswald',sans-serif;letter-spacing:1px;text-transform:uppercase;color:#f8f7f3;margin:0 0 7px">Thumb-friendly booking</h3>
+        <p style="margin:0;font-size:13.5px;line-height:1.6;color:#b9c8e0">A fixed Call / Book bar sits at the bottom on phones, the logo shrinks from 100px to 52px, every tap target clears 44px, and form fields are 16px so iOS stops zooming on focus.</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{}">
+class Component extends DCLogic {
+  state = { view: 'both', frameKey: 0, scale: 'fit', fs: false };
+  componentDidMount() {
+    this.onKey = e => { if (e.key === 'Escape') this.setState({ fs: false }); };
+    document.addEventListener('keydown', this.onKey);
+  }
+  componentWillUnmount() { document.removeEventListener('keydown', this.onKey); }
+  renderVals() {
+    const v = this.state.view;
+    const on = '#e05c22', onFg = '#0b1930', off = 'transparent', offFg = '#b9c8e0';
+    const full = this.state.scale === 'full';
+    const s = full ? 1 : 0.55;
+    return {
+      frameKey: this.state.frameKey,
+      deskScale: s,
+      deskW: Math.round(1440 * s) + 'px',
+      deskH: Math.round(900 * s) + 'px',
+      stageMax: full ? 'none' : '1320px',
+      stageOverflow: full ? 'auto' : 'visible',
+      stageJustify: full ? 'flex-start' : 'center',
+      figMargin: full ? '0' : 'auto',
+      bgFit: full ? off : on, fgFit: full ? offFg : onFg,
+      bgFull: full ? on : off, fgFull: full ? onFg : offFg,
+      setFit: () => this.setState({ scale: 'fit' }),
+      setFull: () => this.setState({ scale: 'full' }),
+      fs: this.state.fs,
+      openFs: () => this.setState({ fs: true }),
+      closeFs: () => this.setState({ fs: false }),
+      showDesktop: v === 'mobile' ? 'none' : 'block',
+      showMobile: v === 'desktop' ? 'none' : 'block',
+      bgBoth: v === 'both' ? on : off, fgBoth: v === 'both' ? onFg : offFg,
+      bgDesktop: v === 'desktop' ? on : off, fgDesktop: v === 'desktop' ? onFg : offFg,
+      bgMobile: v === 'mobile' ? on : off, fgMobile: v === 'mobile' ? onFg : offFg,
+      setBoth: () => this.setState({ view: 'both' }),
+      setDesktop: () => this.setState({ view: 'desktop' }),
+      setMobile: () => this.setState({ view: 'mobile' }),
+      reload: () => this.setState(s => ({ frameKey: s.frameKey + 1 }))
+    };
+  }
+}
+</script>
+</body>
+</html>

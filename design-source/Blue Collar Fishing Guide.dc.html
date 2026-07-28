@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Blue Collar Fishing Guide - Central Texas Bass Fishing</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:80px;-webkit-text-size-adjust:100%}
+body{margin:0;background:#f8f7f3;color:#22293a;font-family:'Inter',system-ui,sans-serif;line-height:1.65;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+img{display:block;max-width:100%}
+a{color:#1d3059;text-decoration:none}
+a:hover{color:#0e2244}
+button,input,select,textarea{font-family:inherit}
+[data-hs]{overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch}
+[data-hs]::-webkit-scrollbar{height:6px}
+[data-hs]::-webkit-scrollbar-thumb{background:rgba(14,34,68,.22);border-radius:99px}
+[data-hs]>*{scroll-snap-align:start}
+:focus-visible{outline:2px solid #e05c22;outline-offset:2px}
+@media (min-width:901px){[data-mob]{display:none!important}}
+@media (max-width:900px){
+  [data-desk]{display:none!important}
+  [data-tap]{display:inline-flex;align-items:center;min-height:44px}
+  [data-r=hero]{grid-template-columns:1fr!important;gap:0!important}
+  [data-r=two]{grid-template-columns:1fr!important;gap:28px!important}
+  [data-r=book]{grid-template-columns:1fr!important;gap:40px!important}
+  [data-r=foot]{grid-template-columns:1fr!important}
+}
+@media (max-width:720px){
+  [data-r=three]{grid-template-columns:1fr!important}
+  [data-r=drive]{grid-template-columns:1fr!important;gap:8px!important}
+  [data-r=drive]>div{display:flex;align-items:center;justify-content:space-between;gap:12px}
+  [data-r=drive]>div>span{margin:0!important}
+}
+@media (max-width:560px){[data-pinlabel]{display:none!important}}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition-duration:.01ms!important}}
+</style>
+</helmet>
+
+<div style="background:#f8f7f3;background-image:url('bcfg/contours.svg'),radial-gradient(rgba(14,34,68,.022) 1px,transparent 1px);background-size:900px 900px,4px 4px;min-height:100vh;overflow-x:hidden">
+
+<header style="position:sticky;top:0;z-index:60;background:rgba(248,247,243,.95);backdrop-filter:blur(10px);border-bottom:1px solid rgba(14,34,68,.12)">
+  <div style="max-width:1180px;margin:0 auto;padding:8px clamp(16px,4vw,40px);display:flex;align-items:center;justify-content:space-between;gap:20px;min-height:64px">
+    <a href="#top" style="display:flex;align-items:center"><img src="bcfg/logo-card-navy.png" alt="Blue Collar Fishing Guide" style="height:52px;width:auto"></a>
+    <nav data-desk style="display:flex;align-items:center;gap:26px">
+      <a href="#top" style="font:500 14px/1 'Oswald',sans-serif;letter-spacing:1.2px;text-transform:uppercase;color:#1d3059">Home</a>
+      <a href="#about" style="font:500 14px/1 'Oswald',sans-serif;letter-spacing:1.2px;text-transform:uppercase;color:#1d3059">Your Guide</a>
+      <a href="#scene" style="font:500 14px/1 'Oswald',sans-serif;letter-spacing:1.2px;text-transform:uppercase;color:#1d3059">The Scene</a>
+      <a href="#trips" style="font:500 14px/1 'Oswald',sans-serif;letter-spacing:1.2px;text-transform:uppercase;color:#1d3059">Trips</a>
+      <a href="#book" style="font:500 14px/1 'Oswald',sans-serif;letter-spacing:1.2px;text-transform:uppercase;color:#1d3059">Contact</a>
+      <a href="#book" style="display:inline-flex;align-items:center;background:#1d3059;color:#fff;border-radius:6px;padding:12px 22px;font:500 14px/1 'Oswald',sans-serif;letter-spacing:1.4px;text-transform:uppercase">Book a Trip</a>
+    </nav>
+    <button data-mob onClick="{{ toggleNav }}" aria-label="Menu" style="width:46px;height:46px;display:flex;align-items:center;justify-content:center;background:none;border:1px solid rgba(14,34,68,.18);border-radius:8px;color:#1d3059;cursor:pointer;padding:0">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"></path></svg>
+    </button>
+  </div>
+  <div data-mob style="position:absolute;left:0;right:0;top:100%;background:#f8f7f3;border-bottom:1px solid rgba(14,34,68,.12);box-shadow:0 26px 44px -28px rgba(14,34,68,.5);overflow:hidden;transition:max-height .32s ease;max-height:{{ navMax }}">
+    <nav style="padding:4px clamp(16px,5vw,28px) 20px;display:grid">
+      <a onClick="{{ closeNav }}" href="#top" style="display:flex;align-items:center;min-height:52px;border-top:1px solid rgba(14,34,68,.1);font:500 15px/1 'Oswald',sans-serif;letter-spacing:1.4px;text-transform:uppercase;color:#1d3059">Home</a>
+      <a onClick="{{ closeNav }}" href="#about" style="display:flex;align-items:center;min-height:52px;border-top:1px solid rgba(14,34,68,.1);font:500 15px/1 'Oswald',sans-serif;letter-spacing:1.4px;text-transform:uppercase;color:#1d3059">Your Guide</a>
+      <a onClick="{{ closeNav }}" href="#scene" style="display:flex;align-items:center;min-height:52px;border-top:1px solid rgba(14,34,68,.1);font:500 15px/1 'Oswald',sans-serif;letter-spacing:1.4px;text-transform:uppercase;color:#1d3059">The Scene</a>
+      <a onClick="{{ closeNav }}" href="#trips" style="display:flex;align-items:center;min-height:52px;border-top:1px solid rgba(14,34,68,.1);font:500 15px/1 'Oswald',sans-serif;letter-spacing:1.4px;text-transform:uppercase;color:#1d3059">Trips &amp; Rates</a>
+      <a onClick="{{ closeNav }}" href="#book" style="display:flex;align-items:center;min-height:52px;border-top:1px solid rgba(14,34,68,.1);font:500 15px/1 'Oswald',sans-serif;letter-spacing:1.4px;text-transform:uppercase;color:#1d3059">Availability &amp; Contact</a>
+      <a onClick="{{ closeNav }}" href="#book" style="display:flex;align-items:center;justify-content:center;min-height:52px;margin-top:14px;background:#1d3059;color:#fff;border-radius:6px;font:500 15px/1 'Oswald',sans-serif;letter-spacing:1.6px;text-transform:uppercase">Book a Trip</a>
+    </nav>
+  </div>
+</header>
+
+<section id="top">
+  <div data-r="hero" style="max-width:1180px;margin:0 auto;display:grid;grid-template-columns:1.02fr 1fr;gap:48px;align-items:center;padding:0 0 0 0">
+    <div data-mob style="position:relative;height:58vh;min-height:360px;max-height:520px;background:#0e2244;overflow:hidden;order:-1">
+      <img src="{{ heroA }}" alt="Recent trip photo" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:{{ opA }};transition:opacity 1.2s ease">
+      <img src="{{ heroB }}" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:{{ opB }};transition:opacity 1.2s ease">
+      <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(14,34,68,.4) 0%,rgba(14,34,68,.06) 34%,rgba(14,34,68,.88) 100%)"></div>
+      <div style="position:absolute;left:0;right:0;bottom:0;padding:0 clamp(18px,5vw,28px) 26px">
+        <span style="display:inline-block;font:700 11px/1 'Inter',sans-serif;letter-spacing:.24em;text-transform:uppercase;color:#a9bedf;margin-bottom:12px">New Braunfels, Texas</span>
+        <h1 style="font-family:'Anton',Impact,sans-serif;font-weight:400;font-size:clamp(36px,11vw,52px);line-height:.98;letter-spacing:1px;text-transform:uppercase;color:#f8f7f3;margin:0">A Working Angler's Guide</h1>
+      </div>
+    </div>
+    <div style="padding:clamp(26px,4vw,72px) clamp(18px,4vw,40px)">
+      <span data-desk style="display:inline-block;font:700 12px/1 'Inter',sans-serif;letter-spacing:.26em;text-transform:uppercase;color:#1d3059">New Braunfels, Texas</span>
+      <h1 data-desk style="font-family:'Anton',Impact,sans-serif;font-weight:400;font-size:clamp(44px,4.6vw,68px);line-height:.98;letter-spacing:1px;text-transform:uppercase;color:#1d3059;margin:18px 0 22px">A Working Angler's Guide</h1>
+      <p style="margin:0 0 22px;font-size:16.5px;max-width:560px;text-wrap:pretty">Here at Blue Collar Fishing Guide, my goal is to help you shorten the learning curve of bass fishing on Central Texas lakes. Through countless hours spent on the water, I'll share the techniques, seasonal patterns, and local knowledge that help you spend less time guessing and more time catching fish. Whether you're new to bass fishing or looking to refine your skills, every trip is designed to build your confidence, improve your knowledge, and create a successful day on the water.</p>
+      <ul style="list-style:none;display:grid;gap:11px;margin:0 0 28px;padding:0;max-width:560px">
+        <li style="display:flex;align-items:baseline;gap:11px"><span style="font:600 15px/1 'Oswald',sans-serif;color:#1d3059">&#10003;</span><span>Rods, tackle, ice, and water are on us</span></li>
+        <li style="display:flex;align-items:baseline;gap:11px"><span style="font:600 15px/1 'Oswald',sans-serif;color:#1d3059">&#10003;</span><span>Eight lakes within striking distance of Austin</span></li>
+        <li style="display:flex;align-items:baseline;gap:11px"><span style="font:600 15px/1 'Oswald',sans-serif;color:#1d3059">&#10003;</span><span>All skill levels, from "what's a fish?" to "I can outfish the guide"</span></li>
+      </ul>
+      <div style="display:flex;gap:12px;flex-wrap:wrap">
+        <a href="#book" style="display:inline-flex;align-items:center;justify-content:center;min-height:50px;padding:0 26px;background:#1d3059;color:#fff;border-radius:6px;font:500 14px/1 'Oswald',sans-serif;letter-spacing:1.5px;text-transform:uppercase;box-shadow:0 12px 26px -12px rgba(14,34,68,.7)">Book a Trip</a>
+        <a href="#trips" style="display:inline-flex;align-items:center;justify-content:center;min-height:50px;padding:0 26px;border:2px solid #1d3059;color:#1d3059;border-radius:6px;font:500 14px/1 'Oswald',sans-serif;letter-spacing:1.5px;text-transform:uppercase">See Trips &amp; Rates</a>
+      </div>
+    </div>
+    <div data-desk style="align-self:stretch;min-height:520px;position:relative;overflow:hidden">
+      <img src="{{ heroA }}" alt="Recent trip photo" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:{{ opA }};transition:opacity 1.2s ease">
+      <img src="{{ heroB }}" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:{{ opB }};transition:opacity 1.2s ease">
+    </div>
+  </div>
+</section>
+
+<section id="about" style="background:#eef0f3;padding:clamp(44px,6vw,80px) 0">
+  <div style="max-width:1180px;margin:0 auto;padding:0 clamp(18px,4vw,40px)">
+    <div data-r="two" style="display:grid;grid-template-columns:.85fr 1.15fr;gap:44px;align-items:center">
+      <img src="bcfg/Chris.jpg" alt="Chris Studinger holding two largemouth bass" style="width:100%;max-width:430px;aspect-ratio:4/5;object-fit:cover;border-radius:12px;margin:0 auto">
+      <div>
+        <span style="display:inline-block;font:700 12px/1 'Inter',sans-serif;letter-spacing:.26em;text-transform:uppercase;color:#1d3059">Who's Behind This</span>
+        <h2 style="font:600 clamp(26px,3.4vw,34px)/1.1 'Oswald',sans-serif;letter-spacing:.5px;text-transform:uppercase;color:#1d3059;margin:14px 0 18px">Chris Studinger, New Braunfels</h2>
+        <p style="margin:0 0 14px;text-wrap:pretty">Chris developed a passion for fishing at a young age, spending countless hours chasing anything that would bite, from the surf to neighborhood ponds and local lakes. That passion eventually led him to Central Texas, where he now spends his time guiding clients and competing in bass tournaments across the country.</p>
+        <p style="margin:0;text-wrap:pretty">Whether you're new to Texas, visiting for a few days, or simply looking to become a better bass angler on Central Texas lakes, you're in the right place. At Blue Collar Fishing Guide, our goal is to help you catch more fish while teaching you the techniques, patterns, and decision-making behind every bite. We don't just want you to have a great day on the water. We want you to leave a more knowledgeable and confident angler.</p>
+      </div>
+    </div>
+    <div data-r="three" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:40px">
+      <div style="background:#f8f7f3;border:1px solid rgba(14,34,68,.12);border-radius:12px;padding:22px">
+        <h3 style="font:600 19px/1.15 'Oswald',sans-serif;letter-spacing:.5px;text-transform:uppercase;color:#1d3059;margin:0 0 8px">Hard Work Over Hype</h3>
+        <p style="margin:0;color:#5c6470;font-size:15px">We show up early, we grind through the slow bites, and we earn the good days instead of manufacturing them for a highlight reel.</p>
+      </div>
+      <div style="background:#f8f7f3;border:1px solid rgba(14,34,68,.12);border-radius:12px;padding:22px">
+        <h3 style="font:600 19px/1.15 'Oswald',sans-serif;letter-spacing:.5px;text-transform:uppercase;color:#1d3059;margin:0 0 8px">Local Water Knowledge</h3>
+        <p style="margin:0;color:#5c6470;font-size:15px">Having spent years on Central Texas Lakes, it has taught us what actually works here, not what works in a magazine.</p>
+      </div>
+      <div style="background:#f8f7f3;border:1px solid rgba(14,34,68,.12);border-radius:12px;padding:22px">
+        <h3 style="font:600 19px/1.15 'Oswald',sans-serif;letter-spacing:.5px;text-transform:uppercase;color:#1d3059;margin:0 0 8px">Everybody's Welcome</h3>
+        <p style="margin:0;color:#5c6470;font-size:15px">First-timers, kids, seasoned anglers chasing a personal best, if you're willing to put in the work, we're glad to have you in the boat.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="scene" style="padding:clamp(44px,6vw,80px) 0">
+  <div style="max-width:1180px;margin:0 auto;padding:0 clamp(18px,4vw,40px)">
+    <span style="display:inline-block;font:700 12px/1 'Inter',sans-serif;letter-spacing:.26em;text-transform:uppercase;color:#1d3059">The Water Where We Work</span>
+    <h2 style="font:600 clamp(28px,3.6vw,36px)/1.1 'Oswald',sans-serif;letter-spacing:.5px;text-transform:uppercase;color:#1d3059;margin:14px 0 12px">The Scene</h2>
+    <p style="max-width:640px;margin:0 0 24px;color:#5c6470">Every lake we work sits within about an hour and a half of Austin or San Antonio. Tap a lake on the map for drive times from each airport.</p>
+
+    <div style="position:relative;border:2px solid #1d3059;border-radius:8px;overflow:hidden;box-shadow:0 24px 50px -24px rgba(14,34,68,.35);max-width:760px;margin:0 auto 16px">
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);line-height:0"><img src="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/9/209/115" alt="" style="width:100%"><img src="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/9/209/116" alt="" style="width:100%"><img src="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/9/209/117" alt="" style="width:100%"><img src="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/9/210/115" alt="" style="width:100%"><img src="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/9/210/116" alt="" style="width:100%"><img src="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/9/210/117" alt="" style="width:100%"><img src="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/9/211/115" alt="" style="width:100%"><img src="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/9/211/116" alt="" style="width:100%"><img src="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/9/211/117" alt="" style="width:100%"></div>
+      <div style="position:absolute;left:12px;top:12px;background:rgba(248,247,243,.94);border:1px solid #1d3059;box-shadow:2px 2px 0 rgba(14,34,68,.3);padding:3px">
+        <div style="border:1px solid rgba(29,48,89,.4);padding:6px 14px;text-align:center;font-family:Georgia,serif;color:#1d3059">
+          <div style="font-size:9px;letter-spacing:2.5px">CHART No. 1</div>
+          <div style="font-size:14px;font-weight:700;letter-spacing:1.4px;margin:2px 0">CENTRAL TEXAS</div>
+          <div style="font-size:10px;font-style:italic;opacity:.8">Bass Waters &amp; Approaches</div>
+        </div>
+      </div>
+      <div style="position:absolute;left:48.4%;top:91%;transform:translate(-50%,-50%);pointer-events:none;display:flex;align-items:center;gap:6px">
+        <span style="width:8px;height:8px;border-radius:50%;background:#f8f7f3;border:2px solid #1d3059;display:block"></span>
+        <span data-pinlabel style="font-family:Georgia,serif;font-style:italic;font-size:11px;color:#1d3059;background:rgba(248,247,243,.9);padding:0 5px;border:1px solid rgba(29,48,89,.3);white-space:nowrap">New Braunfels</span>
+      </div>
+      <div style="position:absolute;left:69.7%;top:64.3%;transform:translate(-50%,-50%);pointer-events:none;display:flex;align-items:center;gap:4px;color:#f8f7f3;white-space:nowrap;filter:drop-shadow(0 1px 2px rgba(0,0,0,.8))"><svg width="13" height="13" viewBox="0 0 24 24" fill="#f8f7f3"><path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z"></path></svg><span style="font-family:Georgia,serif;font-style:italic;font-size:11px;font-weight:700">AUS</span></div>
+      <div style="position:absolute;left:31.8%;top:96%;transform:translate(-50%,-50%);pointer-events:none;display:flex;align-items:center;gap:4px;color:#f8f7f3;white-space:nowrap;filter:drop-shadow(0 1px 2px rgba(0,0,0,.8))"><svg width="13" height="13" viewBox="0 0 24 24" fill="#f8f7f3"><path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z"></path></svg><span style="font-family:Georgia,serif;font-style:italic;font-size:11px;font-weight:700">SAT</span></div>
+      <div style="position:absolute;left:62.2%;top:16.1%;transform:translate(-50%,-50%);pointer-events:none;display:flex;align-items:center;gap:4px;color:#f8f7f3;white-space:nowrap;filter:drop-shadow(0 1px 2px rgba(0,0,0,.8))"><svg width="13" height="13" viewBox="0 0 24 24" fill="#f8f7f3"><path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z"></path></svg><span style="font-family:Georgia,serif;font-style:italic;font-size:11px;font-weight:700">GRK</span></div>
+      <sc-for list="{{ pins }}" as="pin" hint-placeholder-count="8">
+        <button onClick="{{ pin.go }}" aria-label="{{ pin.name }}" style="position:absolute;left:{{ pin.left }};top:{{ pin.top }};transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:2px;background:none;border:none;cursor:pointer;padding:8px;min-width:44px;min-height:44px;justify-content:center">
+          <span style="width:12px;height:12px;border-radius:50%;background:#e05c22;border:2px solid #f8f7f3;box-shadow:0 2px 8px rgba(0,0,0,.5);display:block"></span>
+          <span data-pinlabel style="font-family:Georgia,serif;font-style:italic;font-size:11px;color:#1d3059;white-space:nowrap;background:rgba(248,247,243,.92);padding:0 5px;border:1px solid rgba(29,48,89,.3)">{{ pin.name }}</span>
+        </button>
+      </sc-for>
+      <span style="position:absolute;right:6px;bottom:5px;font-size:9px;color:rgba(248,247,243,.85);background:rgba(14,34,68,.55);padding:1px 6px;border-radius:3px">Imagery &copy; Esri World Imagery</span>
+    </div>
+
+    <div data-hs style="display:flex;gap:8px;padding:2px 0 14px;margin:0 -4px">
+      <sc-for list="{{ pins }}" as="pin" hint-placeholder-count="8">
+        <button onClick="{{ pin.go }}" style="flex:0 0 auto;min-height:40px;padding:0 16px;border-radius:999px;border:1px solid rgba(14,34,68,.18);background:#fff;color:#1d3059;font:500 13px/1 'Oswald',sans-serif;letter-spacing:1.1px;text-transform:uppercase;cursor:pointer">{{ pin.full }}</button>
+      </sc-for>
+    </div>
+
+    <div style="display:grid;gap:12px">
+      <div id="lake-canyon" style="background:#fff;border:1px solid rgba(14,34,68,.14);border-radius:12px;overflow:hidden">
+        <button onClick="{{ tCanyon }}" style="width:100%;display:flex;align-items:center;gap:14px;text-align:left;background:none;border:none;padding:16px 18px;cursor:pointer">
+          <span style="flex:1;display:grid;gap:3px">
+            <span style="font:600 11px/1 'Oswald',sans-serif;letter-spacing:1.8px;text-transform:uppercase;color:#1d3059">Clear Water</span>
+            <span style="font:600 21px/1.15 'Oswald',sans-serif;letter-spacing:.5px;text-transform:uppercase;color:#1d3059">Canyon Lake</span>
+            <span style="font-size:14.5px;color:#5c6470;line-height:1.5">Gin-clear and unforgiving, the lake that teaches you finesse.</span>
+          </span>
+          <span style="flex:0 0 34px;height:34px;border-radius:50%;background:#eef0f3;color:#1d3059;display:flex;align-items:center;justify-content:center;font:600 18px/1 'Oswald',sans-serif">{{ sCanyon }}</span>
+        </button>
+        <sc-if value="{{ oCanyon }}" hint-placeholder-val="{{ true }}">
+          <div style="padding:0 18px 18px">
+            <div style="display:flex;flex-wrap:wrap;gap:6px 16px;font:500 12px/1.4 'Oswald',sans-serif;letter-spacing:1px;text-transform:uppercase;color:#1d3059;margin-bottom:14px"><span>8,308 acres</span><span style="color:#5c6470">Deepest lake in Texas at 140+ feet</span></div>
+            <div data-r="drive" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px">
+              <div style="background:#f8f7f3;border-radius:8px;padding:11px 13px"><span style="display:block;font:500 11px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:#5c6470;margin-bottom:6px">Austin (AUS)</span><span style="font:600 15px/1.2 'Oswald',sans-serif;color:#1d3059">51 mi &middot; ~55 min</span></div>
+              <div style="background:#f8f7f3;border-radius:8px;padding:11px 13px"><span style="display:block;font:500 11px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:#5c6470;margin-bottom:6px">San Antonio (SAT)</span><span style="font:600 15px/1.2 'Oswald',sans-serif;color:#1d3059">43 mi &middot; ~45 min</span></div>
+              <div style="background:#f8f7f3;border-radius:8px;padding:11px 13px"><span style="display:block;font:500 11px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:#5c6470;margin-bottom:6px">Killeen (GRK)</span><span style="font:600 15px/1.2 'Oswald',sans-serif;color:#1d3059">110 mi &middot; ~1 hr 45 min</span></div>
+            </div>
+            <div data-hs style="display:flex;gap:8px;padding-bottom:8px">
+              <sc-for list="{{ picsCanyon }}" as="p" hint-placeholder-count="6">
+                <button onClick="{{ p.open }}" style="flex:0 0 clamp(128px,36vw,164px);aspect-ratio:3/4;padding:0;border:none;border-radius:8px;overflow:hidden;background:#eef0f3;cursor:zoom-in"><img src="{{ p.src }}" alt="{{ p.alt }}" loading="lazy" style="width:100%;height:100%;object-fit:cover"></button>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+      </div>
+
+      <div id="lake-travis" style="background:#fff;border:1px solid rgba(14,34,68,.14);border-radius:12px;overflow:hidden">
+        <button onClick="{{ tTravis }}" style="width:100%;display:flex;align-items:center;gap:14px;text-align:left;background:none;border:none;padding:16px 18px;cursor:pointer">
+          <span style="flex:1;display:grid;gap:3px">
+            <span style="font:600 11px/1 'Oswald',sans-serif;letter-spacing:1.8px;text-transform:uppercase;color:#1d3059">Big Water</span>
+            <span style="font:600 21px/1.15 'Oswald',sans-serif;letter-spacing:.5px;text-transform:uppercase;color:#1d3059">Lake Travis</span>
+            <span style="font-size:14.5px;color:#5c6470;line-height:1.5">Deep Highland Lakes water with a summer schooling bite worth the drive.</span>
+          </span>
+          <span style="flex:0 0 34px;height:34px;border-radius:50%;background:#eef0f3;color:#1d3059;display:flex;align-items:center;justify-content:center;font:600 18px/1 'Oswald',sans-serif">{{ sTravis }}</span>
+        </button>
+        <sc-if value="{{ oTravis }}" hint-placeholder-val="{{ false }}">
+          <div style="padding:0 18px 18px">
+            <div style="display:flex;flex-wrap:wrap;gap:6px 16px;font:500 12px/1.4 'Oswald',sans-serif;letter-spacing:1px;text-transform:uppercase;color:#1d3059;margin-bottom:14px"><span>18,622 acres</span><span style="color:#5c6470">63 miles of winding Colorado River canyon</span></div>
+            <div data-r="drive" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px">
+              <div style="background:#f8f7f3;border-radius:8px;padding:11px 13px"><span style="display:block;font:500 11px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:#5c6470;margin-bottom:6px">Austin (AUS)</span><span style="font:600 15px/1.2 'Oswald',sans-serif;color:#1d3059">35 mi &middot; ~45 min</span></div>
+              <div style="background:#f8f7f3;border-radius:8px;padding:11px 13px"><span style="display:block;font:500 11px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:#5c6470;margin-bottom:6px">San Antonio (SAT)</span><span style="font:600 15px/1.2 'Oswald',sans-serif;color:#1d3059">90 mi &middot; ~1 hr 30 min</span></div>
+              <div style="background:#f8f7f3;border-radius:8px;padding:11px 13px"><span style="display:block;font:500 11px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:#5c6470;margin-bottom:6px">Killeen (GRK)</span><span style="font:600 15px/1.2 'Oswald',sans-serif;color:#1d3059">60 mi &middot; ~1 hr 5 min</span></div>
+            </div>
+            <div data-hs style="display:flex;gap:8px;padding-bottom:8px">
+              <sc-for list="{{ picsTravis }}" as="p" hint-placeholder-count="6">
+                <button onClick="{{ p.open }}" style="flex:0 0 clamp(128px,36vw,164px);aspect-ratio:3/4;padding:0;border:none;border-radius:8px;overflow:hidden;background:#eef0f3;cursor:zoom-in"><img src="{{ p.src }}" alt="{{ p.alt }}" loading="lazy" style="width:100%;height:100%;object-fit:cover"></button>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+      </div>
+
+      <div id="lake-ladybird" style="background:#fff;border:1px solid rgba(14,34,68,.14);border-radius:12px;overflow:hidden">
+        <button onClick="{{ tLadybird }}" style="width:100%;display:flex;align-items:center;gap:14px;text-align:left;background:none;border:none;padding:16px 18px;cursor:pointer">
+          <span style="flex:1;display:grid;gap:3px">
+            <span style="font:600 11px/1 'Oswald',sans-serif;letter-spacing:1.8px;text-transform:uppercase;color:#1d3059">In-Town Water</span>
+            <span style="font:600 21px/1.15 'Oswald',sans-serif;letter-spacing:.5px;text-transform:uppercase;color:#1d3059">Lady Bird Lake</span>
+            <span style="font-size:14.5px;color:#5c6470;line-height:1.5">Big, educated bass right through the middle of downtown Austin.</span>
+          </span>
+          <span style="flex:0 0 34px;height:34px;border-radius:50%;background:#eef0f3;color:#1d3059;display:flex;align-items:center;justify-content:center;font:600 18px/1 'Oswald',sans-serif">{{ sLadybird }}</span>
+        </button>
+        <sc-if value="{{ oLadybird }}" hint-placeholder-val="{{ false }}">
+          <div style="padding:0 18px 18px">
+            <div style="display:flex;flex-wrap:wrap;gap:6px 16px;font:500 12px/1.4 'Oswald',sans-serif;letter-spacing:1px;text-transform:uppercase;color:#1d3059;margin-bottom:14px"><span>416 acres</span><span style="color:#5c6470">No gas motors allowed, so it fishes quiet</span></div>
+            <div data-r="drive" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px">
+              <div style="background:#f8f7f3;border-radius:8px;padding:11px 13px"><span style="display:block;font:500 11px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:#5c6470;margin-bottom:6px">Austin (AUS)</span><span style="font:600 15px/1.2 'Oswald',sans-serif;color:#1d3059">8 mi &middot; ~15 min</span></div>
+              <div style="background:#f8f7f3;border-radius:8px;padding:11px 13px"><span style="display:block;font:500 11px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:#5c6470;margin-bottom:6px">San Antonio (SAT)</span><span style="font:600 15px/1.2 'Oswald',sans-serif;color:#1d3059">75 mi &middot; ~1 hr 15 min</span></div>
+              <div style="background:#f8f7f3;border-radius:8px;padding:11px 13px"><span style="display:block;font:500 11px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:#5c6470;margin-bottom:6px">Killeen (GRK)</span><span style="font:600 15px/1.2 'Oswald',sans-serif;color:#1d3059">70 mi &middot; ~1 hr 10 min</span></div>
+            </div>
+            <div data-hs style="display:flex;gap:8px;padding-bottom:8px">
+              <sc-for list="{{ picsLadybird }}" as="p" hint-placeholder-count="1">
+                <button onClick="{{ p.open }}" style="flex:0 0 clamp(128px,36vw,164px);aspect-ratio:3/4;padding:0;border:none;border-radius:8px;overflow:hidden;background:#eef0f3;cursor:zoom-in"><img src="{{ p.src }}" alt="{{ p.alt }}" loading="lazy" style="width:100%;height:100%;object-fit:cover"></button>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+      </div>
+
+      <div id="lake-lbj" style="background:#fff;border:1px solid rgba(14,34,68,.14);border-radius:12px;overflow:hidden">
+        <button onClick="{{ tLbj }}" style="width:100%;display:flex;align-items:center;gap:14px;text-align:left;background:none;border:none;padding:16px 18px;cursor:pointer">
+          <span style="flex:1;display:grid;gap:3px">
+            <span style="font:600 11px/1 'Oswald',sans-serif;letter-spacing:1.8px;text-transform:uppercase;color:#1d3059">Big Bass</span>
+            <span style="font:600 21px/1.15 'Oswald',sans-serif;letter-spacing:.5px;text-transform:uppercase;color:#1d3059">Lake LBJ</span>
+            <span style="font-size:14.5px;color:#5c6470;line-height:1.5">Constant-level dock water with a legit shot at a giant.</span>
+          </span>
+          <span style="flex:0 0 34px;height:34px;border-radius:50%;background:#eef0f3;color:#1d3059;display:flex;align-items:center;justify-content:center;font:600 18px/1 'Oswald',sans-serif">{{ sLbj }}</span>
+        </button>
+        <sc-if value="{{ oLbj }}" hint-placeholder-val="{{ false }}">
+          <div style="padding:0 18px 18px">
+            <div style="display:flex;flex-wrap:wrap;gap:6px 16px;font:500 12px/1.4 'Oswald',sans-serif;letter-spacing:1px;text-transform:uppercase;color:#1d3059;margin-bottom:14px"><span>6,534 acres</span><span style="color:#5c6470">Held at a constant level year-round</span></div>
+            <div data-r="drive" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px">
+              <div style="background:#f8f7f3;border-radius:8px;padding:11px 13px"><span style="display:block;font:500 11px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:#5c6470;margin-bottom:6px">Austin (AUS)</span><span style="font:600 15px/1.2 'Oswald',sans-serif;color:#1d3059">62 mi &middot; ~1 hr 10 min</span></div>
+              <div style="background:#f8f7f3;border-radius:8px;padding:11px 13px"><span style="display:block;font:500 11px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:#5c6470;margin-bottom:6px">San Antonio (SAT)</span><span style="font:600 15px/1.2 'Oswald',sans-serif;color:#1d3059">95 mi &middot; ~1 hr 40 min</span></div>
+              <div style="background:#f8f7f3;border-radius:8px;padding:11px 13px"><span style="display:block;font:500 11px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:#5c6470;margin-bottom:6px">Killeen (GRK)</span><span style="font:600 15px/1.2 'Oswald',sans-serif;color:#1d3059">70 mi &middot; ~1 hr 20 min</span></div>
+            </div>
+            <div data-hs style="display:flex;gap:8px;padding-bottom:8px">
+              <sc-for list="{{ picsLbj }}" as="p" hint-placeholder-count="6">
+                <button onClick="{{ p.open }}" style="flex:0 0 clamp(128px,36vw,164px);aspect-ratio:3/4;padding:0;border:none;border-radius:8px;overflow:hidden;background:#eef0f3;cursor:zoom-in"><img src="{{ p.src }}" alt="{{ p.alt }}" loading="lazy" style="width:100%;height:100%;object-fit:cover"></button>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+      </div>
+
+      <div id="lake-austin" style="background:#fff;border:1px solid rgba(14,34,68,.14);border-radius:12px;overflow:hidden">
+        <button onClick="{{ tAustin }}" style="width:100%;display:flex;align-items:center;gap:14px;text-align:left;background:none;border:none;padding:16px 18px;cursor:pointer">
+          <span style="flex:1;display:grid;gap:3px">
+            <span style="font:600 11px/1 'Oswald',sans-serif;letter-spacing:1.8px;text-transform:uppercase;color:#1d3059">Big Bass</span>
+            <span style="font:600 21px/1.15 'Oswald',sans-serif;letter-spacing:.5px;text-transform:uppercase;color:#1d3059">Lake Austin</span>
+            <span style="font-size:14.5px;color:#5c6470;line-height:1.5">Grass, docks, and some of the biggest largemouth in Texas.</span>
+          </span>
+          <span style="flex:0 0 34px;height:34px;border-radius:50%;background:#eef0f3;color:#1d3059;display:flex;align-items:center;justify-content:center;font:600 18px/1 'Oswald',sans-serif">{{ sAustin }}</span>
+        </button>
+        <sc-if value="{{ oAustin }}" hint-placeholder-val="{{ false }}">
+          <div style="padding:0 18px 18px">
+            <div style="display:flex;flex-wrap:wrap;gap:6px 16px;font:500 12px/1.4 'Oswald',sans-serif;letter-spacing:1px;text-transform:uppercase;color:#1d3059;margin-bottom:14px"><span>1,599 acres</span><span style="color:#5c6470">Has produced 13-pound-plus ShareLunker bass</span></div>
+            <div data-r="drive" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px">
+              <div style="background:#f8f7f3;border-radius:8px;padding:11px 13px"><span style="display:block;font:500 11px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:#5c6470;margin-bottom:6px">Austin (AUS)</span><span style="font:600 15px/1.2 'Oswald',sans-serif;color:#1d3059">15 mi &middot; ~25 min</span></div>
+              <div style="background:#f8f7f3;border-radius:8px;padding:11px 13px"><span style="display:block;font:500 11px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:#5c6470;margin-bottom:6px">San Antonio (SAT)</span><span style="font:600 15px/1.2 'Oswald',sans-serif;color:#1d3059">80 mi &middot; ~1 hr 20 min</span></div>
+              <div style="background:#f8f7f3;border-radius:8px;padding:11px 13px"><span style="display:block;font:500 11px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:#5c6470;margin-bottom:6px">Killeen (GRK)</span><span style="font:600 15px/1.2 'Oswald',sans-serif;color:#1d3059">75 mi &middot; ~1 hr 15 min</span></div>
+            </div>
+            <div style="border:1px dashed rgba(14,34,68,.28);border-radius:8px;padding:22px;text-align:center;font:500 12px/1.5 'Oswald',sans-serif;letter-spacing:1.6px;text-transform:uppercase;color:#5c6470;background:repeating-linear-gradient(45deg,#f8f7f3,#f8f7f3 10px,#eef0f3 10px,#eef0f3 20px)">Lake Austin photo coming soon</div>
+          </div>
+        </sc-if>
+      </div>
+
+      <div id="lake-belton" style="background:#fff;border:1px solid rgba(14,34,68,.14);border-radius:12px;overflow:hidden">
+        <button onClick="{{ tBelton }}" style="width:100%;display:flex;align-items:center;gap:14px;text-align:left;background:none;border:none;padding:16px 18px;cursor:pointer">
+          <span style="flex:1;display:grid;gap:3px">
+            <span style="font:600 11px/1 'Oswald',sans-serif;letter-spacing:1.8px;text-transform:uppercase;color:#1d3059">Smallmouth</span>
+            <span style="font:600 21px/1.15 'Oswald',sans-serif;letter-spacing:.5px;text-transform:uppercase;color:#1d3059">Lake Belton</span>
+            <span style="font-size:14.5px;color:#5c6470;line-height:1.5">Our smallmouth water, brown fish over clear Hill Country rock.</span>
+          </span>
+          <span style="flex:0 0 34px;height:34px;border-radius:50%;background:#eef0f3;color:#1d3059;display:flex;align-items:center;justify-content:center;font:600 18px/1 'Oswald',sans-serif">{{ sBelton }}</span>
+        </button>
+        <sc-if value="{{ oBelton }}" hint-placeholder-val="{{ false }}">
+          <div style="padding:0 18px 18px">
+            <div style="display:flex;flex-wrap:wrap;gap:6px 16px;font:500 12px/1.4 'Oswald',sans-serif;letter-spacing:1px;text-transform:uppercase;color:#1d3059;margin-bottom:14px"><span>12,385 acres</span><span style="color:#5c6470">One of the best smallmouth fisheries in Texas</span></div>
+            <div data-r="drive" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px">
+              <div style="background:#f8f7f3;border-radius:8px;padding:11px 13px"><span style="display:block;font:500 11px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:#5c6470;margin-bottom:6px">Austin (AUS)</span><span style="font:600 15px/1.2 'Oswald',sans-serif;color:#1d3059">73 mi &middot; ~1 hr 10 min</span></div>
+              <div style="background:#f8f7f3;border-radius:8px;padding:11px 13px"><span style="display:block;font:500 11px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:#5c6470;margin-bottom:6px">San Antonio (SAT)</span><span style="font:600 15px/1.2 'Oswald',sans-serif;color:#1d3059">130 mi &middot; ~1 hr 55 min</span></div>
+              <div style="background:#f8f7f3;border-radius:8px;padding:11px 13px"><span style="display:block;font:500 11px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:#5c6470;margin-bottom:6px">Killeen (GRK)</span><span style="font:600 15px/1.2 'Oswald',sans-serif;color:#1d3059">12 mi &middot; ~20 min</span></div>
+            </div>
+            <div data-hs style="display:flex;gap:8px;padding-bottom:8px">
+              <sc-for list="{{ picsBelton }}" as="p" hint-placeholder-count="5">
+                <button onClick="{{ p.open }}" style="flex:0 0 clamp(128px,36vw,164px);aspect-ratio:3/4;padding:0;border:none;border-radius:8px;overflow:hidden;background:#eef0f3;cursor:zoom-in"><img src="{{ p.src }}" alt="{{ p.alt }}" loading="lazy" style="width:100%;height:100%;object-fit:cover"></button>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+      </div>
+
+      <div id="lake-stillhouse" style="background:#fff;border:1px solid rgba(14,34,68,.14);border-radius:12px;overflow:hidden">
+        <button onClick="{{ tStillhouse }}" style="width:100%;display:flex;align-items:center;gap:14px;text-align:left;background:none;border:none;padding:16px 18px;cursor:pointer">
+          <span style="flex:1;display:grid;gap:3px">
+            <span style="font:600 11px/1 'Oswald',sans-serif;letter-spacing:1.8px;text-transform:uppercase;color:#1d3059">Sleeper Water</span>
+            <span style="font:600 21px/1.15 'Oswald',sans-serif;letter-spacing:.5px;text-transform:uppercase;color:#1d3059">Stillhouse Hollow</span>
+            <span style="font-size:14.5px;color:#5c6470;line-height:1.5">Belton's quieter neighbor, clear, grassy, and full of quality fish.</span>
+          </span>
+          <span style="flex:0 0 34px;height:34px;border-radius:50%;background:#eef0f3;color:#1d3059;display:flex;align-items:center;justify-content:center;font:600 18px/1 'Oswald',sans-serif">{{ sStillhouse }}</span>
+        </button>
+        <sc-if value="{{ oStillhouse }}" hint-placeholder-val="{{ false }}">
+          <div style="padding:0 18px 18px">
+            <div style="display:flex;flex-wrap:wrap;gap:6px 16px;font:500 12px/1.4 'Oswald',sans-serif;letter-spacing:1px;text-transform:uppercase;color:#1d3059;margin-bottom:14px"><span>6,430 acres</span><span style="color:#5c6470">Known for hydrilla beds that hold big fish</span></div>
+            <div data-r="drive" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px">
+              <div style="background:#f8f7f3;border-radius:8px;padding:11px 13px"><span style="display:block;font:500 11px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:#5c6470;margin-bottom:6px">Austin (AUS)</span><span style="font:600 15px/1.2 'Oswald',sans-serif;color:#1d3059">65 mi &middot; ~1 hr</span></div>
+              <div style="background:#f8f7f3;border-radius:8px;padding:11px 13px"><span style="display:block;font:500 11px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:#5c6470;margin-bottom:6px">San Antonio (SAT)</span><span style="font:600 15px/1.2 'Oswald',sans-serif;color:#1d3059">125 mi &middot; ~1 hr 50 min</span></div>
+              <div style="background:#f8f7f3;border-radius:8px;padding:11px 13px"><span style="display:block;font:500 11px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:#5c6470;margin-bottom:6px">Killeen (GRK)</span><span style="font:600 15px/1.2 'Oswald',sans-serif;color:#1d3059">10 mi &middot; ~15 min</span></div>
+            </div>
+            <div data-hs style="display:flex;gap:8px;padding-bottom:8px">
+              <sc-for list="{{ picsStillhouse }}" as="p" hint-placeholder-count="4">
+                <button onClick="{{ p.open }}" style="flex:0 0 clamp(128px,36vw,164px);aspect-ratio:3/4;padding:0;border:none;border-radius:8px;overflow:hidden;background:#eef0f3;cursor:zoom-in"><img src="{{ p.src }}" alt="{{ p.alt }}" loading="lazy" style="width:100%;height:100%;object-fit:cover"></button>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+      </div>
+
+      <div id="lake-buchanan" style="background:#fff;border:1px solid rgba(14,34,68,.14);border-radius:12px;overflow:hidden">
+        <button onClick="{{ tBuchanan }}" style="width:100%;display:flex;align-items:center;gap:14px;text-align:left;background:none;border:none;padding:16px 18px;cursor:pointer">
+          <span style="flex:1;display:grid;gap:3px">
+            <span style="font:600 11px/1 'Oswald',sans-serif;letter-spacing:1.8px;text-transform:uppercase;color:#1d3059">Highland Lakes</span>
+            <span style="font:600 21px/1.15 'Oswald',sans-serif;letter-spacing:.5px;text-transform:uppercase;color:#1d3059">Lake Buchanan</span>
+            <span style="font-size:14.5px;color:#5c6470;line-height:1.5">Big open water at the top of the chain, wind-blown rock and stout largemouth.</span>
+          </span>
+          <span style="flex:0 0 34px;height:34px;border-radius:50%;background:#eef0f3;color:#1d3059;display:flex;align-items:center;justify-content:center;font:600 18px/1 'Oswald',sans-serif">{{ sBuchanan }}</span>
+        </button>
+        <sc-if value="{{ oBuchanan }}" hint-placeholder-val="{{ false }}">
+          <div style="padding:0 18px 18px">
+            <div style="display:flex;flex-wrap:wrap;gap:6px 16px;font:500 12px/1.4 'Oswald',sans-serif;letter-spacing:1px;text-transform:uppercase;color:#1d3059;margin-bottom:14px"><span>22,333 acres</span><span style="color:#5c6470">Largest of the Highland Lakes</span></div>
+            <div data-r="drive" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px">
+              <div style="background:#f8f7f3;border-radius:8px;padding:11px 13px"><span style="display:block;font:500 11px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:#5c6470;margin-bottom:6px">Austin (AUS)</span><span style="font:600 15px/1.2 'Oswald',sans-serif;color:#1d3059">75 mi &middot; ~1 hr 25 min</span></div>
+              <div style="background:#f8f7f3;border-radius:8px;padding:11px 13px"><span style="display:block;font:500 11px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:#5c6470;margin-bottom:6px">San Antonio (SAT)</span><span style="font:600 15px/1.2 'Oswald',sans-serif;color:#1d3059">115 mi &middot; ~1 hr 55 min</span></div>
+              <div style="background:#f8f7f3;border-radius:8px;padding:11px 13px"><span style="display:block;font:500 11px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:#5c6470;margin-bottom:6px">Killeen (GRK)</span><span style="font:600 15px/1.2 'Oswald',sans-serif;color:#1d3059">65 mi &middot; ~1 hr 15 min</span></div>
+            </div>
+            <div data-hs style="display:flex;gap:8px;padding-bottom:8px">
+              <sc-for list="{{ picsBuchanan }}" as="p" hint-placeholder-count="5">
+                <button onClick="{{ p.open }}" style="flex:0 0 clamp(128px,36vw,164px);aspect-ratio:3/4;padding:0;border:none;border-radius:8px;overflow:hidden;background:#eef0f3;cursor:zoom-in"><img src="{{ p.src }}" alt="{{ p.alt }}" loading="lazy" style="width:100%;height:100%;object-fit:cover"></button>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+    <p style="font-size:13px;color:#5c6470;margin:16px 0 0">Distances and times are approximate, measured to the nearest public boat ramp in normal traffic.</p>
+  </div>
+</section>
+
+<section style="background:#eef0f3;padding:clamp(44px,6vw,80px) 0">
+  <div style="max-width:1180px;margin:0 auto;padding:0 clamp(18px,4vw,40px)">
+    <span style="display:inline-block;font:700 12px/1 'Inter',sans-serif;letter-spacing:.26em;text-transform:uppercase;color:#1d3059">Straight From The Water</span>
+    <h2 style="font:600 clamp(28px,3.6vw,36px)/1.1 'Oswald',sans-serif;letter-spacing:.5px;text-transform:uppercase;color:#1d3059;margin:14px 0 24px">From Recent Trips</h2>
+  </div>
+  <div data-hs style="display:flex;gap:14px;padding:0 clamp(18px,4vw,40px) 14px">
+    <sc-for list="{{ strip }}" as="s" hint-placeholder-count="6">
+      <figure style="flex:0 0 min(80vw,340px);margin:0">
+        <div style="aspect-ratio:3/2;border-radius:10px;overflow:hidden;background:#dfe3e9"><img src="{{ s.src }}" alt="{{ s.cap }} trip photo" loading="lazy" style="width:100%;height:100%;object-fit:cover;object-position:{{ s.pos }}"></div>
+        <figcaption style="margin-top:9px;font:500 13px/1 'Oswald',sans-serif;letter-spacing:1.4px;text-transform:uppercase;color:#1d3059">{{ s.cap }}</figcaption>
+      </figure>
+    </sc-for>
+  </div>
+</section>
+
+<section id="trips" style="padding:clamp(44px,6vw,80px) 0">
+  <div style="max-width:1180px;margin:0 auto;padding:0 clamp(18px,4vw,40px)">
+    <span style="display:inline-block;font:700 12px/1 'Inter',sans-serif;letter-spacing:.26em;text-transform:uppercase;color:#1d3059">Summer 2026</span>
+    <h2 style="font:600 clamp(28px,3.6vw,36px)/1.1 'Oswald',sans-serif;letter-spacing:.5px;text-transform:uppercase;color:#1d3059;margin:14px 0 10px">Trip Packages</h2>
+    <p style="max-width:640px;margin:0 0 26px;color:#5c6470">Check out our fishing guide services below. If you have a unique request please add that note in the inquiry section.</p>
+    <div data-r="three" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+      <div style="background:#fff;border:1px solid rgba(14,34,68,.14);border-radius:12px;padding:22px;display:flex;flex-direction:column">
+        <span style="font:600 11px/1 'Oswald',sans-serif;letter-spacing:1.8px;text-transform:uppercase;color:#1d3059">4 Hours</span>
+        <h3 style="font:600 24px/1.1 'Oswald',sans-serif;letter-spacing:.5px;text-transform:uppercase;color:#1d3059;margin:8px 0 14px">Half-Day</h3>
+        <div style="display:grid;gap:6px;margin-bottom:20px">
+          <p style="font:600 21px/1.2 'Oswald',sans-serif;color:#1d3059;margin:0">1&ndash;2 people &middot; $400.00</p>
+          <p style="font:600 21px/1.2 'Oswald',sans-serif;color:#1d3059;margin:0">3 people &middot; $450.00</p>
+        </div>
+        <a href="#book" onClick="{{ pickHalf }}" style="margin-top:auto;display:flex;align-items:center;justify-content:center;min-height:50px;background:#1d3059;color:#fff;border-radius:6px;font:500 14px/1 'Oswald',sans-serif;letter-spacing:1.4px;text-transform:uppercase">Request This Trip</a>
+      </div>
+      <div style="background:#fff;border:1px solid rgba(14,34,68,.14);border-radius:12px;padding:22px;display:flex;flex-direction:column">
+        <span style="font:600 11px/1 'Oswald',sans-serif;letter-spacing:1.8px;text-transform:uppercase;color:#1d3059">8 Hours</span>
+        <h3 style="font:600 24px/1.1 'Oswald',sans-serif;letter-spacing:.5px;text-transform:uppercase;color:#1d3059;margin:8px 0 14px">Full-Day</h3>
+        <div style="display:grid;gap:6px;margin-bottom:20px">
+          <p style="font:600 21px/1.2 'Oswald',sans-serif;color:#1d3059;margin:0">1&ndash;2 people &middot; $600.00</p>
+          <p style="font:600 21px/1.2 'Oswald',sans-serif;color:#1d3059;margin:0">3 people &middot; $650.00</p>
+        </div>
+        <a href="#book" onClick="{{ pickFull }}" style="margin-top:auto;display:flex;align-items:center;justify-content:center;min-height:50px;background:#1d3059;color:#fff;border-radius:6px;font:500 14px/1 'Oswald',sans-serif;letter-spacing:1.4px;text-transform:uppercase">Request This Trip</a>
+      </div>
+      <div style="background:#fff;border:1px solid rgba(14,34,68,.14);border-radius:12px;padding:22px;display:flex;flex-direction:column">
+        <span style="font:600 11px/1 'Oswald',sans-serif;letter-spacing:1.8px;text-transform:uppercase;color:#1d3059">6:00 PM &ndash; 10:00 PM</span>
+        <h3 style="font:600 24px/1.1 'Oswald',sans-serif;letter-spacing:.5px;text-transform:uppercase;color:#1d3059;margin:8px 0 14px">Summer Nights</h3>
+        <div style="display:grid;gap:6px;margin-bottom:20px">
+          <p style="font:600 21px/1.2 'Oswald',sans-serif;color:#1d3059;margin:0">$400.00 &middot; up to 3 people</p>
+        </div>
+        <a href="#book" onClick="{{ pickNights }}" style="margin-top:auto;display:flex;align-items:center;justify-content:center;min-height:50px;background:#1d3059;color:#fff;border-radius:6px;font:500 14px/1 'Oswald',sans-serif;letter-spacing:1.4px;text-transform:uppercase">Request This Trip</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="background:#eef0f3;padding:clamp(44px,6vw,80px) 0">
+  <div style="max-width:1180px;margin:0 auto;padding:0 clamp(18px,4vw,40px)">
+    <div data-r="two" style="display:grid;grid-template-columns:1fr 1fr;gap:44px">
+      <div>
+        <span style="display:inline-block;font:700 12px/1 'Inter',sans-serif;letter-spacing:.26em;text-transform:uppercase;color:#1d3059">No Surprises</span>
+        <h2 style="font:600 clamp(24px,3vw,30px)/1.1 'Oswald',sans-serif;letter-spacing:.5px;text-transform:uppercase;color:#1d3059;margin:14px 0 16px">What's Included</h2>
+        <ul style="margin:0;padding-left:20px;display:grid;gap:10px">
+          <li>Rods, reels, and terminal tackle matched to the water</li>
+          <li>Life jackets and all required safety equipment</li>
+          <li>Fuel and boat</li>
+          <li>Ice and water included</li>
+        </ul>
+      </div>
+      <div>
+        <span style="display:inline-block;font:700 12px/1 'Inter',sans-serif;letter-spacing:.26em;text-transform:uppercase;color:#1d3059">Come Ready</span>
+        <h2 style="font:600 clamp(24px,3vw,30px)/1.1 'Oswald',sans-serif;letter-spacing:.5px;text-transform:uppercase;color:#1d3059;margin:14px 0 16px">What To Bring</h2>
+        <ul style="margin:0;padding-left:20px;display:grid;gap:10px">
+          <li>Texas fishing license (required, and sold at any sporting goods stores or online)</li>
+          <li>Sunscreen, a hat, and polarized sunglasses</li>
+          <li>Other beverages and snacks for the trip</li>
+          <li>Check the weather and come prepared for the expected conditions</li>
+          <li>Don't forget a good attitude</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="background:#0e2244;color:#f8f7f3;padding:clamp(44px,6vw,80px) 0">
+  <div style="max-width:680px;margin:0 auto;padding:0 clamp(18px,4vw,40px);text-align:center">
+    <h2 style="font:600 clamp(26px,3.4vw,34px)/1.1 'Oswald',sans-serif;letter-spacing:.5px;text-transform:uppercase;margin:0 0 18px">Let's Get on the Water</h2>
+    <p style="margin:0 0 26px;color:#f8f7f3;text-wrap:pretty">Explore the best fishing Central Texas has to offer with half-day and full-day guided trips. From first-timers to experienced anglers, we'll customize your day on the water to match your goals, whether that's catching more fish or catching bigger fish.</p>
+    <a href="#book" style="display:inline-flex;align-items:center;justify-content:center;min-height:52px;padding:0 30px;background:#f8f7f3;color:#1d3059;border-radius:6px;font:500 14px/1 'Oswald',sans-serif;letter-spacing:1.5px;text-transform:uppercase">Book a Trip</a>
+  </div>
+</section>
+
+<section id="book" style="padding:clamp(44px,6vw,80px) 0">
+  <div style="max-width:1180px;margin:0 auto;padding:0 clamp(18px,4vw,40px)">
+    <div data-r="book" style="display:grid;grid-template-columns:1fr 1.1fr 1fr;gap:40px;align-items:start">
+      <div>
+        <span style="display:inline-block;font:700 12px/1 'Inter',sans-serif;letter-spacing:.26em;text-transform:uppercase;color:#1d3059">Availability</span>
+        <h2 style="font:600 clamp(24px,3vw,30px)/1.1 'Oswald',sans-serif;letter-spacing:.5px;text-transform:uppercase;color:#1d3059;margin:14px 0 10px">Next 90 Days</h2>
+        <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:center;font-size:13px;color:#5c6470;margin-bottom:16px">
+          <span style="display:inline-flex;align-items:center;gap:7px"><i style="width:12px;height:12px;border-radius:3px;background:#2e7d4f;display:inline-block"></i> Open</span>
+          <span style="display:inline-flex;align-items:center;gap:7px"><i style="width:12px;height:12px;border-radius:3px;background:#c0392b;display:inline-block"></i> Booked</span>
+          <span style="flex:1 1 100%">Dates are kept up to date by hand; confirm when booking.</span>
+        </div>
+        <div style="display:grid;gap:20px;max-width:420px">
+          <sc-for list="{{ months }}" as="m" hint-placeholder-count="3">
+            <div>
+              <h3 style="font:600 14px/1 'Oswald',sans-serif;letter-spacing:1.5px;text-transform:uppercase;color:#1d3059;margin:0 0 10px">{{ m.label }}</h3>
+              <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px">
+                <sc-for list="{{ m.cells }}" as="c" hint-placeholder-count="35">
+                  <span style="height:34px;display:flex;align-items:center;justify-content:center;border-radius:5px;font:400 12.5px/1 'Oswald',sans-serif;background:{{ c.bg }};color:{{ c.fg }}" title="{{ c.title }}">{{ c.n }}</span>
+                </sc-for>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <div>
+        <span style="display:inline-block;font:700 12px/1 'Inter',sans-serif;letter-spacing:.26em;text-transform:uppercase;color:#1d3059">Send An Inquiry</span>
+        <h2 style="font:600 clamp(24px,3vw,30px)/1.1 'Oswald',sans-serif;letter-spacing:.5px;text-transform:uppercase;color:#1d3059;margin:14px 0 18px">Book Your Trip</h2>
+        <form onSubmit="{{ submit }}" style="display:grid;gap:16px">
+          <label style="display:grid;gap:7px"><span style="font:500 13px/1 'Oswald',sans-serif;letter-spacing:1px;text-transform:uppercase;color:#1d3059">Name</span><input type="text" name="name" required style="font-size:16px;padding:13px 14px;border:1px solid rgba(14,34,68,.18);border-radius:8px;background:#fff;color:#22293a;width:100%;min-height:48px"></label>
+          <label style="display:grid;gap:7px"><span style="font:500 13px/1 'Oswald',sans-serif;letter-spacing:1px;text-transform:uppercase;color:#1d3059">Email</span><input type="email" name="email" required inputmode="email" style="font-size:16px;padding:13px 14px;border:1px solid rgba(14,34,68,.18);border-radius:8px;background:#fff;color:#22293a;width:100%;min-height:48px"></label>
+          <label style="display:grid;gap:7px"><span style="font:500 13px/1 'Oswald',sans-serif;letter-spacing:1px;text-transform:uppercase;color:#1d3059">Trip Package</span>
+            <select name="trip" value="{{ trip }}" onChange="{{ setTrip }}" style="font-size:16px;padding:13px 14px;border:1px solid rgba(14,34,68,.18);border-radius:8px;background:#fff;color:#22293a;width:100%;min-height:48px">
+              <option value="half">Half-Day (4 hours)</option>
+              <option value="full">Full-Day (8 hours)</option>
+              <option value="nights">Summer Nights (6:00 PM &ndash; 10:00 PM)</option>
+              <option value="unsure">Not sure yet / unique request</option>
+            </select>
+          </label>
+          <label style="display:grid;gap:7px"><span style="font:500 13px/1 'Oswald',sans-serif;letter-spacing:1px;text-transform:uppercase;color:#1d3059">Experience</span>
+            <select name="experience" style="font-size:16px;padding:13px 14px;border:1px solid rgba(14,34,68,.18);border-radius:8px;background:#fff;color:#22293a;width:100%;min-height:48px">
+              <option value="beginner">Beginner (what's a fish?)</option>
+              <option value="intermediate">Intermediate (I know what a bass is)</option>
+              <option value="expert">Expert (I can outfish the guide)</option>
+            </select>
+          </label>
+          <label style="display:grid;gap:7px"><span style="font:500 13px/1 'Oswald',sans-serif;letter-spacing:1px;text-transform:uppercase;color:#1d3059">Preferred Lake</span>
+            <select name="lake" style="font-size:16px;padding:13px 14px;border:1px solid rgba(14,34,68,.18);border-radius:8px;background:#fff;color:#22293a;width:100%;min-height:48px">
+              <option>Canyon Lake</option><option>Lake Travis</option><option>Lady Bird Lake</option><option>Lake LBJ</option><option>Lake Austin</option><option>Lake Belton</option><option>Stillhouse Hollow</option><option>Lake Buchanan</option><option>Guide's Choice</option>
+            </select>
+          </label>
+          <label style="display:grid;gap:7px"><span style="font:500 13px/1 'Oswald',sans-serif;letter-spacing:1px;text-transform:uppercase;color:#1d3059">Message</span><textarea name="message" rows="5" required style="font-size:16px;padding:13px 14px;border:1px solid rgba(14,34,68,.18);border-radius:8px;background:#fff;color:#22293a;width:100%;resize:vertical"></textarea></label>
+          <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+            <button type="submit" style="display:inline-flex;align-items:center;justify-content:center;min-height:52px;padding:0 28px;background:#1d3059;color:#fff;border:none;border-radius:6px;font:500 14px/1 'Oswald',sans-serif;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer">Send Message</button>
+            <span style="font-size:13px;color:#5c6470">Opens your email app with the message ready to send.</span>
+          </div>
+        </form>
+      </div>
+
+      <div>
+        <span style="display:inline-block;font:700 12px/1 'Inter',sans-serif;letter-spacing:.26em;text-transform:uppercase;color:#1d3059">Find Us</span>
+        <h2 style="font:600 clamp(24px,3vw,30px)/1.1 'Oswald',sans-serif;letter-spacing:.5px;text-transform:uppercase;color:#1d3059;margin:14px 0 16px">Contact Details</h2>
+        <ul style="list-style:none;display:grid;gap:10px;margin:0 0 22px;padding:0">
+          <li><strong>Location:</strong> New Braunfels, TX</li>
+          <li><strong>Email:</strong> <a href="mailto:bluecollarfishingguide@gmail.com" data-tap style="text-decoration:underline;text-underline-offset:2px;word-break:break-word">bluecollarfishingguide@gmail.com</a></li>
+          <li><strong>Phone:</strong> <a href="tel:+15127617639" data-tap style="text-decoration:underline;text-underline-offset:2px">512-761-7639</a></li>
+        </ul>
+        <span style="display:inline-block;font:700 12px/1 'Inter',sans-serif;letter-spacing:.26em;text-transform:uppercase;color:#1d3059">Follow Along</span>
+        <ul style="list-style:none;display:grid;gap:10px;margin:14px 0 22px;padding:0">
+          <li>Instagram, <a href="https://instagram.com/bluecollarfishingguide" target="_blank" rel="noopener" data-tap style="text-decoration:underline;text-underline-offset:2px">@bluecollarfishingguide</a></li>
+          <li>Facebook, <a href="#book" data-tap style="text-decoration:underline;text-underline-offset:2px">@bluecollarfishingguide</a></li>
+        </ul>
+        <img src="bcfg/hero/hero-04.jpg" alt="On the water" loading="lazy" style="width:100%;aspect-ratio:3/2;object-fit:cover;object-position:center 25%;border-radius:12px">
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer style="background:#0e2244;color:#f8f7f3;padding:clamp(40px,5vw,64px) 0 24px">
+  <div style="max-width:1180px;margin:0 auto;padding:0 clamp(18px,4vw,40px)">
+    <div data-r="foot" style="display:grid;grid-template-columns:1.6fr 1fr 1fr;gap:30px;margin-bottom:34px">
+      <div>
+        <img src="bcfg/logo-card-white.png" alt="Blue Collar Fishing Guide" style="height:72px;width:auto;margin-bottom:14px">
+        <p style="font-size:14px;opacity:.85;margin:0;color:#f8f7f3">The working angler's guide. Honest, hardworking bass fishing across Central Texas.</p>
+      </div>
+      <div>
+        <h4 style="font:600 14px/1 'Oswald',sans-serif;letter-spacing:1px;text-transform:uppercase;color:#a9bedf;margin:0 0 14px">Explore</h4>
+        <ul style="list-style:none;display:grid;gap:9px;font-size:14px;margin:0;padding:0">
+          <li><a href="#scene" data-tap style="color:#f8f7f3;opacity:.85">The Scene</a></li>
+          <li><a href="#trips" data-tap style="color:#f8f7f3;opacity:.85">Trips</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 style="font:600 14px/1 'Oswald',sans-serif;letter-spacing:1px;text-transform:uppercase;color:#a9bedf;margin:0 0 14px">Get Out There</h4>
+        <ul style="list-style:none;display:grid;gap:9px;font-size:14px;margin:0;padding:0">
+          <li><a href="#book" data-tap style="color:#f8f7f3;opacity:.85">Book a Trip</a></li>
+          <li><a href="#book" data-tap style="color:#f8f7f3;opacity:.85">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+    <div style="border-top:1px solid rgba(248,247,243,.18);padding-top:18px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:13px;opacity:.7">
+      <span>&copy; 2026 Blue Collar Fishing Guide. All rights reserved.</span>
+      <span>512-761-7639 &middot; bluecollarfishingguide@gmail.com &middot; @bluecollarfishingguide</span>
+    </div>
+  </div>
+</footer>
+
+<div data-mob style="height:76px"></div>
+<div data-mob style="position:fixed;left:0;right:0;bottom:0;z-index:70;background:rgba(248,247,243,.96);backdrop-filter:blur(10px);border-top:1px solid rgba(14,34,68,.14);padding:10px clamp(14px,4vw,20px) calc(10px + env(safe-area-inset-bottom));display:flex;gap:10px">
+  <a href="tel:+15127617639" style="flex:0 0 40%;display:flex;align-items:center;justify-content:center;gap:8px;min-height:52px;border:2px solid #1d3059;color:#1d3059;border-radius:6px;font:500 14px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.2.4 2.4.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.4 0 .8-.2 1l-2.3 2.2z"></path></svg>Call</a>
+  <a href="#book" style="flex:1;display:flex;align-items:center;justify-content:center;min-height:52px;background:#1d3059;color:#fff;border-radius:6px;font:500 14px/1 'Oswald',sans-serif;letter-spacing:1.4px;text-transform:uppercase">Book a Trip</a>
+</div>
+
+<sc-if value="{{ lb }}" hint-placeholder-val="{{ false }}">
+  <div onClick="{{ closeLb }}" style="position:fixed;inset:0;z-index:1000;background:rgba(14,34,68,.9);display:flex;align-items:center;justify-content:center;padding:24px;cursor:zoom-out">
+    <img src="{{ lb }}" alt="" style="max-width:100%;max-height:100%;border-radius:8px;box-shadow:0 12px 48px rgba(0,0,0,.6)">
+    <button onClick="{{ closeLb }}" aria-label="Close photo" style="position:fixed;top:14px;right:16px;width:44px;height:44px;background:rgba(14,34,68,.6);border:none;border-radius:50%;color:#f8f7f3;font:400 28px/1 Georgia,serif;cursor:pointer">&times;</button>
+  </div>
+</sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{}">
+const HERO_COUNT = 42;
+const BOOKED = ['2026-07-25', '2026-08-01'];
+const LAKES = [
+  { id: 'canyon', key: 'Canyon', name: 'Canyon', full: 'Canyon Lake', label: 'Canyon Lake', n: 18, left: '44.6%', top: '81.5%' },
+  { id: 'travis', key: 'Travis', name: 'Travis', full: 'Lake Travis', label: 'Lake Travis', n: 8, left: '58.3%', top: '53%' },
+  { id: 'ladybird', key: 'Ladybird', name: 'Lady Bird', full: 'Lady Bird Lake', label: 'Lady Bird Lake', n: 1, left: '66.9%', top: '61.5%' },
+  { id: 'lbj', key: 'Lbj', name: 'LBJ', full: 'Lake LBJ', label: 'Lake LBJ', n: 20, left: '38%', top: '44.3%' },
+  { id: 'austin', key: 'Austin', name: 'Lk Austin', full: 'Lake Austin', label: 'Lake Austin', n: 0, left: '62%', top: '56.3%' },
+  { id: 'belton', key: 'Belton', name: 'Belton', full: 'Lake Belton', label: 'Lake Belton', n: 5, left: '79.2%', top: '14.1%' },
+  { id: 'stillhouse', key: 'Stillhouse', name: 'Stillhouse', full: 'Stillhouse Hollow', label: 'Stillhouse Hollow', n: 4, left: '76.4%', top: '21.5%' },
+  { id: 'buchanan', key: 'Buchanan', name: 'Buchanan', full: 'Lake Buchanan', label: 'Lake Buchanan', n: 5, left: '34.2%', top: '33.4%' }
+];
+const pad = n => (n < 10 ? '0' : '') + n;
+
+class Component extends DCLogic {
+  state = { nav: false, open: 'canyon', lb: null, trip: 'half', heroA: 'bcfg/hero/hero-01.jpg', heroB: 'bcfg/hero/hero-02.jpg', showA: true, cur: 1 };
+
+  componentDidMount() {
+    this.timer = setInterval(() => {
+      const next = (this.state.cur % HERO_COUNT) + 1;
+      const src = 'bcfg/hero/hero-' + pad(next) + '.jpg';
+      this.setState(s => s.showA ? { heroB: src, showA: false, cur: next } : { heroA: src, showA: true, cur: next });
+    }, 5000);
+    this.onKey = e => { if (e.key === 'Escape') this.setState({ lb: null, nav: false }); };
+    document.addEventListener('keydown', this.onKey);
+  }
+  componentWillUnmount() { clearInterval(this.timer); document.removeEventListener('keydown', this.onKey); }
+
+  go(id) {
+    this.setState({ open: id });
+    setTimeout(() => {
+      const el = document.getElementById('lake-' + id);
+      if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.pageYOffset - 90, behavior: 'smooth' });
+    }, 60);
+  }
+
+  pics(lake) {
+    const out = [];
+    for (let i = 1; i <= lake.n; i++) {
+      const src = 'bcfg/' + lake.id + '/' + lake.id + '-' + pad(i) + '.jpg';
+      out.push({ src, alt: lake.label + ' trip photo ' + i, open: () => this.setState({ lb: src }) });
+    }
+    return out;
+  }
+
+  calendar() {
+    const today = new Date(); today.setHours(0, 0, 0, 0);
+    const end = new Date(today); end.setDate(end.getDate() + 89);
+    const booked = {}; BOOKED.forEach(d => { booked[d] = true; });
+    const names = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    const dows = ['S','M','T','W','T','F','S'];
+    const key = d => d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
+    const months = [];
+    let m = new Date(today.getFullYear(), today.getMonth(), 1);
+    while (m <= end) {
+      const cells = dows.map((d, i) => ({ n: d, bg: 'transparent', fg: '#5c6470', title: '', key: 'dow' + i }));
+      for (let b = 0; b < m.getDay(); b++) cells.push({ n: '', bg: 'transparent', fg: 'transparent', title: '', key: 'pad' + b });
+      const last = new Date(m.getFullYear(), m.getMonth() + 1, 0).getDate();
+      for (let day = 1; day <= last; day++) {
+        const cur = new Date(m.getFullYear(), m.getMonth(), day);
+        let bg = '#2e7d4f', fg = '#fff', title = 'Open';
+        if (cur < today || cur > end) { bg = '#eef0f3'; fg = '#5c6470'; title = ''; }
+        else if (booked[key(cur)]) { bg = '#c0392b'; title = 'Booked'; }
+        cells.push({ n: day, bg, fg, title, key: 'd' + day });
+      }
+      months.push({ label: names[m.getMonth()] + ' ' + m.getFullYear(), cells, key: m.getFullYear() + '-' + m.getMonth() });
+      m = new Date(m.getFullYear(), m.getMonth() + 1, 1);
+    }
+    return months;
+  }
+
+  submit(e) {
+    e.preventDefault();
+    const f = e.target;
+    const val = n => (f.elements[n] ? f.elements[n].value : '');
+    const txt = n => { const el = f.elements[n]; return el && el.options ? el.options[el.selectedIndex].text : ''; };
+    const body = 'Name: ' + val('name') + '\nEmail: ' + val('email') + '\nTrip: ' + txt('trip') +
+      '\nExperience: ' + txt('experience') + '\nPreferred lake: ' + val('lake') + '\n\n' + val('message');
+    location.href = 'mailto:bluecollarfishingguide@gmail.com?subject=' +
+      encodeURIComponent('Trip inquiry from ' + val('name')) + '&body=' + encodeURIComponent(body);
+    return false;
+  }
+
+  renderVals() {
+    const v = {
+      navMax: this.state.nav ? '420px' : '0px',
+      toggleNav: () => this.setState(s => ({ nav: !s.nav })),
+      closeNav: () => this.setState({ nav: false }),
+      heroA: this.state.heroA, heroB: this.state.heroB,
+      opA: this.state.showA ? 1 : 0, opB: this.state.showA ? 0 : 1,
+      lb: this.state.lb,
+      closeLb: () => this.setState({ lb: null }),
+      trip: this.state.trip,
+      setTrip: e => this.setState({ trip: e.target.value }),
+      pickHalf: () => this.setState({ trip: 'half' }),
+      pickFull: () => this.setState({ trip: 'full' }),
+      pickNights: () => this.setState({ trip: 'nights' }),
+      submit: e => this.submit(e),
+      months: this.calendar(),
+      pins: LAKES.map(l => ({ key: l.id, name: l.name, full: l.full, left: l.left, top: l.top, go: () => this.go(l.id) })),
+      strip: [
+        { key: 'a', src: 'bcfg/canyon/canyon-02.jpg', cap: 'Canyon Lake', pos: 'center top' },
+        { key: 'b', src: 'bcfg/travis/travis-04.jpg', cap: 'Lake Travis', pos: 'center' },
+        { key: 'c', src: 'bcfg/lbj/lbj-03.jpg', cap: 'Lake LBJ', pos: 'center' },
+        { key: 'd', src: 'bcfg/belton/belton-03.jpg', cap: 'Lake Belton', pos: 'center' },
+        { key: 'e', src: 'bcfg/ladybird/ladybird-01.jpg', cap: 'Lady Bird Lake', pos: 'center' },
+        { key: 'f', src: 'bcfg/stillhouse/stillhouse-01.jpg', cap: 'Stillhouse Hollow', pos: 'center' }
+      ]
+    };
+    LAKES.forEach(l => {
+      const isOpen = this.state.open === l.id;
+      v['o' + l.key] = isOpen;
+      v['s' + l.key] = isOpen ? '\u2212' : '+';
+      v['t' + l.key] = () => this.setState(s => ({ open: s.open === l.id ? null : l.id }));
+      v['pics' + l.key] = this.pics(l);
+    });
+    return v;
+  }
+}
+</script>
+</body>
+</html>

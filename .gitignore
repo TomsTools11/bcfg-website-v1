@@ -1,0 +1,9 @@
+# Claude Design handoff bundle — source of truth lives in claude.ai/design
+.handoff/
+*-handoff.zip
+
+# Session/editor scratch
+.remember/
+.DS_Store
+.vercel/
+node_modules/
