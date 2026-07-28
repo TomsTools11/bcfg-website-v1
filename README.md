@@ -8,9 +8,8 @@ Static HTML/CSS/JS. **No build step, no dependencies, no framework.**
 ## Layout
 
 ```
-index.html                   Preview landing page — desktop + phone side by side
+index.html                   Preview landing page — the site in a phone frame
 site/index.html              The website
-mobile/index.html            Preview — the phone version, centred
 bcfg/                        All photography and logos (107 files)
 vercel.json                  Cache headers for /bcfg/*
 design-source/               Original Claude Design files — reference only
@@ -63,14 +62,13 @@ rather than the website:
 | --- | --- |
 | `/` | the preview landing page |
 | `/site/` | the real website |
-| `/mobile/` | the phone preview |
 
 These are real files in real directories, not config. That is deliberate:
 **Vercel checks the filesystem before applying rewrites**, so a `rewrites` entry
 on `/` can never override an `index.html` sitting at the root — it is silently
 ignored. Moving the files is the only thing that actually changes what `/`
-serves. (`vercel.json` keeps redirects from the old `/prototype/*` URLs so
-links already shared still work.)
+serves. (`vercel.json` redirects the old `/prototype/*` and `/mobile/*` URLs to `/`
+so links already shared still work.)
 
 ### Going live
 
@@ -79,35 +77,43 @@ root. Three steps:
 
 1. `git mv index.html preview.html && git mv site/index.html index.html`
    — or simply move `site/index.html` to the root, replacing the preview page.
-2. In the preview pages, change `/site/` back to `/` (search for `"/site/"`).
-3. Drop the `/prototype` redirects from `vercel.json` if you no longer want them.
+2. In the preview page, change `/site/` back to `/` (one iframe, one button).
+3. Drop the redirects from `vercel.json` if you no longer want them.
 
 The website's asset paths are root-absolute (`/bcfg/...`), so it renders
 correctly from any of these locations — no path edits needed when it moves.
 
-## The preview pages
+## The preview page
 
-These are for showing the site to someone, not for visitors. Both are marked
+`/` is for showing the site to someone, not for visitors, and is marked
 `noindex`.
 
-**`/`** is the landing page. It shows the site as it looks on a computer and on
-a phone, side by side. Both frames are live — you can scroll them, open a lake,
-tap through. They're scaled down together so the pair always fits the window,
-but the site inside each frame still renders at its true width, so the desktop
-frame gets the real desktop layout and the phone frame gets the real mobile
-layout. Two buttons open the full-size versions in a new tab:
+It shows the site inside a phone frame at its true 390x844, so what you see is
+the real mobile layout rather than a scaled-down picture of one. The frame
+shrinks only on screens too narrow to hold it, and is never scaled up.
 
-| Button | Opens |
-| --- | --- |
-| **Full Site** | `/site/` — the real website, no wrapper around it |
-| **Mobile** | `/mobile/` — the phone version, centred |
+One button, **Full Site**, opens `/site/` in a new tab. The site is responsive,
+so that gives the wide layout on a computer and the phone layout on a phone —
+the right view for whatever device the reader is on.
 
-**`/mobile/`** shows the site in a phone frame at its true 390×844, centred on
-screen, shrinking only if the window is too small to fit it. It has **Back** to
-the landing page and **Full Site**.
+There is deliberately no second "Mobile" button. An earlier version showed a
+desktop frame and a phone frame side by side with a button for each, which
+raised the obvious question of which one you were actually looking at and what
+"Full Site" meant on a phone. `/mobile/` and `/prototype/` redirect to `/`.
 
-The copy on these pages is written for a non-technical reader — no pixel
-dimensions or jargon.
+On touch devices the frame is inert: a finger drag landing on an iframe scrolls
+the site inside it rather than the page, which strands the reader partway down.
+The frame stays live for mouse users, who have no such problem.
+
+The frame loads `/site/?preview=1`, which pins the hero photo to its first
+image. Two things drove that: a 42-image slideshow decoding a ~300KB JPEG every
+five seconds behind a thumbnail is wasted work, and it made this page stutter
+while scrolling on a phone. **Full Site** opens the site normally, slideshow and
+all. The site applies the same static hero when a visitor has asked for reduced
+motion.
+
+The copy here is written for a non-technical reader — no pixel dimensions or
+jargon.
 
 ## Notes
 
