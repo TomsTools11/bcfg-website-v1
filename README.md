@@ -54,6 +54,32 @@ placeholder until photos are added.
 Prices, trip packages, contact details, and body copy are plain text in the HTML
 and safe to edit directly.
 
+## Routing (important)
+
+This deployment is currently set up for **review**, so the root shows the
+preview page rather than the website:
+
+| URL | Serves |
+| --- | --- |
+| `/` | the preview landing page |
+| `/site` | the real website |
+| `/prototype/` | the preview landing page (same as `/`) |
+| `/prototype/mobile/` | the phone preview |
+
+The root is rewritten in `vercel.json`. The preview frames deliberately load
+`/site` and never `/` — framing `/` would nest the preview page inside itself.
+
+### Going live
+
+When the real domain is pointed at this project, the website has to be at the
+root. Two steps:
+
+1. Delete the `rewrites` block from `vercel.json`.
+2. In `prototype/index.html` and `prototype/mobile/index.html`, change
+   `/site` back to `/` (3 iframes and 2 buttons — search for `"/site"`).
+
+After that, `/` is the website and `/prototype/` is still the preview.
+
 ## The preview pages
 
 These are for showing the site to someone, not for visitors. Both are marked
