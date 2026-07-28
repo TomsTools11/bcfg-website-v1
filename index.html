@@ -50,23 +50,29 @@ button{font-family:inherit}
 .frame-tap{display:none}
 .only-mob{display:none}
 
-/* PHONE LAYOUT
-   Side by side stops working well before this width: fitting a 1440 frame and
-   a 414 frame into one row forces a shared scale near 0.18, which renders the
-   phone mock about 74px wide. Stack them instead and scale each one on its
-   own to the full column width, so the phone lands close to life size. */
-@media (max-width:860px){
+/* LAYOUT — stack whenever a side-by-side row would squeeze both frames.
+   The two frames share one scale when side by side, so the phone is always
+   about 29% the width of the desktop frame. Below roughly 1100px that puts
+   the phone under ~230px and neither view is worth looking at; stacked, each
+   frame gets the full column width on its own. Above it, side by side is
+   comfortable (at 1440: desktop 941, phone 270). */
+@media (max-width:1100px){
   .stage{flex-direction:column;align-items:center;gap:30px}
   .frame-fig{width:100%;display:flex;flex-direction:column;align-items:center}
-  /* The phone comes first — it's the more relevant view on a phone. */
-  .frame-fig--phone{order:-1}
   .frame-cap{align-self:flex-start;flex-wrap:wrap}
+}
+
+/* TOUCH — a finger drag landing on an iframe scrolls the site inside it
+   rather than this page, which strands the reader partway down. Make the
+   frames inert tap targets instead and let the page own vertical scrolling.
+   Keyed on pointer, not width: a mouse user at 1000px has no such problem
+   and should keep live frames. The max-width arm is a fallback for narrow
+   windows and makes the behaviour reachable when testing by resizing. */
+@media (pointer: coarse), (max-width:860px){
+  /* On a real phone the phone view is the one that matters — show it first. */
+  .frame-fig--phone{order:-1}
   .only-desk{display:none}
   .only-mob{display:block}
-
-  /* A touch drag landing on an iframe scrolls the site inside it instead of
-     this page, which strands the reader. Make the frames a tap target that
-     opens the real thing, and let the page own vertical scrolling. */
   .frame-hit iframe{pointer-events:none}
   .frame-tap{position:absolute;inset:0;display:flex;align-items:flex-end;
     justify-content:center;padding-bottom:16px;text-decoration:none}
@@ -185,8 +191,8 @@ button{font-family:inherit}
   'use strict';
 
   var stage = document.getElementById('stage');
-  // Must match the phone breakpoint in the stylesheet.
-  var STACKED = window.matchMedia('(max-width:860px)');
+  // Must match the layout breakpoint in the stylesheet.
+  var STACKED = window.matchMedia('(max-width:1100px)');
   var pairs = [
     { box: document.getElementById('deskBox'), shell: document.getElementById('deskShell') },
     { box: document.getElementById('mobBox'), shell: document.getElementById('mobShell') }
