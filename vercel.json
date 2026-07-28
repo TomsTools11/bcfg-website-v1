@@ -1,14 +1,10 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-
-  "//": "PREVIEW ROUTING. While this deployment is being used for review, the root serves the preview landing page and the real site is at /site. To go live on the real domain, delete the whole rewrites block below and change the iframe/button targets in prototype/*.html from /site back to / — see README, 'Going live'.",
-
   "rewrites": [
     { "source": "/", "destination": "/prototype/index.html" },
     { "source": "/site", "destination": "/index.html" },
     { "source": "/site/", "destination": "/index.html" }
   ],
-
   "headers": [
     {
       "source": "/bcfg/(.*)",
