@@ -8,9 +8,9 @@ Static HTML/CSS/JS. **No build step, no dependencies, no framework.**
 ## Layout
 
 ```
-index.html                   The website
-prototype/index.html         Preview landing page — desktop + phone side by side
-prototype/mobile/index.html  Preview — the phone version, centred
+index.html                   Preview landing page — desktop + phone side by side
+site/index.html              The website
+mobile/index.html            Preview — the phone version, centred
 bcfg/                        All photography and logos (107 files)
 vercel.json                  Cache headers for /bcfg/*
 design-source/               Original Claude Design files — reference only
@@ -30,7 +30,7 @@ Every push to `main` redeploys automatically.
 ## Editing content
 
 All of the content that changes regularly lives in the `<script>` block at the
-bottom of `index.html`, marked with `EDIT` comments.
+bottom of `site/index.html`, marked with `EDIT` comments.
 
 **Booked dates** — the availability calendar shows the next 90 days from whenever
 the page loads. Green is open, red is booked. Add or remove dates in `BOOKED`:
@@ -56,50 +56,55 @@ and safe to edit directly.
 
 ## Routing (important)
 
-This deployment is currently set up for **review**, so the root shows the
-preview page rather than the website:
+This deployment is set up for **review**, so the root shows the preview page
+rather than the website:
 
 | URL | Serves |
 | --- | --- |
 | `/` | the preview landing page |
-| `/site` | the real website |
-| `/prototype/` | the preview landing page (same as `/`) |
-| `/prototype/mobile/` | the phone preview |
+| `/site/` | the real website |
+| `/mobile/` | the phone preview |
 
-The root is rewritten in `vercel.json`. The preview frames deliberately load
-`/site` and never `/` — framing `/` would nest the preview page inside itself.
+These are real files in real directories, not config. That is deliberate:
+**Vercel checks the filesystem before applying rewrites**, so a `rewrites` entry
+on `/` can never override an `index.html` sitting at the root — it is silently
+ignored. Moving the files is the only thing that actually changes what `/`
+serves. (`vercel.json` keeps redirects from the old `/prototype/*` URLs so
+links already shared still work.)
 
 ### Going live
 
 When the real domain is pointed at this project, the website has to be at the
-root. Two steps:
+root. Three steps:
 
-1. Delete the `rewrites` block from `vercel.json`.
-2. In `prototype/index.html` and `prototype/mobile/index.html`, change
-   `/site` back to `/` (3 iframes and 2 buttons — search for `"/site"`).
+1. `git mv index.html preview.html && git mv site/index.html index.html`
+   — or simply move `site/index.html` to the root, replacing the preview page.
+2. In the preview pages, change `/site/` back to `/` (search for `"/site/"`).
+3. Drop the `/prototype` redirects from `vercel.json` if you no longer want them.
 
-After that, `/` is the website and `/prototype/` is still the preview.
+The website's asset paths are root-absolute (`/bcfg/...`), so it renders
+correctly from any of these locations — no path edits needed when it moves.
 
 ## The preview pages
 
 These are for showing the site to someone, not for visitors. Both are marked
 `noindex`.
 
-**`/prototype/`** is the landing page. It shows the site as it looks on a
-computer and on a phone, side by side. Both frames are live — you can scroll
-them, open a lake, tap through. They're scaled down together so the pair always
-fits the window, but the site inside each frame still renders at its true width,
-so the desktop frame gets the real desktop layout and the phone frame gets the
-real mobile layout. Two buttons open the full-size versions in a new tab:
+**`/`** is the landing page. It shows the site as it looks on a computer and on
+a phone, side by side. Both frames are live — you can scroll them, open a lake,
+tap through. They're scaled down together so the pair always fits the window,
+but the site inside each frame still renders at its true width, so the desktop
+frame gets the real desktop layout and the phone frame gets the real mobile
+layout. Two buttons open the full-size versions in a new tab:
 
 | Button | Opens |
 | --- | --- |
-| **Full Site** | `/` — the real site, no wrapper around it |
-| **Mobile** | `/prototype/mobile/` — the phone version, centred |
+| **Full Site** | `/site/` — the real website, no wrapper around it |
+| **Mobile** | `/mobile/` — the phone version, centred |
 
-**`/prototype/mobile/`** shows the site in a phone frame at its true 390×844,
-centred on screen, shrinking only if the window is too small to fit it. It has
-**Back** to the landing page and **Full Site**.
+**`/mobile/`** shows the site in a phone frame at its true 390×844, centred on
+screen, shrinking only if the window is too small to fit it. It has **Back** to
+the landing page and **Full Site**.
 
 The copy on these pages is written for a non-technical reader — no pixel
 dimensions or jargon.
