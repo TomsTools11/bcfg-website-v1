@@ -44,6 +44,40 @@ button{font-family:inherit}
    across and orphans the fourth card on its own row. */
 .cards{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
 @media (max-width:620px){.cards{grid-template-columns:1fr}}
+
+.topbar-actions{display:flex;align-items:center;gap:12px}
+.frame-hit{position:relative;width:fit-content}
+.frame-tap{display:none}
+.only-mob{display:none}
+
+/* PHONE LAYOUT
+   Side by side stops working well before this width: fitting a 1440 frame and
+   a 414 frame into one row forces a shared scale near 0.18, which renders the
+   phone mock about 74px wide. Stack them instead and scale each one on its
+   own to the full column width, so the phone lands close to life size. */
+@media (max-width:860px){
+  .stage{flex-direction:column;align-items:center;gap:30px}
+  .frame-fig{width:100%;display:flex;flex-direction:column;align-items:center}
+  /* The phone comes first — it's the more relevant view on a phone. */
+  .frame-fig--phone{order:-1}
+  .frame-cap{align-self:flex-start;flex-wrap:wrap}
+  .only-desk{display:none}
+  .only-mob{display:block}
+
+  /* A touch drag landing on an iframe scrolls the site inside it instead of
+     this page, which strands the reader. Make the frames a tap target that
+     opens the real thing, and let the page own vertical scrolling. */
+  .frame-hit iframe{pointer-events:none}
+  .frame-tap{position:absolute;inset:0;display:flex;align-items:flex-end;
+    justify-content:center;padding-bottom:16px;text-decoration:none}
+  .frame-tap span{background:rgba(11,25,48,.92);color:#f8f7f3;
+    border:1px solid rgba(169,190,223,.4);border-radius:999px;padding:10px 18px;
+    font:600 12px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase}
+}
+@media (max-width:560px){
+  .topbar-actions{width:100%;gap:10px}
+  .topbar-actions .btn{flex:1;justify-content:center;min-height:44px}
+}
 </style>
 </head>
 <body>
@@ -56,28 +90,36 @@ button{font-family:inherit}
         <span style="font:700 10.5px/1 'Inter',sans-serif;letter-spacing:.26em;text-transform:uppercase;color:#e05c22">Website Preview</span>
         <span style="font-family:'Anton',Impact,sans-serif;font-size:20px;letter-spacing:.6px;text-transform:uppercase;color:#f8f7f3">Blue Collar Fishing Guide</span>
       </div>
-      <a href="/site/" target="_blank" rel="noopener" class="btn btn-primary">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"></path></svg>Full Site
-      </a>
-      <a href="/mobile/" target="_blank" rel="noopener" class="btn btn-secondary">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2" width="10" height="20" rx="2"></rect><path d="M11 18h2"></path></svg>Mobile
-      </a>
+      <div class="topbar-actions">
+        <a href="/site/" target="_blank" rel="noopener" class="btn btn-primary">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"></path></svg>Full Site
+        </a>
+        <a href="/mobile/" target="_blank" rel="noopener" class="btn btn-secondary">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2" width="10" height="20" rx="2"></rect><path d="M11 18h2"></path></svg>Mobile
+        </a>
+      </div>
     </div>
   </div>
 
-  <p style="max-width:1320px;margin:0 auto;padding:26px clamp(16px,3vw,32px) 0;font-size:14.5px;line-height:1.6;color:#b9c8e0">
+  <p class="only-desk" style="max-width:1320px;margin:0 auto;padding:26px clamp(16px,3vw,32px) 0;font-size:14.5px;line-height:1.6;color:#b9c8e0">
     Here is the site as it looks on a computer and on a phone. Both are live &mdash; scroll them,
     tap through them, open a lake. Use <strong style="color:#f8f7f3;font-weight:600">Full Site</strong>
     or <strong style="color:#f8f7f3;font-weight:600">Mobile</strong> up top to open either one full size in a new tab.
   </p>
+  <p class="only-mob" style="max-width:1320px;margin:0 auto;padding:26px clamp(16px,3vw,32px) 0;font-size:15px;line-height:1.6;color:#b9c8e0">
+    Here is the site as it looks on a phone and on a computer. Tap either preview,
+    or use <strong style="color:#f8f7f3;font-weight:600">Full Site</strong> and
+    <strong style="color:#f8f7f3;font-weight:600">Mobile</strong> up top, to open it properly and have a scroll around.
+  </p>
 
-  <div id="stage" style="max-width:1320px;margin:0 auto;padding:22px clamp(16px,3vw,32px) 0;display:flex;gap:clamp(24px,3vw,48px);align-items:flex-start;justify-content:center;flex-wrap:nowrap">
+  <div id="stage" class="stage" style="max-width:1320px;margin:0 auto;padding:22px clamp(16px,3vw,32px) 0;display:flex;gap:clamp(24px,3vw,48px);align-items:flex-start;justify-content:center;flex-wrap:nowrap">
 
-    <figure style="margin:0;flex:0 0 auto">
-      <figcaption style="display:flex;align-items:baseline;gap:10px;margin-bottom:14px">
+    <figure class="frame-fig" style="margin:0;flex:0 0 auto">
+      <figcaption class="frame-cap" style="display:flex;align-items:baseline;gap:10px;margin-bottom:14px">
         <span style="font:500 13px/1 'Oswald',sans-serif;letter-spacing:1.6px;text-transform:uppercase;color:#f8f7f3">Desktop</span>
         <span style="font-size:12px;color:#8ea3c6">How it looks on a computer</span>
       </figcaption>
+      <div class="frame-hit">
       <div id="deskBox">
         <div id="deskShell" class="frame-shell" style="width:1440px;border-radius:12px;overflow:hidden;background:#1b2b4a;border:1px solid rgba(169,190,223,.22);box-shadow:0 40px 80px -40px rgba(0,0,0,.8)">
           <div style="height:36px;display:flex;align-items:center;gap:8px;padding:0 14px;background:#152443;border-bottom:1px solid rgba(169,190,223,.16)">
@@ -89,13 +131,16 @@ button{font-family:inherit}
           <iframe src="/site/" title="Desktop preview" style="width:1440px;height:900px;border:none;display:block;background:#f8f7f3"></iframe>
         </div>
       </div>
+      <a class="frame-tap" href="/site/" target="_blank" rel="noopener"><span>Open full site</span></a>
+      </div>
     </figure>
 
-    <figure style="margin:0;flex:0 0 auto">
-      <figcaption style="display:flex;align-items:baseline;gap:10px;margin-bottom:14px">
+    <figure class="frame-fig frame-fig--phone" style="margin:0;flex:0 0 auto">
+      <figcaption class="frame-cap" style="display:flex;align-items:baseline;gap:10px;margin-bottom:14px">
         <span style="font:500 13px/1 'Oswald',sans-serif;letter-spacing:1.6px;text-transform:uppercase;color:#f8f7f3">Mobile</span>
         <span style="font-size:12px;color:#8ea3c6">How it looks on a phone</span>
       </figcaption>
+      <div class="frame-hit">
       <div id="mobBox">
         <div id="mobShell" class="frame-shell" style="width:414px;padding:12px;border-radius:50px;background:#0e1a30;border:1px solid rgba(169,190,223,.22);box-shadow:0 40px 80px -40px rgba(0,0,0,.85)">
           <div style="position:relative;width:390px;height:844px;border-radius:38px;overflow:hidden;background:#f8f7f3">
@@ -104,6 +149,8 @@ button{font-family:inherit}
             <div style="position:absolute;bottom:7px;left:50%;transform:translateX(-50%);width:130px;height:5px;border-radius:999px;background:rgba(14,34,68,.4);pointer-events:none"></div>
           </div>
         </div>
+      </div>
+      <a class="frame-tap" href="/mobile/" target="_blank" rel="noopener"><span>Open phone view</span></a>
       </div>
     </figure>
 
@@ -138,6 +185,8 @@ button{font-family:inherit}
   'use strict';
 
   var stage = document.getElementById('stage');
+  // Must match the phone breakpoint in the stylesheet.
+  var STACKED = window.matchMedia('(max-width:860px)');
   var pairs = [
     { box: document.getElementById('deskBox'), shell: document.getElementById('deskShell') },
     { box: document.getElementById('mobBox'), shell: document.getElementById('mobShell') }
@@ -166,13 +215,21 @@ button{font-family:inherit}
     var cs = getComputedStyle(stage);
     var rect = stage.getBoundingClientRect();
     var avail = rect.width - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
-    // The gap is a fixed size and does not scale with the frames, so take it
-    // off the available width before dividing rather than folding it into the
-    // divisor — otherwise the pair ends up wider than the row.
-    var gap = parseFloat(cs.columnGap) || 0;
-    var scale = Math.min(1, (avail - gap) / (natural[0].w + natural[1].w));
 
     pairs.forEach(function (p, i) {
+      var scale;
+      if (STACKED.matches) {
+        // Stacked: each frame gets the full column width on its own, so the
+        // phone lands near life size instead of being dragged down to the
+        // scale the 1440 desktop frame would force in a shared row.
+        scale = Math.min(1, avail / natural[i].w);
+      } else {
+        // Side by side: one shared scale. The gap is fixed and does not scale,
+        // so take it off the available width before dividing rather than
+        // folding it into the divisor — otherwise the pair overflows the row.
+        var gap = parseFloat(cs.columnGap) || 0;
+        scale = Math.min(1, (avail - gap) / (natural[0].w + natural[1].w));
+      }
       p.shell.style.transform = 'scale(' + scale + ')';
       p.box.style.width = Math.floor(natural[i].w * scale) + 'px';
       p.box.style.height = Math.floor(natural[i].h * scale) + 'px';
@@ -181,6 +238,10 @@ button{font-family:inherit}
 
   fit();
   window.addEventListener('resize', fit);
+  window.addEventListener('orientationchange', fit);
+  // Crossing the breakpoint swaps stacked/side-by-side, which changes how the
+  // scale is computed, so re-fit on the query itself and not only on resize.
+  if (STACKED.addEventListener) STACKED.addEventListener('change', fit);
   // Web fonts can change the caption metrics; re-fit once they settle.
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
 })();
