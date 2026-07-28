@@ -59,6 +59,11 @@ and safe to edit directly.
 both at 1:1, for reviewing the two breakpoints side by side. It is marked
 `noindex` and is a review tool, not a public page.
 
+Toolbar: **Both / Desktop / Mobile** switch which frames are shown, **Reload**
+refreshes them in place, **Full Screen** expands the site over the current tab
+(Escape closes), and **Open Full Site** opens the real site at `/` in a new tab
+with none of the prototype chrome.
+
 ## Notes
 
 - The chart in "The Scene" uses Esri World Imagery tiles loaded at runtime from
