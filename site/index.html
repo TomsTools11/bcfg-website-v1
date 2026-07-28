@@ -620,7 +620,15 @@ button,input,select,textarea{font-family:inherit}
     preload((cur % HERO_COUNT) + 1);
   }
 
-  if (heroA.length) {
+  /* The preview page frames this site twice. Two 42-image slideshows running
+     behind thumbnails you cannot interact with is pure cost: a ~300KB decode
+     every 5 seconds each, which makes the preview page stutter while it is
+     being scrolled. ?preview=1 pins the hero to its first frame. Anyone who
+     asked for reduced motion gets the same treatment. */
+  var STATIC_HERO = /[?&]preview=1(&|$)/.test(location.search) ||
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (heroA.length && !STATIC_HERO) {
     preload(2);
     preload(3);
     setInterval(tick, 5000);

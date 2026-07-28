@@ -45,9 +45,12 @@ button{font-family:inherit}
 .cards{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
 @media (max-width:620px){.cards{grid-template-columns:1fr}}
 
+.topbar{position:sticky;top:0;z-index:20;background:rgba(11,25,48,.86);
+  backdrop-filter:blur(12px);border-bottom:1px solid rgba(169,190,223,.16)}
 .topbar-actions{display:flex;align-items:center;gap:12px}
-.frame-hit{position:relative;width:fit-content}
-.frame-tap{display:none}
+/* Keep each frame's painting to itself so scrolling the page does not
+   invalidate anything outside the frame's own box. */
+.frame-hit{position:relative;width:fit-content;contain:paint}
 .only-mob{display:none}
 
 /* LAYOUT — stack whenever a side-by-side row would squeeze both frames.
@@ -74,11 +77,11 @@ button{font-family:inherit}
   .only-desk{display:none}
   .only-mob{display:block}
   .frame-hit iframe{pointer-events:none}
-  .frame-tap{position:absolute;inset:0;display:flex;align-items:flex-end;
-    justify-content:center;padding-bottom:16px;text-decoration:none}
-  .frame-tap span{background:rgba(11,25,48,.92);color:#f8f7f3;
-    border:1px solid rgba(169,190,223,.4);border-radius:999px;padding:10px 18px;
-    font:600 12px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase}
+
+  /* backdrop-filter re-samples and re-blurs everything behind the bar on every
+     scrolled frame, which is a well-known source of scroll jank on phones. The
+     bar is 86% opaque already, so a flat colour is visually near-identical. */
+  .topbar{backdrop-filter:none;background:#101f3b}
 }
 @media (max-width:560px){
   .topbar-actions{width:100%;gap:10px}
@@ -90,7 +93,7 @@ button{font-family:inherit}
 
 <div style="min-height:100vh;background:radial-gradient(1200px 600px at 50% -10%,#16305c 0%,#0b1930 60%);padding:0 0 64px">
 
-  <div style="position:sticky;top:0;z-index:20;background:rgba(11,25,48,.86);backdrop-filter:blur(12px);border-bottom:1px solid rgba(169,190,223,.16)">
+  <div class="topbar">
     <div style="max-width:1320px;margin:0 auto;padding:14px clamp(16px,3vw,32px);display:flex;align-items:center;gap:20px;flex-wrap:wrap">
       <div style="display:grid;gap:2px;margin-right:auto">
         <span style="font:700 10.5px/1 'Inter',sans-serif;letter-spacing:.26em;text-transform:uppercase;color:#e05c22">Website Preview</span>
@@ -113,9 +116,10 @@ button{font-family:inherit}
     or <strong style="color:#f8f7f3;font-weight:600">Mobile</strong> up top to open either one full size in a new tab.
   </p>
   <p class="only-mob" style="max-width:1320px;margin:0 auto;padding:26px clamp(16px,3vw,32px) 0;font-size:15px;line-height:1.6;color:#b9c8e0">
-    Here is the site as it looks on a phone and on a computer. Tap either preview,
-    or use <strong style="color:#f8f7f3;font-weight:600">Full Site</strong> and
-    <strong style="color:#f8f7f3;font-weight:600">Mobile</strong> up top, to open it properly and have a scroll around.
+    Here is the site as it looks on a phone and on a computer. Use
+    <strong style="color:#f8f7f3;font-weight:600">Full Site</strong> or
+    <strong style="color:#f8f7f3;font-weight:600">Mobile</strong> up top to open either one
+    properly and have a scroll around.
   </p>
 
   <div id="stage" class="stage" style="max-width:1320px;margin:0 auto;padding:22px clamp(16px,3vw,32px) 0;display:flex;gap:clamp(24px,3vw,48px);align-items:flex-start;justify-content:center;flex-wrap:nowrap">
@@ -134,10 +138,9 @@ button{font-family:inherit}
             <span style="width:10px;height:10px;border-radius:50%;background:#28c840;display:block"></span>
             <span style="margin:0 auto;padding:3px 16px;border-radius:999px;background:rgba(11,25,48,.6);font-size:11px;color:#8ea3c6">bluecollarfishingguide.com</span>
           </div>
-          <iframe src="/site/" title="Desktop preview" style="width:1440px;height:900px;border:none;display:block;background:#f8f7f3"></iframe>
+          <iframe src="/site/?preview=1" loading="lazy" title="Desktop preview" style="width:1440px;height:900px;border:none;display:block;background:#f8f7f3"></iframe>
         </div>
       </div>
-      <a class="frame-tap" href="/site/" target="_blank" rel="noopener"><span>Open full site</span></a>
       </div>
     </figure>
 
@@ -150,13 +153,12 @@ button{font-family:inherit}
       <div id="mobBox">
         <div id="mobShell" class="frame-shell" style="width:414px;padding:12px;border-radius:50px;background:#0e1a30;border:1px solid rgba(169,190,223,.22);box-shadow:0 40px 80px -40px rgba(0,0,0,.85)">
           <div style="position:relative;width:390px;height:844px;border-radius:38px;overflow:hidden;background:#f8f7f3">
-            <iframe src="/site/" title="Mobile preview" style="width:390px;height:844px;border:none;display:block;background:#f8f7f3"></iframe>
+            <iframe src="/site/?preview=1" loading="lazy" title="Mobile preview" style="width:390px;height:844px;border:none;display:block;background:#f8f7f3"></iframe>
             <div style="position:absolute;top:10px;left:50%;transform:translateX(-50%);width:112px;height:28px;border-radius:999px;background:#0e1a30;pointer-events:none"></div>
             <div style="position:absolute;bottom:7px;left:50%;transform:translateX(-50%);width:130px;height:5px;border-radius:999px;background:rgba(14,34,68,.4);pointer-events:none"></div>
           </div>
         </div>
       </div>
-      <a class="frame-tap" href="/mobile/" target="_blank" rel="noopener"><span>Open phone view</span></a>
       </div>
     </figure>
 
