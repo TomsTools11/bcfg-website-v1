@@ -7,12 +7,22 @@
       "permanent": false
     },
     {
+      "source": "/prototype/",
+      "destination": "/",
+      "permanent": false
+    },
+    {
       "source": "/prototype/:path*",
       "destination": "/",
       "permanent": false
     },
     {
       "source": "/mobile",
+      "destination": "/",
+      "permanent": false
+    },
+    {
+      "source": "/mobile/",
       "destination": "/",
       "permanent": false
     },
