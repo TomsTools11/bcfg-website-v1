@@ -8,11 +8,12 @@ Static HTML/CSS/JS. **No build step, no dependencies, no framework.**
 ## Layout
 
 ```
-index.html            The website
-prototype/index.html  Desktop + mobile review harness (frames the live site)
-bcfg/                 All photography and logos (107 files)
-vercel.json           Cache headers for /bcfg/*
-design-source/        Original Claude Design files — reference only, not served
+index.html                   The website
+prototype/index.html         Preview landing page — desktop + phone side by side
+prototype/mobile/index.html  Preview — the phone version, centred
+bcfg/                        All photography and logos (107 files)
+vercel.json                  Cache headers for /bcfg/*
+design-source/               Original Claude Design files — reference only
 ```
 
 ## Deploying to Vercel
@@ -53,16 +54,29 @@ placeholder until photos are added.
 Prices, trip packages, contact details, and body copy are plain text in the HTML
 and safe to edit directly.
 
-## The prototype page
+## The preview pages
 
-`/prototype/` frames the live site at desktop (1440×900) and mobile (390×844),
-both at 1:1, for reviewing the two breakpoints side by side. It is marked
-`noindex` and is a review tool, not a public page.
+These are for showing the site to someone, not for visitors. Both are marked
+`noindex`.
 
-Toolbar: **Both / Desktop / Mobile** switch which frames are shown, **Reload**
-refreshes them in place, **Full Screen** expands the site over the current tab
-(Escape closes), and **Open Full Site** opens the real site at `/` in a new tab
-with none of the prototype chrome.
+**`/prototype/`** is the landing page. It shows the site as it looks on a
+computer and on a phone, side by side. Both frames are live — you can scroll
+them, open a lake, tap through. They're scaled down together so the pair always
+fits the window, but the site inside each frame still renders at its true width,
+so the desktop frame gets the real desktop layout and the phone frame gets the
+real mobile layout. Two buttons open the full-size versions in a new tab:
+
+| Button | Opens |
+| --- | --- |
+| **Full Site** | `/` — the real site, no wrapper around it |
+| **Mobile** | `/prototype/mobile/` — the phone version, centred |
+
+**`/prototype/mobile/`** shows the site in a phone frame at its true 390×844,
+centred on screen, shrinking only if the window is too small to fit it. It has
+**Back** to the landing page and **Full Site**.
+
+The copy on these pages is written for a non-technical reader — no pixel
+dimensions or jargon.
 
 ## Notes
 

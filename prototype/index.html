@@ -1,11 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 <!-- ==========================================================================
-  BCFG PROTOTYPE — Desktop and Mobile review harness
-  Frames the live site (served from /) at desktop 1440x900 and mobile 390x844,
-  both 1:1, so the breakpoints can be reviewed side by side. "Open Full Site"
-  opens the real site at / in a new tab, clean, with none of this chrome.
-  This is a review tool, not a public page — the real site lives at /.
+  BCFG PROTOTYPE — landing page
+  Shows the live site (served from /) at desktop 1440x900 and mobile 390x844
+  side by side. Both frames are scaled down together so the pair always fits
+  the window — the site inside each frame still renders at its true width, so
+  the desktop frame gets the desktop layout and the phone frame gets the
+  mobile layout.
+
+  Two buttons open the real thing at full size:
+    Full Site  ->  /                  the site, no wrapper
+    Mobile     ->  /prototype/mobile/ the phone experience, centered
+
+  This is a review tool, not a public page. The real site lives at /.
 ========================================================================== -->
 <head>
 <meta charset="utf-8">
@@ -22,6 +29,12 @@ body{margin:0;background:#0b1930;color:#f8f7f3;font-family:'Inter',system-ui,san
 a{color:#a9bedf}
 button{font-family:inherit}
 :focus-visible{outline:2px solid #e05c22;outline-offset:2px}
+.btn{display:inline-flex;align-items:center;gap:8px;min-height:38px;padding:0 18px;border-radius:999px;text-decoration:none;cursor:pointer;font:600 12.5px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;white-space:nowrap}
+.btn-primary{border:none;background:#e05c22;color:#0b1930}
+.btn-secondary{border:1px solid rgba(169,190,223,.35);background:none;color:#a9bedf}
+/* The shell holds a fixed-size mock; the box is sized in JS to the shell's
+   scaled footprint so the scaled frames still occupy correct layout space. */
+.frame-shell{transform-origin:0 0}
 </style>
 </head>
 <body>
@@ -31,86 +44,80 @@ button{font-family:inherit}
   <div style="position:sticky;top:0;z-index:20;background:rgba(11,25,48,.86);backdrop-filter:blur(12px);border-bottom:1px solid rgba(169,190,223,.16)">
     <div style="max-width:1320px;margin:0 auto;padding:14px clamp(16px,3vw,32px);display:flex;align-items:center;gap:20px;flex-wrap:wrap">
       <div style="display:grid;gap:2px;margin-right:auto">
-        <span style="font:700 10.5px/1 'Inter',sans-serif;letter-spacing:.26em;text-transform:uppercase;color:#e05c22">Responsive Prototype</span>
+        <span style="font:700 10.5px/1 'Inter',sans-serif;letter-spacing:.26em;text-transform:uppercase;color:#e05c22">Website Preview</span>
         <span style="font-family:'Anton',Impact,sans-serif;font-size:20px;letter-spacing:.6px;text-transform:uppercase;color:#f8f7f3">Blue Collar Fishing Guide</span>
       </div>
-      <div style="display:flex;gap:4px;padding:4px;background:rgba(169,190,223,.12);border-radius:999px">
-        <button data-view="both" style="min-height:38px;padding:0 18px;border:none;border-radius:999px;cursor:pointer;font:500 12.5px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase">Both</button>
-        <button data-view="desktop" style="min-height:38px;padding:0 18px;border:none;border-radius:999px;cursor:pointer;font:500 12.5px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase">Desktop</button>
-        <button data-view="mobile" style="min-height:38px;padding:0 18px;border:none;border-radius:999px;cursor:pointer;font:500 12.5px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase">Mobile</button>
-      </div>
-      <button id="reload" style="min-height:38px;padding:0 18px;border:1px solid rgba(169,190,223,.35);border-radius:999px;background:none;color:#a9bedf;cursor:pointer;font:500 12.5px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase">Reload</button>
-      <button id="openFs" style="display:inline-flex;align-items:center;gap:8px;min-height:38px;padding:0 18px;border:1px solid rgba(169,190,223,.35);border-radius:999px;background:none;color:#a9bedf;cursor:pointer;font:500 12.5px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10V4h6M20 14v6h-6M20 10V4h-6M4 14v6h6"></path></svg>Full Screen
-      </button>
-      <a href="/" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;min-height:38px;padding:0 18px;border:none;border-radius:999px;background:#e05c22;color:#0b1930;text-decoration:none;cursor:pointer;font:600 12.5px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"></path></svg>Open Full Site
+      <a href="/" target="_blank" rel="noopener" class="btn btn-primary">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"></path></svg>Full Site
+      </a>
+      <a href="/prototype/mobile/" target="_blank" rel="noopener" class="btn btn-secondary">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2" width="10" height="20" rx="2"></rect><path d="M11 18h2"></path></svg>Mobile
       </a>
     </div>
   </div>
 
-  <div id="stage" style="margin:0 auto;padding:38px clamp(16px,3vw,32px) 0;display:flex;gap:clamp(24px,3vw,48px);align-items:flex-start;justify-content:flex-start;flex-wrap:wrap;overflow-x:auto">
+  <p style="max-width:1320px;margin:0 auto;padding:26px clamp(16px,3vw,32px) 0;font-size:14.5px;line-height:1.6;color:#b9c8e0">
+    Here is the site as it looks on a computer and on a phone. Both are live &mdash; scroll them,
+    tap through them, open a lake. Use <strong style="color:#f8f7f3;font-weight:600">Full Site</strong>
+    or <strong style="color:#f8f7f3;font-weight:600">Mobile</strong> up top to open either one full size in a new tab.
+  </p>
 
-    <figure id="figDesktop" style="margin:0;display:block;flex:0 0 auto">
+  <div id="stage" style="max-width:1320px;margin:0 auto;padding:22px clamp(16px,3vw,32px) 0;display:flex;gap:clamp(24px,3vw,48px);align-items:flex-start;justify-content:center;flex-wrap:nowrap">
+
+    <figure style="margin:0;flex:0 0 auto">
       <figcaption style="display:flex;align-items:baseline;gap:10px;margin-bottom:14px">
         <span style="font:500 13px/1 'Oswald',sans-serif;letter-spacing:1.6px;text-transform:uppercase;color:#f8f7f3">Desktop</span>
-        <span style="font-size:12px;color:#8ea3c6">1440 &times; 900</span>
+        <span style="font-size:12px;color:#8ea3c6">How it looks on a computer</span>
       </figcaption>
-      <div id="deskShell" style="width:1440px;border-radius:12px;overflow:hidden;background:#1b2b4a;border:1px solid rgba(169,190,223,.22);box-shadow:0 40px 80px -40px rgba(0,0,0,.8)">
-        <div style="height:36px;display:flex;align-items:center;gap:8px;padding:0 14px;background:#152443;border-bottom:1px solid rgba(169,190,223,.16)">
-          <span style="width:10px;height:10px;border-radius:50%;background:#ff5f57;display:block"></span>
-          <span style="width:10px;height:10px;border-radius:50%;background:#febc2e;display:block"></span>
-          <span style="width:10px;height:10px;border-radius:50%;background:#28c840;display:block"></span>
-          <span style="margin:0 auto;padding:3px 16px;border-radius:999px;background:rgba(11,25,48,.6);font-size:11px;color:#8ea3c6">bluecollarfishingguide.com</span>
-        </div>
-        <div id="deskViewport" style="width:1440px;height:900px;overflow:hidden;position:relative">
-          <iframe data-frame src="/" title="Desktop preview" style="width:1440px;height:900px;border:none;display:block;background:#f8f7f3"></iframe>
+      <div id="deskBox">
+        <div id="deskShell" class="frame-shell" style="width:1440px;border-radius:12px;overflow:hidden;background:#1b2b4a;border:1px solid rgba(169,190,223,.22);box-shadow:0 40px 80px -40px rgba(0,0,0,.8)">
+          <div style="height:36px;display:flex;align-items:center;gap:8px;padding:0 14px;background:#152443;border-bottom:1px solid rgba(169,190,223,.16)">
+            <span style="width:10px;height:10px;border-radius:50%;background:#ff5f57;display:block"></span>
+            <span style="width:10px;height:10px;border-radius:50%;background:#febc2e;display:block"></span>
+            <span style="width:10px;height:10px;border-radius:50%;background:#28c840;display:block"></span>
+            <span style="margin:0 auto;padding:3px 16px;border-radius:999px;background:rgba(11,25,48,.6);font-size:11px;color:#8ea3c6">bluecollarfishingguide.com</span>
+          </div>
+          <iframe src="/" title="Desktop preview" style="width:1440px;height:900px;border:none;display:block;background:#f8f7f3"></iframe>
         </div>
       </div>
     </figure>
 
-    <figure id="figMobile" style="margin:0;display:block;flex:0 0 auto">
+    <figure style="margin:0;flex:0 0 auto">
       <figcaption style="display:flex;align-items:baseline;gap:10px;margin-bottom:14px">
         <span style="font:500 13px/1 'Oswald',sans-serif;letter-spacing:1.6px;text-transform:uppercase;color:#f8f7f3">Mobile</span>
-        <span style="font-size:12px;color:#8ea3c6">390 &times; 844</span>
+        <span style="font-size:12px;color:#8ea3c6">How it looks on a phone</span>
       </figcaption>
-      <div style="width:414px;padding:12px;border-radius:50px;background:#0e1a30;border:1px solid rgba(169,190,223,.22);box-shadow:0 40px 80px -40px rgba(0,0,0,.85)">
-        <div style="position:relative;width:390px;height:844px;border-radius:38px;overflow:hidden;background:#f8f7f3">
-          <iframe data-frame src="/" title="Mobile preview" style="width:390px;height:844px;border:none;display:block;background:#f8f7f3"></iframe>
-          <div style="position:absolute;top:10px;left:50%;transform:translateX(-50%);width:112px;height:28px;border-radius:999px;background:#0e1a30;pointer-events:none"></div>
-          <div style="position:absolute;bottom:7px;left:50%;transform:translateX(-50%);width:130px;height:5px;border-radius:999px;background:rgba(14,34,68,.4);pointer-events:none"></div>
+      <div id="mobBox">
+        <div id="mobShell" class="frame-shell" style="width:414px;padding:12px;border-radius:50px;background:#0e1a30;border:1px solid rgba(169,190,223,.22);box-shadow:0 40px 80px -40px rgba(0,0,0,.85)">
+          <div style="position:relative;width:390px;height:844px;border-radius:38px;overflow:hidden;background:#f8f7f3">
+            <iframe src="/" title="Mobile preview" style="width:390px;height:844px;border:none;display:block;background:#f8f7f3"></iframe>
+            <div style="position:absolute;top:10px;left:50%;transform:translateX(-50%);width:112px;height:28px;border-radius:999px;background:#0e1a30;pointer-events:none"></div>
+            <div style="position:absolute;bottom:7px;left:50%;transform:translateX(-50%);width:130px;height:5px;border-radius:999px;background:rgba(14,34,68,.4);pointer-events:none"></div>
+          </div>
         </div>
       </div>
     </figure>
 
-  </div>
-
-  <div id="fsLayer" style="display:none;position:fixed;inset:0;z-index:200;background:#0b1930;flex-direction:column">
-    <div style="flex:0 0 auto;display:flex;align-items:center;gap:14px;padding:9px clamp(12px,2vw,20px);background:#0e1a30;border-bottom:1px solid rgba(169,190,223,.18)">
-      <span style="font:500 12px/1 'Oswald',sans-serif;letter-spacing:1.5px;text-transform:uppercase;color:#a9bedf;margin-right:auto">Full Screen &mdash; Live Site</span>
-      <button id="closeFs" style="display:inline-flex;align-items:center;gap:8px;min-height:36px;padding:0 16px;border:1px solid rgba(169,190,223,.35);border-radius:999px;background:none;color:#f8f7f3;cursor:pointer;font:500 12px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase">Close &nbsp;&times;</button>
-    </div>
-    <iframe id="fsFrame" data-frame src="" title="Full screen desktop preview" style="flex:1 1 auto;width:100%;border:none;display:block;background:#f8f7f3"></iframe>
   </div>
 
   <div style="max-width:900px;margin:44px auto 0;padding:0 clamp(16px,3vw,32px)">
-    <h2 style="font:600 15px/1 'Oswald',sans-serif;letter-spacing:1.8px;text-transform:uppercase;color:#a9bedf;margin:0 0 18px">What changed for mobile</h2>
+    <h2 style="font:600 15px/1 'Oswald',sans-serif;letter-spacing:1.8px;text-transform:uppercase;color:#a9bedf;margin:0 0 18px">What's different on a phone</h2>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px">
       <div style="background:rgba(169,190,223,.08);border:1px solid rgba(169,190,223,.16);border-radius:12px;padding:16px 18px">
-        <h3 style="font:600 14px/1.2 'Oswald',sans-serif;letter-spacing:1px;text-transform:uppercase;color:#f8f7f3;margin:0 0 7px">Right-sized photography</h3>
-        <p style="margin:0;font-size:13.5px;line-height:1.6;color:#b9c8e0">Gallery shots are now uniform 3:4 tiles in a snap-scrolling rail instead of 320px free-height images. The contact photo went from a 560px slab to a 3:2 frame, and Chris's portrait is capped at 430px.</p>
+        <h3 style="font:600 14px/1.2 'Oswald',sans-serif;letter-spacing:1px;text-transform:uppercase;color:#f8f7f3;margin:0 0 7px">Photos you can flick through</h3>
+        <p style="margin:0;font-size:13.5px;line-height:1.6;color:#b9c8e0">Trip photos sit in a neat row you swipe sideways with your thumb, instead of running one after another down a very long page. Tap any photo to see it full size.</p>
       </div>
       <div style="background:rgba(169,190,223,.08);border:1px solid rgba(169,190,223,.16);border-radius:12px;padding:16px 18px">
-        <h3 style="font:600 14px/1.2 'Oswald',sans-serif;letter-spacing:1px;text-transform:uppercase;color:#f8f7f3;margin:0 0 7px">Lakes collapse</h3>
-        <p style="margin:0;font-size:13.5px;line-height:1.6;color:#b9c8e0">Eight stacked lake cards became an accordion. Tapping a map pin, or a lake chip under the map, opens that lake and scrolls to it. All copy, acreage, and drive times are unchanged.</p>
+        <h3 style="font:600 14px/1.2 'Oswald',sans-serif;letter-spacing:1px;text-transform:uppercase;color:#f8f7f3;margin:0 0 7px">Lakes open one at a time</h3>
+        <p style="margin:0;font-size:13.5px;line-height:1.6;color:#b9c8e0">The eight lakes are folded up so you can see them all at a glance. Tap a lake on the map, or its name underneath, and it opens. Nothing was cut &mdash; the acreage, drive times, and photos are all still there.</p>
       </div>
       <div style="background:rgba(169,190,223,.08);border:1px solid rgba(169,190,223,.16);border-radius:12px;padding:16px 18px">
-        <h3 style="font:600 14px/1.2 'Oswald',sans-serif;letter-spacing:1px;text-transform:uppercase;color:#f8f7f3;margin:0 0 7px">Hero that fits a phone</h3>
-        <p style="margin:0;font-size:13.5px;line-height:1.6;color:#b9c8e0">On mobile the slideshow becomes a full-bleed 58vh image with the headline set over it; on desktop it stays the original two-column layout.</p>
+        <h3 style="font:600 14px/1.2 'Oswald',sans-serif;letter-spacing:1px;text-transform:uppercase;color:#f8f7f3;margin:0 0 7px">An opening photo that fits</h3>
+        <p style="margin:0;font-size:13.5px;line-height:1.6;color:#b9c8e0">On a phone the opening photo fills the screen with the headline sitting over it. On a computer it keeps the original side-by-side layout.</p>
       </div>
       <div style="background:rgba(169,190,223,.08);border:1px solid rgba(169,190,223,.16);border-radius:12px;padding:16px 18px">
-        <h3 style="font:600 14px/1.2 'Oswald',sans-serif;letter-spacing:1px;text-transform:uppercase;color:#f8f7f3;margin:0 0 7px">Thumb-friendly booking</h3>
-        <p style="margin:0;font-size:13.5px;line-height:1.6;color:#b9c8e0">A fixed Call / Book bar sits at the bottom on phones, the logo shrinks from 100px to 52px, every tap target clears 44px, and form fields are 16px so iOS stops zooming on focus.</p>
+        <h3 style="font:600 14px/1.2 'Oswald',sans-serif;letter-spacing:1px;text-transform:uppercase;color:#f8f7f3;margin:0 0 7px">Easy to call and book</h3>
+        <p style="margin:0;font-size:13.5px;line-height:1.6;color:#b9c8e0">A Call and Book a Trip bar stays put at the bottom of the screen, so booking is always one tap away. Every button is sized to be comfortable to hit, and the form won't zoom in on you when you start typing.</p>
       </div>
     </div>
   </div>
@@ -121,59 +128,52 @@ button{font-family:inherit}
 (function () {
   'use strict';
 
-  /* Root-absolute so this works whether the page is served at
-     /prototype or /prototype/ — a relative '../' resolves differently
-     depending on the trailing slash. */
-  var SITE = '/';
-  var ON = '#e05c22', ON_FG = '#0b1930', OFF = 'transparent', OFF_FG = '#b9c8e0';
+  var stage = document.getElementById('stage');
+  var pairs = [
+    { box: document.getElementById('deskBox'), shell: document.getElementById('deskShell') },
+    { box: document.getElementById('mobBox'), shell: document.getElementById('mobShell') }
+  ];
 
-  var $ = function (s) { return document.querySelector(s); };
-  var $$ = function (s) { return Array.prototype.slice.call(document.querySelectorAll(s)); };
+  /* Scale both frames by the same factor so the pair fits the stage side by
+     side. Never scale up past 1:1. The boxes are sized to the scaled footprint
+     so surrounding layout still reserves the right space. */
+  function fit() {
+    // Collapse the boxes first so stage.clientWidth reflects available space,
+    // not the space the frames are currently taking up.
+    pairs.forEach(function (p) {
+      p.box.style.width = '0px';
+      p.box.style.height = '0px';
+      p.box.style.overflow = 'visible';
+      p.shell.style.transform = 'none';
+    });
 
-  /* Frames always render 1:1 — no scaling. The stage scrolls horizontally. */
-  var view = 'both';
+    var natural = pairs.map(function (p) {
+      return { w: p.shell.offsetWidth, h: p.shell.offsetHeight };
+    });
 
-  var figDesktop = $('#figDesktop');
-  var figMobile = $('#figMobile');
-  var fsLayer = $('#fsLayer');
-  var fsFrame = $('#fsFrame');
+    // getBoundingClientRect rather than clientWidth: the latter rounds to whole
+    // pixels, which can size the frames fractionally too wide and overflow the
+    // row. Floor the footprints for the same reason.
+    var cs = getComputedStyle(stage);
+    var rect = stage.getBoundingClientRect();
+    var avail = rect.width - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+    // The gap is a fixed size and does not scale with the frames, so take it
+    // off the available width before dividing rather than folding it into the
+    // divisor — otherwise the pair ends up wider than the row.
+    var gap = parseFloat(cs.columnGap) || 0;
+    var scale = Math.min(1, (avail - gap) / (natural[0].w + natural[1].w));
 
-  function render() {
-    figDesktop.style.display = view === 'mobile' ? 'none' : 'block';
-    figMobile.style.display = view === 'desktop' ? 'none' : 'block';
-
-    $$('[data-view]').forEach(function (b) {
-      var on = b.getAttribute('data-view') === view;
-      b.style.background = on ? ON : OFF;
-      b.style.color = on ? ON_FG : OFF_FG;
+    pairs.forEach(function (p, i) {
+      p.shell.style.transform = 'scale(' + scale + ')';
+      p.box.style.width = Math.floor(natural[i].w * scale) + 'px';
+      p.box.style.height = Math.floor(natural[i].h * scale) + 'px';
     });
   }
 
-  $$('[data-view]').forEach(function (b) {
-    b.addEventListener('click', function () { view = b.getAttribute('data-view'); render(); });
-  });
-
-  $('#reload').addEventListener('click', function () {
-    $$('[data-frame]').forEach(function (f) {
-      if (f.getAttribute('src')) f.src = SITE;
-    });
-  });
-
-  function openFs() {
-    fsFrame.src = SITE;
-    fsLayer.style.display = 'flex';
-  }
-  function closeFs() {
-    fsLayer.style.display = 'none';
-    fsFrame.src = '';
-  }
-  $('#openFs').addEventListener('click', openFs);
-  $('#closeFs').addEventListener('click', closeFs);
-  document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape') closeFs();
-  });
-
-  render();
+  fit();
+  window.addEventListener('resize', fit);
+  // Web fonts can change the caption metrics; re-fit once they settle.
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
 })();
 </script>
 
