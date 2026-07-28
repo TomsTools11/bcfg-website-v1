@@ -7,3 +7,7 @@
 .DS_Store
 .vercel/
 node_modules/
+
+# Claude Code: share launch config, keep local settings out
+.claude/*
+!.claude/launch.json
