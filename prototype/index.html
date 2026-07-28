@@ -12,7 +12,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Blue Collar Fishing Guide - Prototype</title>
 <meta name="robots" content="noindex">
-<link rel="icon" href="../bcfg/logo-card-navy.png">
+<link rel="icon" href="/bcfg/logo-card-navy.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&family=Oswald:wght@400;500;600&display=swap" rel="stylesheet">
@@ -43,7 +43,7 @@ button{font-family:inherit}
       <button id="openFs" style="display:inline-flex;align-items:center;gap:8px;min-height:38px;padding:0 18px;border:1px solid rgba(169,190,223,.35);border-radius:999px;background:none;color:#a9bedf;cursor:pointer;font:500 12.5px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10V4h6M20 14v6h-6M20 10V4h-6M4 14v6h6"></path></svg>Full Screen
       </button>
-      <a href="../" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;min-height:38px;padding:0 18px;border:none;border-radius:999px;background:#e05c22;color:#0b1930;text-decoration:none;cursor:pointer;font:600 12.5px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase">
+      <a href="/" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;min-height:38px;padding:0 18px;border:none;border-radius:999px;background:#e05c22;color:#0b1930;text-decoration:none;cursor:pointer;font:600 12.5px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"></path></svg>Open Full Site
       </a>
     </div>
@@ -64,7 +64,7 @@ button{font-family:inherit}
           <span style="margin:0 auto;padding:3px 16px;border-radius:999px;background:rgba(11,25,48,.6);font-size:11px;color:#8ea3c6">bluecollarfishingguide.com</span>
         </div>
         <div id="deskViewport" style="width:1440px;height:900px;overflow:hidden;position:relative">
-          <iframe data-frame src="../" title="Desktop preview" style="width:1440px;height:900px;border:none;display:block;background:#f8f7f3"></iframe>
+          <iframe data-frame src="/" title="Desktop preview" style="width:1440px;height:900px;border:none;display:block;background:#f8f7f3"></iframe>
         </div>
       </div>
     </figure>
@@ -76,7 +76,7 @@ button{font-family:inherit}
       </figcaption>
       <div style="width:414px;padding:12px;border-radius:50px;background:#0e1a30;border:1px solid rgba(169,190,223,.22);box-shadow:0 40px 80px -40px rgba(0,0,0,.85)">
         <div style="position:relative;width:390px;height:844px;border-radius:38px;overflow:hidden;background:#f8f7f3">
-          <iframe data-frame src="../" title="Mobile preview" style="width:390px;height:844px;border:none;display:block;background:#f8f7f3"></iframe>
+          <iframe data-frame src="/" title="Mobile preview" style="width:390px;height:844px;border:none;display:block;background:#f8f7f3"></iframe>
           <div style="position:absolute;top:10px;left:50%;transform:translateX(-50%);width:112px;height:28px;border-radius:999px;background:#0e1a30;pointer-events:none"></div>
           <div style="position:absolute;bottom:7px;left:50%;transform:translateX(-50%);width:130px;height:5px;border-radius:999px;background:rgba(14,34,68,.4);pointer-events:none"></div>
         </div>
@@ -121,7 +121,10 @@ button{font-family:inherit}
 (function () {
   'use strict';
 
-  var SITE = '../';
+  /* Root-absolute so this works whether the page is served at
+     /prototype or /prototype/ — a relative '../' resolves differently
+     depending on the trailing slash. */
+  var SITE = '/';
   var ON = '#e05c22', ON_FG = '#0b1930', OFF = 'transparent', OFF_FG = '#b9c8e0';
 
   var $ = function (s) { return document.querySelector(s); };
