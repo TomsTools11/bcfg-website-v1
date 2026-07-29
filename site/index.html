@@ -7,8 +7,15 @@
   HOW TO EDIT
     - Text: the copy between tags is safe to change.
     - Booked dates: see "EDIT BOOKED DATES" in the script at the bottom.
+      These also close the day off in the booking form.
+    - Reviews: see "EDIT REVIEWS" in the script at the bottom. Every quote
+      shipped today is a placeholder and says so on the card.
     - Lake photos: see the LAKES table in the script at the bottom.
     - Hero photos: drop numbered files in bcfg/hero/ and update HERO_COUNT.
+    - Header logo size: the .brand-logo rule in the stylesheet.
+
+  CHECK: `node verify-assets.mjs` from the repo root flags any photo that is
+  referenced but missing, or sitting in bcfg/ without a page asking for it.
 
   DEPLOY: static site, no build step. Vercel serves this directory as-is.
 ========================================================================== -->
@@ -1160,6 +1167,11 @@ button,input,select,textarea{font-family:inherit}
   function setDate(mode, iso) {
     var input = inputFor(mode);
     if (!input) return;
+    /* A day can only play one of the two parts. Tapping the day the other
+       field is already holding hands it over rather than setting both to the
+       same date, which would only fail validation on submit. */
+    var other = inputFor(mode === 'preferred' ? 'alternate' : 'preferred');
+    if (other && other.value === iso) other.value = '';
     /* Tapping the day that is already set clears it, so a mistake is one tap
        to undo rather than a trip to the field. */
     input.value = input.value === iso ? '' : iso;
