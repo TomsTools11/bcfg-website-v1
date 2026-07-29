@@ -75,6 +75,27 @@ placeholder until photos are added.
 Prices, trip packages, contact details, and body copy are plain text in the HTML
 and safe to edit directly.
 
+## Search and sharing
+
+The website's `<head>` carries its own title and description, Open Graph and
+Twitter card tags, and a `LocalBusiness` block of structured data naming the
+eight lakes, the three trip packages and their prices, and the contact details.
+
+Everything in the structured data is also stated somewhere on the page, so when
+a price or a lake changes, change it in both places.
+
+Two things are deliberately left out until they can be done truthfully:
+
+- **`og:url`, `canonical`, and the absolute `og:image`** need the live domain.
+  They sit commented out in the `<head>` with a `YOUR-DOMAIN` placeholder —
+  uncomment them at launch. Everything else works from any address.
+- **Review structured data.** Review markup has to describe real reviews, so
+  there is no `review` or `aggregateRating` while the quotes are placeholders.
+
+The page has exactly one `<h1>`. The hero heading appears in two very different
+layouts — over the photo on a phone, in the text column on a computer — but it
+is a single element that grid areas move, not two headings with one hidden.
+
 ## Routing (important)
 
 This deployment is set up for **review**, so the root shows the preview page
