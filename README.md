@@ -48,6 +48,21 @@ written into the inquiry email. A booked day cannot be picked — its cell is no
 a button, and typing that date into either field stops the form from submitting.
 So `BOOKED` is the single place that closes a day off.
 
+**Reviews** — the "What Anglers Say" cards come from `REVIEWS`. Four to six
+reads best: three across on a computer, stacked on a phone. Keep a quote to two
+or three sentences, and set `from` to a hometown or the lake they fished.
+
+> **Every quote shipped today is a placeholder, not a real customer.** Each
+> carries `placeholder: true`, which draws a visible "Placeholder" badge on that
+> card and a note above the grid. When a real review arrives, replace the quote,
+> name and `from`, and delete that entry's `placeholder: true` line. The badge
+> and the note clear themselves once the last placeholder is gone — there is
+> deliberately no single switch that turns the badges off, because that is what
+> keeps invented testimonials from going out under a real person's name.
+
+The reviews are also deliberately left out of the page's structured data. Review
+markup fed to Google has to describe real reviews.
+
 **Lake photos** — drop files into `bcfg/<lake>/` named `<lake>-01.jpg`,
 `<lake>-02.jpg`, … then update that lake's `n` in the `LAKES` table to match the
 number of photos. Lake Austin is at `n: 0` and shows a "photo coming soon"

@@ -539,6 +539,18 @@ button,input,select,textarea{font-family:inherit}
   </div>
 </section>
 
+<section id="reviews" style="background:#eef0f3;padding:clamp(44px,6vw,80px) 0">
+  <div style="max-width:1180px;margin:0 auto;padding:0 clamp(18px,4vw,40px)">
+    <span style="display:inline-block;font:700 12px/1 'Inter',sans-serif;letter-spacing:.26em;text-transform:uppercase;color:#1d3059">In Their Words</span>
+    <h2 style="font:600 clamp(28px,3.6vw,36px)/1.1 'Oswald',sans-serif;letter-spacing:.5px;text-transform:uppercase;color:#1d3059;margin:14px 0 12px">What Anglers Say</h2>
+    <!-- Both the note and the per-card badges are written by the script from
+         the REVIEWS table, and disappear on their own as each placeholder is
+         swapped for a real quote. -->
+    <p id="reviewsNote" style="max-width:640px;margin:0 0 24px;color:#5c6470;display:none"></p>
+    <div id="reviewCards" data-r="three" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px"></div>
+  </div>
+</section>
+
 <footer style="background:#0e2244;color:#f8f7f3;padding:clamp(40px,5vw,64px) 0 24px">
   <div style="max-width:1180px;margin:0 auto;padding:0 clamp(18px,4vw,40px)">
     <div data-r="foot" style="display:grid;grid-template-columns:1.6fr 1fr 1fr;gap:30px;margin-bottom:34px">
@@ -597,6 +609,58 @@ button,input,select,textarea{font-family:inherit}
   var BOOKED = [
     '2026-07-25',
     '2026-08-01'
+  ];
+
+  /* EDIT REVIEWS: the cards in the "What Anglers Say" section, in the order
+     they appear. Four to six reads best — three across on a computer, stacked
+     on a phone. Keep a quote to two or three sentences; much longer and the
+     cards stop lining up. `from` is a hometown or the lake they fished.
+
+     EVERY QUOTE BELOW IS A STAND-IN, NOT A REAL CUSTOMER. Each one is marked
+     `placeholder: true`, which puts a visible "Placeholder" badge on its card
+     and a note above the grid. When a real review comes in, replace the quote,
+     the name and the `from`, and DELETE that entry's `placeholder: true` line.
+     The badge and the note clear themselves once the last one is gone.
+
+     Do not switch the badges off any other way. They are what stops invented
+     testimonials from going out under a real person's name. */
+  var REVIEWS = [
+    {
+      placeholder: true,
+      quote: 'He put us on fish within twenty minutes of leaving the ramp. What stuck with me was how much he explained along the way, why we were on that stretch of bank and what the fish were doing. I have fished Canyon a dozen times since and I finally know what I am looking at.',
+      name: 'Marcus D.',
+      from: 'Canyon Lake'
+    },
+    {
+      placeholder: true,
+      quote: 'Booked a half day for my son’s twelfth birthday and he has not stopped talking about it since. Chris was patient with every backlash and made sure the kid put the first fish of the day in the boat.',
+      name: 'Jill R.',
+      from: 'New Braunfels, TX'
+    },
+    {
+      placeholder: true,
+      quote: 'I have fished with guides all over Texas and this was the most straightforward day I have had. No hype and no highlight-reel promises, just somebody who knows the water and works hard for it.',
+      name: 'Tony V.',
+      from: 'Austin, TX'
+    },
+    {
+      placeholder: true,
+      quote: 'We flew in from out of state with one free morning and no gear at all. Everything was already on the boat and we were catching before the sun was fully up. Worth every dollar.',
+      name: 'Aaron K.',
+      from: 'Lake Travis'
+    },
+    {
+      placeholder: true,
+      quote: 'Third trip this year and it has been a different pattern every time depending on what the lake is doing. He explains the why behind it, which is the part that sticks once you are out there on your own.',
+      name: 'Dee W.',
+      from: 'Lake LBJ'
+    },
+    {
+      placeholder: true,
+      quote: 'Slow bite all morning and he never stopped grinding for it. We ended up with a five pounder in the last half hour. That is the difference between a good guide and a great one.',
+      name: 'Ray S.',
+      from: 'San Antonio, TX'
+    }
   ];
 
   /* EDIT: `n` is how many photos sit in bcfg/<id>/, named <id>-01.jpg, <id>-02.jpg, ...
@@ -719,6 +783,57 @@ button,input,select,textarea{font-family:inherit}
       rail.appendChild(btn);
     }
   });
+
+  /* ---------- Reviews ------------------------------------------------ */
+
+  (function buildReviews() {
+    var host = $('#reviewCards');
+    if (!host) return;
+
+    REVIEWS.forEach(function (review) {
+      var card = document.createElement('figure');
+      card.style.cssText = 'background:#fff;border:1px solid rgba(14,34,68,.14);border-radius:12px;' +
+        'padding:22px;margin:0;display:flex;flex-direction:column;gap:14px';
+
+      if (review.placeholder) {
+        var badge = document.createElement('span');
+        badge.style.cssText = "align-self:flex-start;font:700 10px/1 'Inter',sans-serif;" +
+          'letter-spacing:.22em;text-transform:uppercase;color:#e05c22;' +
+          'border:1px solid rgba(224,92,34,.45);border-radius:999px;padding:5px 10px';
+        badge.textContent = 'Placeholder';
+        card.appendChild(badge);
+      }
+
+      var quote = document.createElement('blockquote');
+      quote.style.cssText = 'margin:0;font-size:15.5px;line-height:1.6;color:#22293a;text-wrap:pretty';
+      quote.textContent = '“' + review.quote + '”';
+      card.appendChild(quote);
+
+      var who = document.createElement('figcaption');
+      who.style.cssText = 'margin-top:auto;display:grid;gap:3px';
+      var name = document.createElement('span');
+      name.style.cssText = "font:600 15px/1.2 'Oswald',sans-serif;letter-spacing:.5px;" +
+        'text-transform:uppercase;color:#1d3059';
+      name.textContent = review.name;
+      var from = document.createElement('span');
+      from.style.cssText = 'font-size:13.5px;color:#5c6470';
+      from.textContent = review.from;
+      who.appendChild(name);
+      who.appendChild(from);
+      card.appendChild(who);
+
+      host.appendChild(card);
+    });
+
+    var pending = REVIEWS.filter(function (r) { return r.placeholder; }).length;
+    var note = $('#reviewsNote');
+    if (note && pending) {
+      note.style.display = '';
+      note.textContent = pending === REVIEWS.length
+        ? 'Heads up: every quote below is a placeholder, standing in until the real reviews come through.'
+        : pending + ' of these ' + REVIEWS.length + ' quotes are still placeholders, marked on the card.';
+    }
+  })();
 
   /* ---------- Lake accordion ---------------------------------------- */
 
