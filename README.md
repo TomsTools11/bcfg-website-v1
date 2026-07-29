@@ -41,6 +41,13 @@ var BOOKED = [
 ];
 ```
 
+The calendar is also the date picker for the inquiry form. Tapping a green day
+fills the form's **Preferred date** (required) or **Alternate date** (optional),
+whichever of the two buttons above the calendar is highlighted; both dates are
+written into the inquiry email. A booked day cannot be picked — its cell is not
+a button, and typing that date into either field stops the form from submitting.
+So `BOOKED` is the single place that closes a day off.
+
 **Lake photos** — drop files into `bcfg/<lake>/` named `<lake>-01.jpg`,
 `<lake>-02.jpg`, … then update that lake's `n` in the `LAKES` table to match the
 number of photos. Lake Austin is at `n: 0` and shows a "photo coming soon"

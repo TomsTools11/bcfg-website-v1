@@ -461,6 +461,20 @@ button,input,select,textarea{font-family:inherit}
           <span style="display:inline-flex;align-items:center;gap:7px"><i style="width:12px;height:12px;border-radius:3px;background:#c0392b;display:inline-block"></i> Booked</span>
           <span style="flex:1 1 100%">Dates are kept up to date by hand; confirm when booking.</span>
         </div>
+        <!-- Which of the two trip-date fields a tap on the calendar fills. The
+             buttons double as a readout, so on a phone — where the form sits
+             below the fold — you can see what you just picked. -->
+        <div id="datePicker" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;max-width:420px">
+          <button type="button" data-calmode="preferred" style="flex:1 1 0;min-width:0;min-height:44px;padding:0 14px;border-radius:999px;border:1px solid rgba(14,34,68,.18);background:#fff;color:#1d3059;cursor:pointer;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:2px;text-align:left">
+            <span style="font:500 10.5px/1 'Oswald',sans-serif;letter-spacing:1.4px;text-transform:uppercase;opacity:.75">Preferred</span>
+            <span data-calmode-value style="font:600 13px/1 'Oswald',sans-serif;letter-spacing:.6px;white-space:nowrap">Choose</span>
+          </button>
+          <button type="button" data-calmode="alternate" style="flex:1 1 0;min-width:0;min-height:44px;padding:0 14px;border-radius:999px;border:1px solid rgba(14,34,68,.18);background:#fff;color:#1d3059;cursor:pointer;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:2px;text-align:left">
+            <span style="font:500 10.5px/1 'Oswald',sans-serif;letter-spacing:1.4px;text-transform:uppercase;opacity:.75">Alternate</span>
+            <span data-calmode-value style="font:600 13px/1 'Oswald',sans-serif;letter-spacing:.6px;white-space:nowrap">Optional</span>
+          </button>
+        </div>
+        <p style="font-size:13px;color:#5c6470;margin:0 0 16px;max-width:420px">Tap a green day to set the highlighted date. Booked days can't be picked, and both dates go straight into the inquiry form.</p>
         <div id="calendar" style="display:grid;gap:20px;max-width:420px"></div>
       </div>
 
@@ -478,6 +492,8 @@ button,input,select,textarea{font-family:inherit}
               <option value="unsure">Not sure yet / unique request</option>
             </select>
           </label>
+          <label style="display:grid;gap:7px"><span style="font:500 13px/1 'Oswald',sans-serif;letter-spacing:1px;text-transform:uppercase;color:#1d3059">Preferred Date</span><input type="date" name="preferredDate" required style="font-size:16px;padding:13px 14px;border:1px solid rgba(14,34,68,.18);border-radius:8px;background:#fff;color:#22293a;width:100%;min-height:48px"></label>
+          <label style="display:grid;gap:7px"><span style="font:500 13px/1 'Oswald',sans-serif;letter-spacing:1px;text-transform:uppercase;color:#1d3059">Alternate Date <span style="color:#5c6470">(Optional)</span></span><input type="date" name="alternateDate" style="font-size:16px;padding:13px 14px;border:1px solid rgba(14,34,68,.18);border-radius:8px;background:#fff;color:#22293a;width:100%;min-height:48px"></label>
           <label style="display:grid;gap:7px"><span style="font:500 13px/1 'Oswald',sans-serif;letter-spacing:1px;text-transform:uppercase;color:#1d3059">Experience</span>
             <select name="experience" style="font-size:16px;padding:13px 14px;border:1px solid rgba(14,34,68,.18);border-radius:8px;background:#fff;color:#22293a;width:100%;min-height:48px">
               <option value="beginner">Beginner (what's a fish?)</option>
@@ -569,7 +585,9 @@ button,input,select,textarea{font-family:inherit}
   var HERO_COUNT = 42;
 
   /* EDIT BOOKED DATES: add or remove dates below (format YYYY-MM-DD).
-     Anything not listed shows as Open for the next 90 days. */
+     Anything not listed shows as Open for the next 90 days. A booked day is
+     also blocked in the booking form — its calendar cell is not clickable, and
+     typing it into Preferred/Alternate date stops the form from submitting. */
   var BOOKED = [
     '2026-07-25',
     '2026-08-01'
@@ -766,41 +784,162 @@ button,input,select,textarea{font-family:inherit}
     if (chips) chips.appendChild(chip);
   });
 
-  /* ---------- Availability calendar ---------------------------------- */
+  /* ---------- Dates -------------------------------------------------- */
+
+  var MONTHS = ['January','February','March','April','May','June',
+                'July','August','September','October','November','December'];
+  var DAYS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+
+  var startOfDay = new Date(); startOfDay.setHours(0, 0, 0, 0);
+  var calEnd = new Date(startOfDay); calEnd.setDate(calEnd.getDate() + 89);
+
+  var isoKey = function (d) {
+    return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
+  };
+
+  var bookedSet = {};
+  BOOKED.forEach(function (d) { bookedSet[d] = true; });
+
+  /* Split the string by hand rather than `new Date('2026-08-08')` — that form
+     is parsed as UTC and comes back a day early anywhere west of Greenwich,
+     which is every visitor this site has. */
+  function parseISO(iso) {
+    var p = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso || '');
+    return p ? new Date(+p[1], +p[2] - 1, +p[3]) : null;
+  }
+  function longDate(iso) {
+    var d = parseISO(iso);
+    return d ? DAYS[d.getDay()] + ', ' + MONTHS[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear() : '';
+  }
+  function shortDate(iso) {
+    var d = parseISO(iso);
+    return d ? DAYS[d.getDay()].slice(0, 3) + ' ' + MONTHS[d.getMonth()].slice(0, 3) + ' ' + d.getDate() : '';
+  }
+
+  /* ---------- Availability calendar + trip dates ---------------------- */
+
+  var form = $('#inquiry');
+  var prefInput = form ? form.elements.preferredDate : null;
+  var altInput = form ? form.elements.alternateDate : null;
+  var pickerHost = $('#datePicker');
+
+  /* Which field the next tap on the calendar fills. */
+  var picking = 'preferred';
+
+  function inputFor(mode) { return mode === 'preferred' ? prefInput : altInput; }
+
+  /* The calendar only paints 90 days, but people do ask for a trip further out
+     than that, so the fields are floored at today and left open at the top.
+     A booked date is unreachable either way: its cell is not a button, and
+     typing one in fails validation before the form will submit. */
+  function validateDates() {
+    [prefInput, altInput].forEach(function (el) {
+      if (!el) return;
+      el.setCustomValidity(el.value && bookedSet[el.value]
+        ? 'That day is already booked. Pick another one.' : '');
+    });
+    if (prefInput && altInput && altInput.value && altInput.value === prefInput.value) {
+      altInput.setCustomValidity('Pick a different day from your preferred date.');
+    }
+  }
+
+  function renderDatePicker() {
+    if (!pickerHost) return;
+    $$('[data-calmode]', pickerHost).forEach(function (btn) {
+      var mode = btn.getAttribute('data-calmode');
+      var input = inputFor(mode);
+      var active = picking === mode;
+      btn.setAttribute('aria-pressed', active ? 'true' : 'false');
+      btn.style.background = active ? '#1d3059' : '#fff';
+      btn.style.color = active ? '#fff' : '#1d3059';
+      btn.style.borderColor = active ? '#1d3059' : 'rgba(14,34,68,.18)';
+      var value = $('[data-calmode-value]', btn);
+      value.textContent = input && input.value
+        ? shortDate(input.value)
+        : (mode === 'preferred' ? 'Choose' : 'Optional');
+    });
+  }
+
+  /* An inset ring rather than an outline: the cells sit 4px apart, so anything
+     drawn outside the box collides with the neighbouring day. */
+  function paintCalendar() {
+    var pref = prefInput ? prefInput.value : '';
+    var alt = altInput ? altInput.value : '';
+    $$('#calendar button[data-date]').forEach(function (btn) {
+      var iso = btn.getAttribute('data-date');
+      var mine = iso && iso === pref ? 'preferred' : (iso && iso === alt ? 'alternate' : '');
+      btn.style.boxShadow = mine === 'preferred' ? 'inset 0 0 0 3px #e05c22'
+        : mine === 'alternate' ? 'inset 0 0 0 3px #0e2244' : 'none';
+      btn.setAttribute('aria-pressed', mine ? 'true' : 'false');
+      btn.title = mine === 'preferred' ? 'Your preferred date'
+        : mine === 'alternate' ? 'Your alternate date' : 'Open';
+    });
+  }
+
+  function syncDates() {
+    validateDates();
+    renderDatePicker();
+    paintCalendar();
+  }
+
+  function setDate(mode, iso) {
+    var input = inputFor(mode);
+    if (!input) return;
+    /* Tapping the day that is already set clears it, so a mistake is one tap
+       to undo rather than a trip to the field. */
+    input.value = input.value === iso ? '' : iso;
+    /* Filling the preferred date moves the target along, which is the order
+       people fill these in. Filling the alternate leaves it where it is. */
+    if (input.value && mode === 'preferred') picking = 'alternate';
+    syncDates();
+  }
 
   function buildCalendar() {
     var host = $('#calendar');
     if (!host) return;
 
-    var today = new Date(); today.setHours(0, 0, 0, 0);
-    var end = new Date(today); end.setDate(end.getDate() + 89);
-    var booked = {};
-    BOOKED.forEach(function (d) { booked[d] = true; });
-
-    var names = ['January','February','March','April','May','June',
-                 'July','August','September','October','November','December'];
     var dows = ['S','M','T','W','T','F','S'];
-    var key = function (d) {
-      return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
-    };
+    var base = 'height:34px;display:flex;align-items:center;justify-content:center;' +
+      "border-radius:5px;font:400 12.5px/1 'Oswald',sans-serif;";
 
     var cell = function (text, bg, fg, title) {
       var s = document.createElement('span');
-      s.style.cssText = 'height:34px;display:flex;align-items:center;justify-content:center;' +
-        'border-radius:5px;font:400 12.5px/1 \'Oswald\',sans-serif;background:' + bg + ';color:' + fg;
+      s.style.cssText = base + 'background:' + bg + ';color:' + fg;
       if (title) s.title = title;
       s.textContent = text;
       return s;
     };
 
-    var m = new Date(today.getFullYear(), today.getMonth(), 1);
-    while (m <= end) {
+    /* Only an open day inside the window is a button. Booked and out-of-window
+       days stay inert spans, so there is nothing to click and nothing to focus. */
+    var dayCell = function (day, iso, outside, isBooked) {
+      if (outside) return cell(String(day), '#eef0f3', '#5c6470', '');
+      if (isBooked) {
+        var s = cell(String(day), '#c0392b', '#fff', 'Booked');
+        s.setAttribute('data-booked', iso);
+        s.setAttribute('aria-label', longDate(iso) + ', booked');
+        return s;
+      }
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.setAttribute('data-date', iso);
+      b.setAttribute('aria-pressed', 'false');
+      b.style.cssText = base + 'background:#2e7d4f;color:#fff;border:none;padding:0;width:100%;cursor:pointer';
+      b.title = 'Open';
+      b.setAttribute('aria-label', longDate(iso) + ', open');
+      b.textContent = String(day);
+      b.addEventListener('click', function () { setDate(picking, iso); });
+      return b;
+    };
+
+    var m = new Date(startOfDay.getFullYear(), startOfDay.getMonth(), 1);
+    while (m <= calEnd) {
       var block = document.createElement('div');
 
       var h3 = document.createElement('h3');
       h3.style.cssText = "font:600 14px/1 'Oswald',sans-serif;letter-spacing:1.5px;" +
         'text-transform:uppercase;color:#1d3059;margin:0 0 10px';
-      h3.textContent = names[m.getMonth()] + ' ' + m.getFullYear();
+      h3.textContent = MONTHS[m.getMonth()] + ' ' + m.getFullYear();
       block.appendChild(h3);
 
       var grid = document.createElement('div');
@@ -814,10 +953,9 @@ button,input,select,textarea{font-family:inherit}
       var last = new Date(m.getFullYear(), m.getMonth() + 1, 0).getDate();
       for (var day = 1; day <= last; day++) {
         var d = new Date(m.getFullYear(), m.getMonth(), day);
-        var bg = '#2e7d4f', fg = '#fff', title = 'Open';
-        if (d < today || d > end) { bg = '#eef0f3'; fg = '#5c6470'; title = ''; }
-        else if (booked[key(d)]) { bg = '#c0392b'; title = 'Booked'; }
-        grid.appendChild(cell(String(day), bg, fg, title));
+        var iso = isoKey(d);
+        var outside = d < startOfDay || d > calEnd;
+        grid.appendChild(dayCell(day, iso, outside, !outside && !!bookedSet[iso]));
       }
 
       block.appendChild(grid);
@@ -828,9 +966,22 @@ button,input,select,textarea{font-family:inherit}
 
   buildCalendar();
 
+  [prefInput, altInput].forEach(function (el) {
+    if (!el) return;
+    el.min = isoKey(startOfDay);
+    el.addEventListener('input', syncDates);
+    el.addEventListener('change', syncDates);
+  });
+  $$('[data-calmode]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      picking = btn.getAttribute('data-calmode');
+      renderDatePicker();
+    });
+  });
+  syncDates();
+
   /* ---------- Inquiry form ------------------------------------------ */
 
-  var form = $('#inquiry');
   var tripSelect = form ? form.elements.trip : null;
 
   $$('[data-pick]').forEach(function (a) {
@@ -850,6 +1001,8 @@ button,input,select,textarea{font-family:inherit}
       var body = 'Name: ' + val('name') +
         '\nEmail: ' + val('email') +
         '\nTrip: ' + txt('trip') +
+        '\nPreferred date: ' + (longDate(val('preferredDate')) || 'not given') +
+        '\nAlternate date: ' + (longDate(val('alternateDate')) || 'none given') +
         '\nExperience: ' + txt('experience') +
         '\nPreferred lake: ' + val('lake') +
         '\n\n' + val('message');
