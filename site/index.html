@@ -40,6 +40,12 @@ button,input,select,textarea{font-family:inherit}
 [data-hs]::-webkit-scrollbar-thumb{background:rgba(14,34,68,.22);border-radius:99px}
 [data-hs]>*{scroll-snap-align:start}
 :focus-visible{outline:2px solid #e05c22;outline-offset:2px}
+/* Header logo — the one number to change if it wants to be bigger again. The
+   mark has no transparent margin of its own (its artwork runs edge to edge),
+   so the height set here is the height you see. The header's vertical padding
+   was trimmed from 8px to 4px to absorb most of the growth: 52px -> 65px is a
+   25% bigger logo for 5px more bar. */
+.brand-logo{height:65px;width:auto}
 @media (min-width:901px){[data-mob]{display:none!important}}
 @media (max-width:900px){
   [data-desk]{display:none!important}
@@ -64,8 +70,8 @@ button,input,select,textarea{font-family:inherit}
 <div style="background:#f8f7f3;background-image:url('/bcfg/contours.svg'),radial-gradient(rgba(14,34,68,.022) 1px,transparent 1px);background-size:900px 900px,4px 4px;min-height:100vh;overflow-x:hidden">
 
 <header style="position:sticky;top:0;z-index:60;background:rgba(248,247,243,.95);backdrop-filter:blur(10px);border-bottom:1px solid rgba(14,34,68,.12)">
-  <div style="max-width:1180px;margin:0 auto;padding:8px clamp(16px,4vw,40px);display:flex;align-items:center;justify-content:space-between;gap:20px;min-height:64px">
-    <a href="#top" style="display:flex;align-items:center"><img src="/bcfg/logo-card-navy.png" alt="Blue Collar Fishing Guide" style="height:52px;width:auto"></a>
+  <div style="max-width:1180px;margin:0 auto;padding:4px clamp(16px,4vw,40px);display:flex;align-items:center;justify-content:space-between;gap:20px;min-height:64px">
+    <a href="#top" style="display:flex;align-items:center"><img class="brand-logo" src="/bcfg/logo-card-navy.png" alt="Blue Collar Fishing Guide"></a>
     <nav data-desk style="display:flex;align-items:center;gap:26px">
       <a href="#top" style="font:500 14px/1 'Oswald',sans-serif;letter-spacing:1.2px;text-transform:uppercase;color:#1d3059">Home</a>
       <a href="#about" style="font:500 14px/1 'Oswald',sans-serif;letter-spacing:1.2px;text-transform:uppercase;color:#1d3059">Your Guide</a>
