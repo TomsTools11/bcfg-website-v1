@@ -7,23 +7,147 @@
   HOW TO EDIT
     - Text: the copy between tags is safe to change.
     - Booked dates: see "EDIT BOOKED DATES" in the script at the bottom.
+      These also close the day off in the booking form.
+    - Reviews: see "EDIT REVIEWS" in the script at the bottom. Every quote
+      shipped today is a placeholder and says so on the card.
     - Lake photos: see the LAKES table in the script at the bottom.
     - Hero photos: drop numbered files in bcfg/hero/ and update HERO_COUNT.
+    - Header logo size: the .brand-logo rule in the stylesheet.
+
+  CHECK: `node verify-assets.mjs` from the repo root flags any photo that is
+  referenced but missing, or sitting in bcfg/ without a page asking for it.
 
   DEPLOY: static site, no build step. Vercel serves this directory as-is.
 ========================================================================== -->
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Blue Collar Fishing Guide - Central Texas Bass Fishing</title>
-<meta name="description" content="Guided bass fishing on eight Central Texas lakes near Austin and San Antonio. Half-day, full-day, and summer night trips out of New Braunfels, Texas. Rods, tackle, ice, and water included.">
+<title>Blue Collar Fishing Guide | Central Texas Bass Fishing Trips</title>
+<meta name="description" content="Guided bass fishing on eight Central Texas lakes near Austin and San Antonio. Half-day, full-day, and summer night trips out of New Braunfels, TX.">
 <link rel="icon" href="/bcfg/logo-card-navy.png">
 <link rel="apple-touch-icon" href="/bcfg/logo-card-navy.png">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Blue Collar Fishing Guide - Central Texas Bass Fishing">
-<meta property="og:description" content="Guided bass fishing on eight Central Texas lakes near Austin and San Antonio. A working angler's guide out of New Braunfels, Texas.">
+<meta property="og:site_name" content="Blue Collar Fishing Guide">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="Blue Collar Fishing Guide | Central Texas Bass Fishing Trips">
+<meta property="og:description" content="Guided bass fishing on eight Central Texas lakes near Austin and San Antonio. A working angler's guide out of New Braunfels, TX.">
 <meta property="og:image" content="/bcfg/hero/hero-01.jpg">
+<meta property="og:image:width" content="1600">
+<meta property="og:image:height" content="1066">
+<meta property="og:image:alt" content="A Blue Collar Fishing Guide bass boat at the dock at sunrise on a Central Texas lake">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Blue Collar Fishing Guide | Central Texas Bass Fishing Trips">
+<meta name="twitter:description" content="Guided bass fishing on eight Central Texas lakes near Austin and San Antonio. A working angler's guide out of New Braunfels, TX.">
+<meta name="twitter:image" content="/bcfg/hero/hero-01.jpg">
+<meta name="twitter:image:alt" content="A Blue Collar Fishing Guide bass boat at the dock at sunrise on a Central Texas lake">
+<!-- AT LAUNCH, once the real domain points here, uncomment these and swap in
+     the domain. They are the only three things on this page that cannot be
+     written without knowing it, and Facebook and X both want the image as a
+     full URL rather than a path:
+<link rel="canonical" href="https://YOUR-DOMAIN/">
+<meta property="og:url" content="https://YOUR-DOMAIN/">
+<meta property="og:image" content="https://YOUR-DOMAIN/bcfg/hero/hero-01.jpg">
+-->
+
+<!-- Structured data. Everything here is also stated on the page: prices come
+     from the Trip Packages cards, the lakes from The Scene, the phone and
+     email from Contact Details. Keep the two in step when any of them change.
+     Deliberately no "review" or "aggregateRating": review markup has to
+     describe real reviews, and every quote on the page is still a placeholder.
+     Add it when the real ones land. -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "name": "Blue Collar Fishing Guide",
+  "description": "Guided bass fishing on eight Central Texas lakes near Austin and San Antonio. Half-day, full-day, and summer night trips out of New Braunfels, Texas. Rods, tackle, ice, and water included.",
+  "slogan": "A working angler's guide",
+  "image": "/bcfg/hero/hero-01.jpg",
+  "logo": "/bcfg/logo-card-navy.png",
+  "telephone": "+1-512-761-7639",
+  "email": "bluecollarfishingguide@gmail.com",
+  "priceRange": "$400-$650",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "New Braunfels",
+    "addressRegion": "TX",
+    "addressCountry": "US"
+  },
+  "sameAs": ["https://instagram.com/bluecollarfishingguide"],
+  "knowsAbout": [
+    "Largemouth bass fishing",
+    "Smallmouth bass fishing",
+    "Central Texas lakes",
+    "Seasonal bass patterns"
+  ],
+  "areaServed": [
+    { "@type": "LakeBodyOfWater", "name": "Canyon Lake" },
+    { "@type": "LakeBodyOfWater", "name": "Lake Travis" },
+    { "@type": "LakeBodyOfWater", "name": "Lady Bird Lake" },
+    { "@type": "LakeBodyOfWater", "name": "Lake LBJ" },
+    { "@type": "LakeBodyOfWater", "name": "Lake Austin" },
+    { "@type": "LakeBodyOfWater", "name": "Lake Belton" },
+    { "@type": "LakeBodyOfWater", "name": "Stillhouse Hollow Lake" },
+    { "@type": "LakeBodyOfWater", "name": "Lake Buchanan" },
+    { "@type": "City", "name": "Austin, Texas" },
+    { "@type": "City", "name": "San Antonio, Texas" },
+    { "@type": "City", "name": "New Braunfels, Texas" }
+  ],
+  "makesOffer": [
+    {
+      "@type": "Offer",
+      "itemOffered": {
+        "@type": "Service",
+        "name": "Half-Day Guided Bass Fishing Trip",
+        "serviceType": "Fishing guide service",
+        "description": "Four hours on the water. Rods, tackle, ice, and water included."
+      },
+      "priceSpecification": {
+        "@type": "PriceSpecification",
+        "priceCurrency": "USD",
+        "minPrice": 400,
+        "maxPrice": 450,
+        "description": "$400 for one or two anglers, $450 for three."
+      }
+    },
+    {
+      "@type": "Offer",
+      "itemOffered": {
+        "@type": "Service",
+        "name": "Full-Day Guided Bass Fishing Trip",
+        "serviceType": "Fishing guide service",
+        "description": "Eight hours on the water. Rods, tackle, ice, and water included."
+      },
+      "priceSpecification": {
+        "@type": "PriceSpecification",
+        "priceCurrency": "USD",
+        "minPrice": 600,
+        "maxPrice": 650,
+        "description": "$600 for one or two anglers, $650 for three."
+      }
+    },
+    {
+      "@type": "Offer",
+      "itemOffered": {
+        "@type": "Service",
+        "name": "Summer Nights Guided Bass Fishing Trip",
+        "serviceType": "Fishing guide service",
+        "description": "6:00 PM to 10:00 PM, up to three anglers."
+      },
+      "priceSpecification": {
+        "@type": "PriceSpecification",
+        "priceCurrency": "USD",
+        "price": 400
+      }
+    }
+  ],
+  "founder": {
+    "@type": "Person",
+    "name": "Chris Studinger",
+    "jobTitle": "Fishing guide"
+  }
+}
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -40,11 +164,54 @@ button,input,select,textarea{font-family:inherit}
 [data-hs]::-webkit-scrollbar-thumb{background:rgba(14,34,68,.22);border-radius:99px}
 [data-hs]>*{scroll-snap-align:start}
 :focus-visible{outline:2px solid #e05c22;outline-offset:2px}
+/* Header logo — the one number to change if it wants to be bigger again. The
+   mark has no transparent margin of its own (its artwork runs edge to edge),
+   so the height set here is the height you see. The header's vertical padding
+   was trimmed from 8px to 4px to absorb most of the growth: 52px -> 65px is a
+   25% bigger logo for 5px more bar. */
+.brand-logo{height:65px;width:auto}
+
+/* HERO — one <h1> in two layouts.
+   The heading used to exist twice, once inside the phone hero where it sits
+   over the photo and once in the desktop text column, with a breakpoint
+   hiding whichever was wrong. Two <h1>s on a page is exactly what an SEO
+   audit flags, and hiding one does not remove it.
+   Instead there is a single heading that both layouts place with grid areas.
+   On a computer .hero-text is an ordinary box holding the title above the
+   copy in the left column. On a phone it becomes display:contents, which
+   drops its box and promotes the title and the copy to grid items in their
+   own right — so the title can be handed the same grid area as the photo and
+   sit over it, while the copy takes the row underneath. */
+.hero{display:grid;grid-template-columns:1.02fr 1fr;grid-template-areas:"text media";
+  align-items:center;gap:48px;max-width:1180px;margin:0 auto}
+.hero-text{grid-area:text;padding:clamp(26px,4vw,72px) clamp(18px,4vw,40px)}
+.hero-media{grid-area:media;position:relative;overflow:hidden;align-self:stretch;
+  min-height:520px;background:#0e2244}
+.hero-eyebrow{display:inline-block;font:700 12px/1 'Inter',sans-serif;letter-spacing:.26em;
+  text-transform:uppercase;color:#1d3059}
+.hero-title h1{font-family:'Anton',Impact,sans-serif;font-weight:400;
+  font-size:clamp(44px,4.6vw,68px);line-height:.98;letter-spacing:1px;text-transform:uppercase;
+  color:#1d3059;margin:18px 0 22px}
+/* The scrim earns the light text its contrast, and is only needed where the
+   heading is actually over the photo. */
+.hero-scrim{display:none;position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(14,34,68,.4) 0%,rgba(14,34,68,.06) 34%,rgba(14,34,68,.88) 100%)}
 @media (min-width:901px){[data-mob]{display:none!important}}
 @media (max-width:900px){
   [data-desk]{display:none!important}
   [data-tap]{display:inline-flex;align-items:center;min-height:44px}
-  [data-r=hero]{grid-template-columns:1fr!important;gap:0!important}
+  .hero{grid-template-columns:1fr;grid-template-areas:"media" "copy";gap:0}
+  .hero-text{display:contents}
+  /* Same area as the photo, pinned to its foot. z-index because the media
+     comes after the title in the source — the heading leads the page for a
+     screen reader, which is the order that matters. */
+  .hero-title{grid-area:media;align-self:end;position:relative;z-index:1;
+    padding:0 clamp(18px,5vw,28px) 26px}
+  .hero-copy{grid-area:copy;padding:clamp(26px,4vw,72px) clamp(18px,4vw,40px)}
+  .hero-media{height:58vh;min-height:360px;max-height:520px}
+  .hero-scrim{display:block}
+  .hero-eyebrow{font-size:11px;letter-spacing:.24em;color:#a9bedf;margin-bottom:12px}
+  .hero-title h1{font-size:clamp(36px,11vw,52px);color:#f8f7f3;margin:0}
   [data-r=two]{grid-template-columns:1fr!important;gap:28px!important}
   [data-r=book]{grid-template-columns:1fr!important;gap:40px!important}
   [data-r=foot]{grid-template-columns:1fr!important}
@@ -64,8 +231,8 @@ button,input,select,textarea{font-family:inherit}
 <div style="background:#f8f7f3;background-image:url('/bcfg/contours.svg'),radial-gradient(rgba(14,34,68,.022) 1px,transparent 1px);background-size:900px 900px,4px 4px;min-height:100vh;overflow-x:hidden">
 
 <header style="position:sticky;top:0;z-index:60;background:rgba(248,247,243,.95);backdrop-filter:blur(10px);border-bottom:1px solid rgba(14,34,68,.12)">
-  <div style="max-width:1180px;margin:0 auto;padding:8px clamp(16px,4vw,40px);display:flex;align-items:center;justify-content:space-between;gap:20px;min-height:64px">
-    <a href="#top" style="display:flex;align-items:center"><img src="/bcfg/logo-card-navy.png" alt="Blue Collar Fishing Guide" style="height:52px;width:auto"></a>
+  <div style="max-width:1180px;margin:0 auto;padding:4px clamp(16px,4vw,40px);display:flex;align-items:center;justify-content:space-between;gap:20px;min-height:64px">
+    <a href="#top" style="display:flex;align-items:center"><img class="brand-logo" src="/bcfg/logo-card-navy.png" alt="Blue Collar Fishing Guide logo"></a>
     <nav data-desk style="display:flex;align-items:center;gap:26px">
       <a href="#top" style="font:500 14px/1 'Oswald',sans-serif;letter-spacing:1.2px;text-transform:uppercase;color:#1d3059">Home</a>
       <a href="#about" style="font:500 14px/1 'Oswald',sans-serif;letter-spacing:1.2px;text-transform:uppercase;color:#1d3059">Your Guide</a>
@@ -91,33 +258,33 @@ button,input,select,textarea{font-family:inherit}
 </header>
 
 <section id="top">
-  <div data-r="hero" style="max-width:1180px;margin:0 auto;display:grid;grid-template-columns:1.02fr 1fr;gap:48px;align-items:center;padding:0 0 0 0">
-    <div data-mob style="position:relative;height:58vh;min-height:360px;max-height:520px;background:#0e2244;overflow:hidden;order:-1">
-      <img data-hero-a src="/bcfg/hero/hero-01.jpg" alt="Recent trip photo" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:1;transition:opacity 1.2s ease">
-      <img data-hero-b src="/bcfg/hero/hero-02.jpg" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 1.2s ease">
-      <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(14,34,68,.4) 0%,rgba(14,34,68,.06) 34%,rgba(14,34,68,.88) 100%)"></div>
-      <div style="position:absolute;left:0;right:0;bottom:0;padding:0 clamp(18px,5vw,28px) 26px">
-        <span style="display:inline-block;font:700 11px/1 'Inter',sans-serif;letter-spacing:.24em;text-transform:uppercase;color:#a9bedf;margin-bottom:12px">New Braunfels, Texas</span>
-        <h1 style="font-family:'Anton',Impact,sans-serif;font-weight:400;font-size:clamp(36px,11vw,52px);line-height:.98;letter-spacing:1px;text-transform:uppercase;color:#f8f7f3;margin:0">A Working Angler's Guide</h1>
+  <div class="hero">
+    <div class="hero-text">
+      <div class="hero-title">
+        <span class="hero-eyebrow">New Braunfels, Texas</span>
+        <h1>A Working Angler's Guide</h1>
+      </div>
+      <div class="hero-copy">
+        <p style="margin:0 0 22px;font-size:16.5px;max-width:560px;text-wrap:pretty">Here at Blue Collar Fishing Guide, my goal is to help you shorten the learning curve of bass fishing on Central Texas lakes. Through countless hours spent on the water, I'll share the techniques, seasonal patterns, and local knowledge that help you spend less time guessing and more time catching fish. Whether you're new to bass fishing or looking to refine your skills, every trip is designed to build your confidence, improve your knowledge, and create a successful day on the water.</p>
+        <ul style="list-style:none;display:grid;gap:11px;margin:0 0 28px;padding:0;max-width:560px">
+          <li style="display:flex;align-items:baseline;gap:11px"><span style="font:600 15px/1 'Oswald',sans-serif;color:#1d3059">&#10003;</span><span>Rods, tackle, ice, and water are on us</span></li>
+          <li style="display:flex;align-items:baseline;gap:11px"><span style="font:600 15px/1 'Oswald',sans-serif;color:#1d3059">&#10003;</span><span>Eight lakes within striking distance of Austin</span></li>
+          <li style="display:flex;align-items:baseline;gap:11px"><span style="font:600 15px/1 'Oswald',sans-serif;color:#1d3059">&#10003;</span><span>All skill levels, from "what's a fish?" to "I can outfish the guide"</span></li>
+        </ul>
+        <div style="display:flex;gap:12px;flex-wrap:wrap">
+          <a href="#book" style="display:inline-flex;align-items:center;justify-content:center;min-height:50px;padding:0 26px;background:#1d3059;color:#fff;border-radius:6px;font:500 14px/1 'Oswald',sans-serif;letter-spacing:1.5px;text-transform:uppercase;box-shadow:0 12px 26px -12px rgba(14,34,68,.7)">Book a Trip</a>
+          <a href="#trips" style="display:inline-flex;align-items:center;justify-content:center;min-height:50px;padding:0 26px;border:2px solid #1d3059;color:#1d3059;border-radius:6px;font:500 14px/1 'Oswald',sans-serif;letter-spacing:1.5px;text-transform:uppercase">See Trips &amp; Rates</a>
+        </div>
       </div>
     </div>
-    <div style="padding:clamp(26px,4vw,72px) clamp(18px,4vw,40px)">
-      <span data-desk style="display:inline-block;font:700 12px/1 'Inter',sans-serif;letter-spacing:.26em;text-transform:uppercase;color:#1d3059">New Braunfels, Texas</span>
-      <h1 data-desk style="font-family:'Anton',Impact,sans-serif;font-weight:400;font-size:clamp(44px,4.6vw,68px);line-height:.98;letter-spacing:1px;text-transform:uppercase;color:#1d3059;margin:18px 0 22px">A Working Angler's Guide</h1>
-      <p style="margin:0 0 22px;font-size:16.5px;max-width:560px;text-wrap:pretty">Here at Blue Collar Fishing Guide, my goal is to help you shorten the learning curve of bass fishing on Central Texas lakes. Through countless hours spent on the water, I'll share the techniques, seasonal patterns, and local knowledge that help you spend less time guessing and more time catching fish. Whether you're new to bass fishing or looking to refine your skills, every trip is designed to build your confidence, improve your knowledge, and create a successful day on the water.</p>
-      <ul style="list-style:none;display:grid;gap:11px;margin:0 0 28px;padding:0;max-width:560px">
-        <li style="display:flex;align-items:baseline;gap:11px"><span style="font:600 15px/1 'Oswald',sans-serif;color:#1d3059">&#10003;</span><span>Rods, tackle, ice, and water are on us</span></li>
-        <li style="display:flex;align-items:baseline;gap:11px"><span style="font:600 15px/1 'Oswald',sans-serif;color:#1d3059">&#10003;</span><span>Eight lakes within striking distance of Austin</span></li>
-        <li style="display:flex;align-items:baseline;gap:11px"><span style="font:600 15px/1 'Oswald',sans-serif;color:#1d3059">&#10003;</span><span>All skill levels, from "what's a fish?" to "I can outfish the guide"</span></li>
-      </ul>
-      <div style="display:flex;gap:12px;flex-wrap:wrap">
-        <a href="#book" style="display:inline-flex;align-items:center;justify-content:center;min-height:50px;padding:0 26px;background:#1d3059;color:#fff;border-radius:6px;font:500 14px/1 'Oswald',sans-serif;letter-spacing:1.5px;text-transform:uppercase;box-shadow:0 12px 26px -12px rgba(14,34,68,.7)">Book a Trip</a>
-        <a href="#trips" style="display:inline-flex;align-items:center;justify-content:center;min-height:50px;padding:0 26px;border:2px solid #1d3059;color:#1d3059;border-radius:6px;font:500 14px/1 'Oswald',sans-serif;letter-spacing:1.5px;text-transform:uppercase">See Trips &amp; Rates</a>
-      </div>
-    </div>
-    <div data-desk style="align-self:stretch;min-height:520px;position:relative;overflow:hidden">
-      <img data-hero-a src="/bcfg/hero/hero-01.jpg" alt="Recent trip photo" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:1;transition:opacity 1.2s ease">
-      <img data-hero-b src="/bcfg/hero/hero-02.jpg" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 1.2s ease">
+    <!-- The two layers crossfade through the 42 hero photos, so the alt text
+         has to describe all of them rather than the one loaded first. Only the
+         front layer carries it; the layer behind is the same slideshow mid-fade
+         and would otherwise be announced twice. -->
+    <div class="hero-media">
+      <img data-hero-a src="/bcfg/hero/hero-01.jpg" alt="A photo from a Blue Collar Fishing Guide trip on a Central Texas lake" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:1;transition:opacity 1.2s ease">
+      <img data-hero-b src="/bcfg/hero/hero-02.jpg" alt="" aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 1.2s ease">
+      <div class="hero-scrim"></div>
     </div>
   </div>
 </section>
@@ -125,7 +292,7 @@ button,input,select,textarea{font-family:inherit}
 <section id="about" style="background:#eef0f3;padding:clamp(44px,6vw,80px) 0">
   <div style="max-width:1180px;margin:0 auto;padding:0 clamp(18px,4vw,40px)">
     <div data-r="two" style="display:grid;grid-template-columns:.85fr 1.15fr;gap:44px;align-items:center">
-      <img src="/bcfg/Chris.jpg" alt="Chris Studinger holding two largemouth bass" style="width:100%;max-width:430px;aspect-ratio:4/5;object-fit:cover;border-radius:12px;margin:0 auto">
+      <img src="/bcfg/Chris.jpg" alt="Chris Studinger holding up two largemouth bass in front of a Central Texas marina" style="width:100%;max-width:430px;aspect-ratio:4/5;object-fit:cover;border-radius:12px;margin:0 auto">
       <div>
         <span style="display:inline-block;font:700 12px/1 'Inter',sans-serif;letter-spacing:.26em;text-transform:uppercase;color:#1d3059">Who's Behind This</span>
         <h2 style="font:600 clamp(26px,3.4vw,34px)/1.1 'Oswald',sans-serif;letter-spacing:.5px;text-transform:uppercase;color:#1d3059;margin:14px 0 18px">Chris Studinger, New Braunfels</h2>
@@ -157,7 +324,7 @@ button,input,select,textarea{font-family:inherit}
     <p style="max-width:640px;margin:0 0 24px;color:#5c6470">Every lake we work sits within about an hour and a half of Austin or San Antonio. Tap a lake on the map for drive times from each airport.</p>
 
     <div id="chart" style="position:relative;border:2px solid #1d3059;border-radius:8px;overflow:hidden;box-shadow:0 24px 50px -24px rgba(14,34,68,.35);max-width:760px;margin:0 auto 16px">
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);line-height:0"><img src="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/9/209/115" alt="" style="width:100%"><img src="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/9/209/116" alt="" style="width:100%"><img src="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/9/209/117" alt="" style="width:100%"><img src="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/9/210/115" alt="" style="width:100%"><img src="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/9/210/116" alt="" style="width:100%"><img src="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/9/210/117" alt="" style="width:100%"><img src="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/9/211/115" alt="" style="width:100%"><img src="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/9/211/116" alt="" style="width:100%"><img src="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/9/211/117" alt="" style="width:100%"></div>
+      <div aria-hidden="true" style="display:grid;grid-template-columns:repeat(3,1fr);line-height:0"><img src="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/9/209/115" alt="" style="width:100%"><img src="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/9/209/116" alt="" style="width:100%"><img src="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/9/209/117" alt="" style="width:100%"><img src="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/9/210/115" alt="" style="width:100%"><img src="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/9/210/116" alt="" style="width:100%"><img src="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/9/210/117" alt="" style="width:100%"><img src="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/9/211/115" alt="" style="width:100%"><img src="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/9/211/116" alt="" style="width:100%"><img src="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/9/211/117" alt="" style="width:100%"></div>
       <div style="position:absolute;left:12px;top:12px;background:rgba(248,247,243,.94);border:1px solid #1d3059;box-shadow:2px 2px 0 rgba(14,34,68,.3);padding:3px">
         <div style="border:1px solid rgba(29,48,89,.4);padding:6px 14px;text-align:center;font-family:Georgia,serif;color:#1d3059">
           <div style="font-size:9px;letter-spacing:2.5px">CHART No. 1</div>
@@ -352,27 +519,27 @@ button,input,select,textarea{font-family:inherit}
   </div>
   <div data-hs style="display:flex;gap:14px;padding:0 clamp(18px,4vw,40px) 14px">
     <figure style="flex:0 0 min(80vw,340px);margin:0">
-      <div style="aspect-ratio:3/2;border-radius:10px;overflow:hidden;background:#dfe3e9"><img src="/bcfg/canyon/canyon-02.jpg" alt="Canyon Lake trip photo" loading="lazy" style="width:100%;height:100%;object-fit:cover;object-position:center top"></div>
+      <div style="aspect-ratio:3/2;border-radius:10px;overflow:hidden;background:#dfe3e9"><img src="/bcfg/canyon/canyon-02.jpg" alt="An angler on the bow of the boat holding up a largemouth bass on Canyon Lake" loading="lazy" style="width:100%;height:100%;object-fit:cover;object-position:center top"></div>
       <figcaption style="margin-top:9px;font:500 13px/1 'Oswald',sans-serif;letter-spacing:1.4px;text-transform:uppercase;color:#1d3059">Canyon Lake</figcaption>
     </figure>
     <figure style="flex:0 0 min(80vw,340px);margin:0">
-      <div style="aspect-ratio:3/2;border-radius:10px;overflow:hidden;background:#dfe3e9"><img src="/bcfg/travis/travis-04.jpg" alt="Lake Travis trip photo" loading="lazy" style="width:100%;height:100%;object-fit:cover;object-position:center"></div>
+      <div style="aspect-ratio:3/2;border-radius:10px;overflow:hidden;background:#dfe3e9"><img src="/bcfg/travis/travis-04.jpg" alt="Two anglers in Blue Collar Fishing shirts with a bass at the Lake Travis marina" loading="lazy" style="width:100%;height:100%;object-fit:cover;object-position:center"></div>
       <figcaption style="margin-top:9px;font:500 13px/1 'Oswald',sans-serif;letter-spacing:1.4px;text-transform:uppercase;color:#1d3059">Lake Travis</figcaption>
     </figure>
     <figure style="flex:0 0 min(80vw,340px);margin:0">
-      <div style="aspect-ratio:3/2;border-radius:10px;overflow:hidden;background:#dfe3e9"><img src="/bcfg/lbj/lbj-03.jpg" alt="Lake LBJ trip photo" loading="lazy" style="width:100%;height:100%;object-fit:cover;object-position:center"></div>
+      <div style="aspect-ratio:3/2;border-radius:10px;overflow:hidden;background:#dfe3e9"><img src="/bcfg/lbj/lbj-03.jpg" alt="An angler holding a largemouth bass in front of the waterfront homes on Lake LBJ" loading="lazy" style="width:100%;height:100%;object-fit:cover;object-position:center"></div>
       <figcaption style="margin-top:9px;font:500 13px/1 'Oswald',sans-serif;letter-spacing:1.4px;text-transform:uppercase;color:#1d3059">Lake LBJ</figcaption>
     </figure>
     <figure style="flex:0 0 min(80vw,340px);margin:0">
-      <div style="aspect-ratio:3/2;border-radius:10px;overflow:hidden;background:#dfe3e9"><img src="/bcfg/belton/belton-03.jpg" alt="Lake Belton trip photo" loading="lazy" style="width:100%;height:100%;object-fit:cover;object-position:center"></div>
+      <div style="aspect-ratio:3/2;border-radius:10px;overflow:hidden;background:#dfe3e9"><img src="/bcfg/belton/belton-03.jpg" alt="An angler in cold-weather gear with a smallmouth bass against the rock bluffs of Lake Belton" loading="lazy" style="width:100%;height:100%;object-fit:cover;object-position:center"></div>
       <figcaption style="margin-top:9px;font:500 13px/1 'Oswald',sans-serif;letter-spacing:1.4px;text-transform:uppercase;color:#1d3059">Lake Belton</figcaption>
     </figure>
     <figure style="flex:0 0 min(80vw,340px);margin:0">
-      <div style="aspect-ratio:3/2;border-radius:10px;overflow:hidden;background:#dfe3e9"><img src="/bcfg/ladybird/ladybird-01.jpg" alt="Lady Bird Lake trip photo" loading="lazy" style="width:100%;height:100%;object-fit:cover;object-position:center"></div>
+      <div style="aspect-ratio:3/2;border-radius:10px;overflow:hidden;background:#dfe3e9"><img src="/bcfg/ladybird/ladybird-01.jpg" alt="A young angler holding out a largemouth bass with the downtown Austin skyline behind" loading="lazy" style="width:100%;height:100%;object-fit:cover;object-position:center"></div>
       <figcaption style="margin-top:9px;font:500 13px/1 'Oswald',sans-serif;letter-spacing:1.4px;text-transform:uppercase;color:#1d3059">Lady Bird Lake</figcaption>
     </figure>
     <figure style="flex:0 0 min(80vw,340px);margin:0">
-      <div style="aspect-ratio:3/2;border-radius:10px;overflow:hidden;background:#dfe3e9"><img src="/bcfg/stillhouse/stillhouse-01.jpg" alt="Stillhouse Hollow trip photo" loading="lazy" style="width:100%;height:100%;object-fit:cover;object-position:center"></div>
+      <div style="aspect-ratio:3/2;border-radius:10px;overflow:hidden;background:#dfe3e9"><img src="/bcfg/stillhouse/stillhouse-01.jpg" alt="An angler cradling a heavy largemouth bass on Stillhouse Hollow" loading="lazy" style="width:100%;height:100%;object-fit:cover;object-position:center"></div>
       <figcaption style="margin-top:9px;font:500 13px/1 'Oswald',sans-serif;letter-spacing:1.4px;text-transform:uppercase;color:#1d3059">Stillhouse Hollow</figcaption>
     </figure>
   </div>
@@ -461,6 +628,20 @@ button,input,select,textarea{font-family:inherit}
           <span style="display:inline-flex;align-items:center;gap:7px"><i style="width:12px;height:12px;border-radius:3px;background:#c0392b;display:inline-block"></i> Booked</span>
           <span style="flex:1 1 100%">Dates are kept up to date by hand; confirm when booking.</span>
         </div>
+        <!-- Which of the two trip-date fields a tap on the calendar fills. The
+             buttons double as a readout, so on a phone — where the form sits
+             below the fold — you can see what you just picked. -->
+        <div id="datePicker" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;max-width:420px">
+          <button type="button" data-calmode="preferred" style="flex:1 1 0;min-width:0;min-height:44px;padding:0 14px;border-radius:999px;border:1px solid rgba(14,34,68,.18);background:#fff;color:#1d3059;cursor:pointer;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:2px;text-align:left">
+            <span style="font:500 10.5px/1 'Oswald',sans-serif;letter-spacing:1.4px;text-transform:uppercase;opacity:.75">Preferred</span>
+            <span data-calmode-value style="font:600 13px/1 'Oswald',sans-serif;letter-spacing:.6px;white-space:nowrap">Choose</span>
+          </button>
+          <button type="button" data-calmode="alternate" style="flex:1 1 0;min-width:0;min-height:44px;padding:0 14px;border-radius:999px;border:1px solid rgba(14,34,68,.18);background:#fff;color:#1d3059;cursor:pointer;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:2px;text-align:left">
+            <span style="font:500 10.5px/1 'Oswald',sans-serif;letter-spacing:1.4px;text-transform:uppercase;opacity:.75">Alternate</span>
+            <span data-calmode-value style="font:600 13px/1 'Oswald',sans-serif;letter-spacing:.6px;white-space:nowrap">Optional</span>
+          </button>
+        </div>
+        <p style="font-size:13px;color:#5c6470;margin:0 0 16px;max-width:420px">Tap a green day to set the highlighted date. Booked days can't be picked, and both dates go straight into the inquiry form.</p>
         <div id="calendar" style="display:grid;gap:20px;max-width:420px"></div>
       </div>
 
@@ -478,6 +659,8 @@ button,input,select,textarea{font-family:inherit}
               <option value="unsure">Not sure yet / unique request</option>
             </select>
           </label>
+          <label style="display:grid;gap:7px"><span style="font:500 13px/1 'Oswald',sans-serif;letter-spacing:1px;text-transform:uppercase;color:#1d3059">Preferred Date</span><input type="date" name="preferredDate" required style="font-size:16px;padding:13px 14px;border:1px solid rgba(14,34,68,.18);border-radius:8px;background:#fff;color:#22293a;width:100%;min-height:48px"></label>
+          <label style="display:grid;gap:7px"><span style="font:500 13px/1 'Oswald',sans-serif;letter-spacing:1px;text-transform:uppercase;color:#1d3059">Alternate Date <span style="color:#5c6470">(Optional)</span></span><input type="date" name="alternateDate" style="font-size:16px;padding:13px 14px;border:1px solid rgba(14,34,68,.18);border-radius:8px;background:#fff;color:#22293a;width:100%;min-height:48px"></label>
           <label style="display:grid;gap:7px"><span style="font:500 13px/1 'Oswald',sans-serif;letter-spacing:1px;text-transform:uppercase;color:#1d3059">Experience</span>
             <select name="experience" style="font-size:16px;padding:13px 14px;border:1px solid rgba(14,34,68,.18);border-radius:8px;background:#fff;color:#22293a;width:100%;min-height:48px">
               <option value="beginner">Beginner (what's a fish?)</option>
@@ -511,9 +694,21 @@ button,input,select,textarea{font-family:inherit}
           <li>Instagram, <a href="https://instagram.com/bluecollarfishingguide" target="_blank" rel="noopener" data-tap style="text-decoration:underline;text-underline-offset:2px">@bluecollarfishingguide</a></li>
           <li>Facebook, <a href="#book" data-tap style="text-decoration:underline;text-underline-offset:2px">@bluecollarfishingguide</a></li>
         </ul>
-        <img src="/bcfg/hero/hero-04.jpg" alt="On the water" loading="lazy" style="width:100%;aspect-ratio:3/2;object-fit:cover;object-position:center 25%;border-radius:12px">
+        <img src="/bcfg/hero/hero-04.jpg" alt="An angler casting from the bow of the boat into schooling fish at first light" loading="lazy" style="width:100%;aspect-ratio:3/2;object-fit:cover;object-position:center 25%;border-radius:12px">
       </div>
     </div>
+  </div>
+</section>
+
+<section id="reviews" style="background:#eef0f3;padding:clamp(44px,6vw,80px) 0">
+  <div style="max-width:1180px;margin:0 auto;padding:0 clamp(18px,4vw,40px)">
+    <span style="display:inline-block;font:700 12px/1 'Inter',sans-serif;letter-spacing:.26em;text-transform:uppercase;color:#1d3059">In Their Words</span>
+    <h2 style="font:600 clamp(28px,3.6vw,36px)/1.1 'Oswald',sans-serif;letter-spacing:.5px;text-transform:uppercase;color:#1d3059;margin:14px 0 12px">What Anglers Say</h2>
+    <!-- Both the note and the per-card badges are written by the script from
+         the REVIEWS table, and disappear on their own as each placeholder is
+         swapped for a real quote. -->
+    <p id="reviewsNote" style="max-width:640px;margin:0 0 24px;color:#5c6470;display:none"></p>
+    <div id="reviewCards" data-r="three" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px"></div>
   </div>
 </section>
 
@@ -521,18 +716,18 @@ button,input,select,textarea{font-family:inherit}
   <div style="max-width:1180px;margin:0 auto;padding:0 clamp(18px,4vw,40px)">
     <div data-r="foot" style="display:grid;grid-template-columns:1.6fr 1fr 1fr;gap:30px;margin-bottom:34px">
       <div>
-        <img src="/bcfg/logo-card-white.png" alt="Blue Collar Fishing Guide" style="height:72px;width:auto;margin-bottom:14px">
+        <img src="/bcfg/logo-card-white.png" alt="Blue Collar Fishing Guide logo" style="height:72px;width:auto;margin-bottom:14px">
         <p style="font-size:14px;opacity:.85;margin:0;color:#f8f7f3">The working angler's guide. Honest, hardworking bass fishing across Central Texas.</p>
       </div>
       <div>
-        <h4 style="font:600 14px/1 'Oswald',sans-serif;letter-spacing:1px;text-transform:uppercase;color:#a9bedf;margin:0 0 14px">Explore</h4>
+        <h3 style="font:600 14px/1 'Oswald',sans-serif;letter-spacing:1px;text-transform:uppercase;color:#a9bedf;margin:0 0 14px">Explore</h3>
         <ul style="list-style:none;display:grid;gap:9px;font-size:14px;margin:0;padding:0">
           <li><a href="#scene" data-tap style="color:#f8f7f3;opacity:.85">The Scene</a></li>
           <li><a href="#trips" data-tap style="color:#f8f7f3;opacity:.85">Trips</a></li>
         </ul>
       </div>
       <div>
-        <h4 style="font:600 14px/1 'Oswald',sans-serif;letter-spacing:1px;text-transform:uppercase;color:#a9bedf;margin:0 0 14px">Get Out There</h4>
+        <h3 style="font:600 14px/1 'Oswald',sans-serif;letter-spacing:1px;text-transform:uppercase;color:#a9bedf;margin:0 0 14px">Get Out There</h3>
         <ul style="list-style:none;display:grid;gap:9px;font-size:14px;margin:0;padding:0">
           <li><a href="#book" data-tap style="color:#f8f7f3;opacity:.85">Book a Trip</a></li>
           <li><a href="#book" data-tap style="color:#f8f7f3;opacity:.85">Contact</a></li>
@@ -569,10 +764,64 @@ button,input,select,textarea{font-family:inherit}
   var HERO_COUNT = 42;
 
   /* EDIT BOOKED DATES: add or remove dates below (format YYYY-MM-DD).
-     Anything not listed shows as Open for the next 90 days. */
+     Anything not listed shows as Open for the next 90 days. A booked day is
+     also blocked in the booking form — its calendar cell is not clickable, and
+     typing it into Preferred/Alternate date stops the form from submitting. */
   var BOOKED = [
     '2026-07-25',
     '2026-08-01'
+  ];
+
+  /* EDIT REVIEWS: the cards in the "What Anglers Say" section, in the order
+     they appear. Four to six reads best — three across on a computer, stacked
+     on a phone. Keep a quote to two or three sentences; much longer and the
+     cards stop lining up. `from` is a hometown or the lake they fished.
+
+     EVERY QUOTE BELOW IS A STAND-IN, NOT A REAL CUSTOMER. Each one is marked
+     `placeholder: true`, which puts a visible "Placeholder" badge on its card
+     and a note above the grid. When a real review comes in, replace the quote,
+     the name and the `from`, and DELETE that entry's `placeholder: true` line.
+     The badge and the note clear themselves once the last one is gone.
+
+     Do not switch the badges off any other way. They are what stops invented
+     testimonials from going out under a real person's name. */
+  var REVIEWS = [
+    {
+      placeholder: true,
+      quote: 'He put us on fish within twenty minutes of leaving the ramp. What stuck with me was how much he explained along the way, why we were on that stretch of bank and what the fish were doing. I have fished Canyon a dozen times since and I finally know what I am looking at.',
+      name: 'Marcus D.',
+      from: 'Canyon Lake'
+    },
+    {
+      placeholder: true,
+      quote: 'Booked a half day for my son’s twelfth birthday and he has not stopped talking about it since. Chris was patient with every backlash and made sure the kid put the first fish of the day in the boat.',
+      name: 'Jill R.',
+      from: 'New Braunfels, TX'
+    },
+    {
+      placeholder: true,
+      quote: 'I have fished with guides all over Texas and this was the most straightforward day I have had. No hype and no highlight-reel promises, just somebody who knows the water and works hard for it.',
+      name: 'Tony V.',
+      from: 'Austin, TX'
+    },
+    {
+      placeholder: true,
+      quote: 'We flew in from out of state with one free morning and no gear at all. Everything was already on the boat and we were catching before the sun was fully up. Worth every dollar.',
+      name: 'Aaron K.',
+      from: 'Lake Travis'
+    },
+    {
+      placeholder: true,
+      quote: 'Third trip this year and it has been a different pattern every time depending on what the lake is doing. He explains the why behind it, which is the part that sticks once you are out there on your own.',
+      name: 'Dee W.',
+      from: 'Lake LBJ'
+    },
+    {
+      placeholder: true,
+      quote: 'Slow bite all morning and he never stopped grinding for it. We ended up with a five pounder in the last half hour. That is the difference between a good guide and a great one.',
+      name: 'Ray S.',
+      from: 'San Antonio, TX'
+    }
   ];
 
   /* EDIT: `n` is how many photos sit in bcfg/<id>/, named <id>-01.jpg, <id>-02.jpg, ...
@@ -685,7 +934,7 @@ button,input,select,textarea{font-family:inherit}
       btn.style.cssText = 'flex:0 0 clamp(128px,36vw,164px);aspect-ratio:3/4;padding:0;border:none;border-radius:8px;overflow:hidden;background:#eef0f3;cursor:zoom-in';
       var img = document.createElement('img');
       img.src = src;
-      img.alt = lake.label + ' trip photo ' + i;
+      img.alt = 'Bass fishing trip photo ' + i + ' from ' + lake.full;
       img.loading = 'lazy';
       img.style.cssText = 'width:100%;height:100%;object-fit:cover';
       btn.appendChild(img);
@@ -695,6 +944,57 @@ button,input,select,textarea{font-family:inherit}
       rail.appendChild(btn);
     }
   });
+
+  /* ---------- Reviews ------------------------------------------------ */
+
+  (function buildReviews() {
+    var host = $('#reviewCards');
+    if (!host) return;
+
+    REVIEWS.forEach(function (review) {
+      var card = document.createElement('figure');
+      card.style.cssText = 'background:#fff;border:1px solid rgba(14,34,68,.14);border-radius:12px;' +
+        'padding:22px;margin:0;display:flex;flex-direction:column;gap:14px';
+
+      if (review.placeholder) {
+        var badge = document.createElement('span');
+        badge.style.cssText = "align-self:flex-start;font:700 10px/1 'Inter',sans-serif;" +
+          'letter-spacing:.22em;text-transform:uppercase;color:#e05c22;' +
+          'border:1px solid rgba(224,92,34,.45);border-radius:999px;padding:5px 10px';
+        badge.textContent = 'Placeholder';
+        card.appendChild(badge);
+      }
+
+      var quote = document.createElement('blockquote');
+      quote.style.cssText = 'margin:0;font-size:15.5px;line-height:1.6;color:#22293a;text-wrap:pretty';
+      quote.textContent = '“' + review.quote + '”';
+      card.appendChild(quote);
+
+      var who = document.createElement('figcaption');
+      who.style.cssText = 'margin-top:auto;display:grid;gap:3px';
+      var name = document.createElement('span');
+      name.style.cssText = "font:600 15px/1.2 'Oswald',sans-serif;letter-spacing:.5px;" +
+        'text-transform:uppercase;color:#1d3059';
+      name.textContent = review.name;
+      var from = document.createElement('span');
+      from.style.cssText = 'font-size:13.5px;color:#5c6470';
+      from.textContent = review.from;
+      who.appendChild(name);
+      who.appendChild(from);
+      card.appendChild(who);
+
+      host.appendChild(card);
+    });
+
+    var pending = REVIEWS.filter(function (r) { return r.placeholder; }).length;
+    var note = $('#reviewsNote');
+    if (note && pending) {
+      note.style.display = '';
+      note.textContent = pending === REVIEWS.length
+        ? 'Heads up: every quote below is a placeholder, standing in until the real reviews come through.'
+        : pending + ' of these ' + REVIEWS.length + ' quotes are still placeholders, marked on the card.';
+    }
+  })();
 
   /* ---------- Lake accordion ---------------------------------------- */
 
@@ -743,7 +1043,7 @@ button,input,select,textarea{font-family:inherit}
   LAKES.forEach(function (lake) {
     var pin = document.createElement('button');
     pin.type = 'button';
-    pin.setAttribute('aria-label', lake.name);
+    pin.setAttribute('aria-label', lake.full);
     pin.style.cssText = 'position:absolute;left:' + lake.left + ';top:' + lake.top +
       ';transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:2px;' +
       'background:none;border:none;cursor:pointer;padding:8px;min-width:44px;min-height:44px;justify-content:center';
@@ -766,41 +1066,167 @@ button,input,select,textarea{font-family:inherit}
     if (chips) chips.appendChild(chip);
   });
 
-  /* ---------- Availability calendar ---------------------------------- */
+  /* ---------- Dates -------------------------------------------------- */
+
+  var MONTHS = ['January','February','March','April','May','June',
+                'July','August','September','October','November','December'];
+  var DAYS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+
+  var startOfDay = new Date(); startOfDay.setHours(0, 0, 0, 0);
+  var calEnd = new Date(startOfDay); calEnd.setDate(calEnd.getDate() + 89);
+
+  var isoKey = function (d) {
+    return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
+  };
+
+  var bookedSet = {};
+  BOOKED.forEach(function (d) { bookedSet[d] = true; });
+
+  /* Split the string by hand rather than `new Date('2026-08-08')` — that form
+     is parsed as UTC and comes back a day early anywhere west of Greenwich,
+     which is every visitor this site has. */
+  function parseISO(iso) {
+    var p = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso || '');
+    return p ? new Date(+p[1], +p[2] - 1, +p[3]) : null;
+  }
+  function longDate(iso) {
+    var d = parseISO(iso);
+    return d ? DAYS[d.getDay()] + ', ' + MONTHS[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear() : '';
+  }
+  function shortDate(iso) {
+    var d = parseISO(iso);
+    return d ? DAYS[d.getDay()].slice(0, 3) + ' ' + MONTHS[d.getMonth()].slice(0, 3) + ' ' + d.getDate() : '';
+  }
+
+  /* ---------- Availability calendar + trip dates ---------------------- */
+
+  var form = $('#inquiry');
+  var prefInput = form ? form.elements.preferredDate : null;
+  var altInput = form ? form.elements.alternateDate : null;
+  var pickerHost = $('#datePicker');
+
+  /* Which field the next tap on the calendar fills. */
+  var picking = 'preferred';
+
+  function inputFor(mode) { return mode === 'preferred' ? prefInput : altInput; }
+
+  /* The calendar only paints 90 days, but people do ask for a trip further out
+     than that, so the fields are floored at today and left open at the top.
+     A booked date is unreachable either way: its cell is not a button, and
+     typing one in fails validation before the form will submit. */
+  function validateDates() {
+    [prefInput, altInput].forEach(function (el) {
+      if (!el) return;
+      el.setCustomValidity(el.value && bookedSet[el.value]
+        ? 'That day is already booked. Pick another one.' : '');
+    });
+    if (prefInput && altInput && altInput.value && altInput.value === prefInput.value) {
+      altInput.setCustomValidity('Pick a different day from your preferred date.');
+    }
+  }
+
+  function renderDatePicker() {
+    if (!pickerHost) return;
+    $$('[data-calmode]', pickerHost).forEach(function (btn) {
+      var mode = btn.getAttribute('data-calmode');
+      var input = inputFor(mode);
+      var active = picking === mode;
+      btn.setAttribute('aria-pressed', active ? 'true' : 'false');
+      btn.style.background = active ? '#1d3059' : '#fff';
+      btn.style.color = active ? '#fff' : '#1d3059';
+      btn.style.borderColor = active ? '#1d3059' : 'rgba(14,34,68,.18)';
+      var value = $('[data-calmode-value]', btn);
+      value.textContent = input && input.value
+        ? shortDate(input.value)
+        : (mode === 'preferred' ? 'Choose' : 'Optional');
+    });
+  }
+
+  /* An inset ring rather than an outline: the cells sit 4px apart, so anything
+     drawn outside the box collides with the neighbouring day. */
+  function paintCalendar() {
+    var pref = prefInput ? prefInput.value : '';
+    var alt = altInput ? altInput.value : '';
+    $$('#calendar button[data-date]').forEach(function (btn) {
+      var iso = btn.getAttribute('data-date');
+      var mine = iso && iso === pref ? 'preferred' : (iso && iso === alt ? 'alternate' : '');
+      btn.style.boxShadow = mine === 'preferred' ? 'inset 0 0 0 3px #e05c22'
+        : mine === 'alternate' ? 'inset 0 0 0 3px #0e2244' : 'none';
+      btn.setAttribute('aria-pressed', mine ? 'true' : 'false');
+      btn.title = mine === 'preferred' ? 'Your preferred date'
+        : mine === 'alternate' ? 'Your alternate date' : 'Open';
+    });
+  }
+
+  function syncDates() {
+    validateDates();
+    renderDatePicker();
+    paintCalendar();
+  }
+
+  function setDate(mode, iso) {
+    var input = inputFor(mode);
+    if (!input) return;
+    /* A day can only play one of the two parts. Tapping the day the other
+       field is already holding hands it over rather than setting both to the
+       same date, which would only fail validation on submit. */
+    var other = inputFor(mode === 'preferred' ? 'alternate' : 'preferred');
+    if (other && other.value === iso) other.value = '';
+    /* Tapping the day that is already set clears it, so a mistake is one tap
+       to undo rather than a trip to the field. */
+    input.value = input.value === iso ? '' : iso;
+    /* Filling the preferred date moves the target along, which is the order
+       people fill these in. Filling the alternate leaves it where it is. */
+    if (input.value && mode === 'preferred') picking = 'alternate';
+    syncDates();
+  }
 
   function buildCalendar() {
     var host = $('#calendar');
     if (!host) return;
 
-    var today = new Date(); today.setHours(0, 0, 0, 0);
-    var end = new Date(today); end.setDate(end.getDate() + 89);
-    var booked = {};
-    BOOKED.forEach(function (d) { booked[d] = true; });
-
-    var names = ['January','February','March','April','May','June',
-                 'July','August','September','October','November','December'];
     var dows = ['S','M','T','W','T','F','S'];
-    var key = function (d) {
-      return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
-    };
+    var base = 'height:34px;display:flex;align-items:center;justify-content:center;' +
+      "border-radius:5px;font:400 12.5px/1 'Oswald',sans-serif;";
 
     var cell = function (text, bg, fg, title) {
       var s = document.createElement('span');
-      s.style.cssText = 'height:34px;display:flex;align-items:center;justify-content:center;' +
-        'border-radius:5px;font:400 12.5px/1 \'Oswald\',sans-serif;background:' + bg + ';color:' + fg;
+      s.style.cssText = base + 'background:' + bg + ';color:' + fg;
       if (title) s.title = title;
       s.textContent = text;
       return s;
     };
 
-    var m = new Date(today.getFullYear(), today.getMonth(), 1);
-    while (m <= end) {
+    /* Only an open day inside the window is a button. Booked and out-of-window
+       days stay inert spans, so there is nothing to click and nothing to focus. */
+    var dayCell = function (day, iso, outside, isBooked) {
+      if (outside) return cell(String(day), '#eef0f3', '#5c6470', '');
+      if (isBooked) {
+        var s = cell(String(day), '#c0392b', '#fff', 'Booked');
+        s.setAttribute('data-booked', iso);
+        s.setAttribute('aria-label', longDate(iso) + ', booked');
+        return s;
+      }
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.setAttribute('data-date', iso);
+      b.setAttribute('aria-pressed', 'false');
+      b.style.cssText = base + 'background:#2e7d4f;color:#fff;border:none;padding:0;width:100%;cursor:pointer';
+      b.title = 'Open';
+      b.setAttribute('aria-label', longDate(iso) + ', open');
+      b.textContent = String(day);
+      b.addEventListener('click', function () { setDate(picking, iso); });
+      return b;
+    };
+
+    var m = new Date(startOfDay.getFullYear(), startOfDay.getMonth(), 1);
+    while (m <= calEnd) {
       var block = document.createElement('div');
 
       var h3 = document.createElement('h3');
       h3.style.cssText = "font:600 14px/1 'Oswald',sans-serif;letter-spacing:1.5px;" +
         'text-transform:uppercase;color:#1d3059;margin:0 0 10px';
-      h3.textContent = names[m.getMonth()] + ' ' + m.getFullYear();
+      h3.textContent = MONTHS[m.getMonth()] + ' ' + m.getFullYear();
       block.appendChild(h3);
 
       var grid = document.createElement('div');
@@ -814,10 +1240,9 @@ button,input,select,textarea{font-family:inherit}
       var last = new Date(m.getFullYear(), m.getMonth() + 1, 0).getDate();
       for (var day = 1; day <= last; day++) {
         var d = new Date(m.getFullYear(), m.getMonth(), day);
-        var bg = '#2e7d4f', fg = '#fff', title = 'Open';
-        if (d < today || d > end) { bg = '#eef0f3'; fg = '#5c6470'; title = ''; }
-        else if (booked[key(d)]) { bg = '#c0392b'; title = 'Booked'; }
-        grid.appendChild(cell(String(day), bg, fg, title));
+        var iso = isoKey(d);
+        var outside = d < startOfDay || d > calEnd;
+        grid.appendChild(dayCell(day, iso, outside, !outside && !!bookedSet[iso]));
       }
 
       block.appendChild(grid);
@@ -828,9 +1253,22 @@ button,input,select,textarea{font-family:inherit}
 
   buildCalendar();
 
+  [prefInput, altInput].forEach(function (el) {
+    if (!el) return;
+    el.min = isoKey(startOfDay);
+    el.addEventListener('input', syncDates);
+    el.addEventListener('change', syncDates);
+  });
+  $$('[data-calmode]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      picking = btn.getAttribute('data-calmode');
+      renderDatePicker();
+    });
+  });
+  syncDates();
+
   /* ---------- Inquiry form ------------------------------------------ */
 
-  var form = $('#inquiry');
   var tripSelect = form ? form.elements.trip : null;
 
   $$('[data-pick]').forEach(function (a) {
@@ -850,6 +1288,8 @@ button,input,select,textarea{font-family:inherit}
       var body = 'Name: ' + val('name') +
         '\nEmail: ' + val('email') +
         '\nTrip: ' + txt('trip') +
+        '\nPreferred date: ' + (longDate(val('preferredDate')) || 'not given') +
+        '\nAlternate date: ' + (longDate(val('alternateDate')) || 'none given') +
         '\nExperience: ' + txt('experience') +
         '\nPreferred lake: ' + val('lake') +
         '\n\n' + val('message');
