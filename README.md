@@ -8,10 +8,10 @@ Static HTML/CSS/JS. **No build step, no dependencies, no framework.**
 ## Layout
 
 ```
-index.html                   Preview landing page — the site in a phone frame
-site/index.html              The website
+index.html                   The website
+preview.html                 Preview page — the site in a phone frame
 bcfg/                        All photography and logos (107 files)
-vercel.json                  Cache headers for /bcfg/*
+vercel.json                  Redirects for old URLs, cache headers for /bcfg/*
 design-source/               Original Claude Design files — reference only
 ```
 
@@ -29,24 +29,29 @@ Every push to `main` redeploys automatically.
 ## Editing content
 
 All of the content that changes regularly lives in the `<script>` block at the
-bottom of `site/index.html`, marked with `EDIT` comments.
+bottom of `index.html`, marked with `EDIT` comments.
 
-**Booked dates** — the availability calendar shows the next 90 days from whenever
-the page loads. Green is open, red is booked. Add or remove dates in `BOOKED`:
+**Booking form** — the "Book Your Trip" section is a form hosted by
+[Fillout](https://fillout.com), embedded as a single empty div:
 
-```js
-var BOOKED = [
-  '2026-07-25',
-  '2026-08-01'
-];
+```html
+<div ... data-fillout-id="tH92xfAJ2nus" data-fillout-embed-type="standard"
+     data-fillout-inherit-parameters="true" data-fillout-dynamic-resize="true"></div>
+<script src="https://server.fillout.com/embed/v1/" async></script>
 ```
 
-The calendar is also the date picker for the inquiry form. Tapping a green day
-fills the form's **Preferred date** (required) or **Alternate date** (optional),
-whichever of the two buttons above the calendar is highlighted; both dates are
-written into the inquiry email. A booked day cannot be picked — its cell is not
-a button, and typing that date into either field stops the form from submitting.
-So `BOOKED` is the single place that closes a day off.
+**The questions, the dates offered, and where the answers go are all edited at
+fillout.com, not in this repo.** Nothing about the form lives here except the
+form's ID. To point the page at a different form, change `data-fillout-id`.
+
+`dynamic-resize` lets the embed grow to whatever height the form needs, and the
+contact photo beside it stretches to match, so the two columns end level.
+`inherit-parameters` passes any query string on the page URL through to the
+form, which is how a prefill link (`/?trip=half-day`) would reach it.
+
+This replaced a hand-built availability calendar and a `mailto:` inquiry form.
+Both are gone, along with the `BOOKED` date table that fed the calendar — the
+booked-dates list now lives in Fillout's scheduling, not in this file.
 
 **Reviews** — the "What Anglers Say" cards come from `REVIEWS`. Four to six
 reads best: three across on a computer, stacked on a phone. Keep a quote to two
@@ -96,59 +101,58 @@ The page has exactly one `<h1>`. The hero heading appears in two very different
 layouts — over the photo on a phone, in the text column on a computer — but it
 is a single element that grid areas move, not two headings with one hidden.
 
-## Routing (important)
+## Routing
 
-This deployment is set up for **review**, so the root shows the preview page
-rather than the website:
+The website is live at the root:
 
 | URL | Serves |
 | --- | --- |
-| `/` | the preview landing page |
-| `/site/` | the real website |
+| `/` | the website |
+| `/preview.html` | the preview page, for showing the site to someone |
 
-These are real files in real directories, not config. That is deliberate:
-**Vercel checks the filesystem before applying rewrites**, so a `rewrites` entry
-on `/` can never override an `index.html` sitting at the root — it is silently
-ignored. Moving the files is the only thing that actually changes what `/`
-serves. (`vercel.json` redirects the old `/prototype/*` and `/mobile/*` URLs to `/`
-so links already shared still work.)
+These are real files, not config. That is deliberate: **Vercel checks the
+filesystem before applying rewrites**, so a `rewrites` entry on `/` can never
+override an `index.html` sitting at the root — it is silently ignored. Moving
+the files is the only thing that actually changes what `/` serves.
 
-### Going live
-
-When the real domain is pointed at this project, the website has to be at the
-root. Three steps:
-
-1. `git mv index.html preview.html && git mv site/index.html index.html`
-   — or simply move `site/index.html` to the root, replacing the preview page.
-2. In the preview page, change `/site/` back to `/` (one iframe, one button).
-3. Drop the redirects from `vercel.json` if you no longer want them.
+`vercel.json` redirects `/site/*`, `/prototype/*` and `/mobile/*` to `/`, so
+every URL shared while the site was under review still lands somewhere useful.
 
 The website's asset paths are root-absolute (`/bcfg/...`), so it renders
-correctly from any of these locations — no path edits needed when it moves.
+correctly from any location — no path edits are needed if it moves again.
+
+### Still to do at launch
+
+The project currently answers on `bcfg-website-v1.vercel.app` with no custom
+domain attached. `canonical`, `og:url` and the absolute `og:image` are still
+commented out in the `<head>` for that reason — point the real domain at the
+project, then uncomment those three lines and swap in the domain. Setting them
+to the `.vercel.app` address instead would be worse than leaving them off.
 
 ## The preview page
 
-`/` is for showing the site to someone, not for visitors, and is marked
-`noindex`.
+`/preview.html` is for showing the site to someone, not for visitors, and is
+marked `noindex`. Nothing links to it — you send the link.
 
 It shows the site inside a phone frame at its true 390x844, so what you see is
 the real mobile layout rather than a scaled-down picture of one. The frame
 shrinks only on screens too narrow to hold it, and is never scaled up.
 
-One button, **Full Site**, opens `/site/` in a new tab. The site is responsive,
+One button, **Full Site**, opens `/` in a new tab. The site is responsive,
 so that gives the wide layout on a computer and the phone layout on a phone —
 the right view for whatever device the reader is on.
 
 There is deliberately no second "Mobile" button. An earlier version showed a
 desktop frame and a phone frame side by side with a button for each, which
 raised the obvious question of which one you were actually looking at and what
-"Full Site" meant on a phone. `/mobile/` and `/prototype/` redirect to `/`.
+"Full Site" meant on a phone. `/mobile/`, `/prototype/` and `/site/` all
+redirect to `/`.
 
 On touch devices the frame is inert: a finger drag landing on an iframe scrolls
 the site inside it rather than the page, which strands the reader partway down.
 The frame stays live for mouse users, who have no such problem.
 
-The frame loads `/site/?preview=1`, which pins the hero photo to its first
+The frame loads `/?preview=1`, which pins the hero photo to its first
 image. Two things drove that: a 42-image slideshow decoding a ~300KB JPEG every
 five seconds behind a thumbnail is wasted work, and it made this page stutter
 while scrolling on a phone. **Full Site** opens the site normally, slideshow and
@@ -164,6 +168,9 @@ jargon.
   `server.arcgisonline.com`. Attribution is displayed on the map. This is a
   third-party runtime dependency — if those tiles ever move, the map background
   goes blank while the pins keep working.
-- The inquiry form has no backend. Submitting opens the visitor's email client
-  with the message pre-filled to `bluecollarfishingguide@gmail.com`.
+- The booking form is a Fillout embed, loaded at runtime from
+  `server.fillout.com`. This is the second third-party runtime dependency, and
+  the more important one: if Fillout is down or blocked, there is no form. The
+  phone number and email sit in the next column for exactly that reason, and a
+  `noscript` note points at them for anyone browsing without JavaScript.
 - Fonts (Anton, Inter, Oswald) load from Google Fonts.
