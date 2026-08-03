@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- ==========================================================================
+  BCFG PROTOTYPE — landing page
+  Shows the live site in a phone frame at its true 390x844, so it renders the
+  real mobile layout rather than a scaled-down picture of one. The frame is
+  shrunk only on screens too narrow to hold it, never scaled up.
+
+  One button: Full Site -> /. The site is responsive, so that opens the
+  wide layout on a computer and this layout on a phone — the right view for
+  whatever device the reader is on. There is deliberately no second button
+  offering a "mobile" version; having both invited the question of which one
+  you were actually looking at.
+
+  The site has gone live, so it now sits at / and this page moved aside to
+  /preview.html. It is not linked from anywhere — it is a page you send
+  someone when you want them to look at the site, and it stays `noindex`.
+========================================================================== -->
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Blue Collar Fishing Guide - Prototype</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/bcfg/logo-card-navy.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&family=Oswald:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#0b1930;color:#f8f7f3;font-family:'Inter',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#a9bedf}
+button{font-family:inherit}
+:focus-visible{outline:2px solid #e05c22;outline-offset:2px}
+.btn{display:inline-flex;align-items:center;gap:8px;min-height:38px;padding:0 18px;border-radius:999px;text-decoration:none;cursor:pointer;font:600 12.5px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;white-space:nowrap}
+.btn-primary{border:none;background:#e05c22;color:#0b1930}
+.btn-secondary{border:1px solid rgba(169,190,223,.35);background:none;color:#a9bedf}
+/* The shell holds a fixed-size mock; the box is sized in JS to the shell's
+   scaled footprint so the scaled frames still occupy correct layout space. */
+.frame-shell{transform-origin:0 0}
+/* Even 2x2, never auto-fit: at this container width auto-fit lands on three
+   across and orphans the fourth card on its own row. */
+.cards{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+@media (max-width:620px){.cards{grid-template-columns:1fr}}
+
+.topbar{position:sticky;top:0;z-index:20;background:rgba(11,25,48,.86);
+  backdrop-filter:blur(12px);border-bottom:1px solid rgba(169,190,223,.16)}
+.topbar-actions{display:flex;align-items:center;gap:12px}
+/* Keep each frame's painting to itself so scrolling the page does not
+   invalidate anything outside the frame's own box. */
+.frame-hit{position:relative;width:fit-content;contain:paint}
+.only-mob{display:none}
+
+.frame-cap{flex-wrap:wrap}
+
+/* TOUCH — a finger drag landing on an iframe scrolls the site inside it
+   rather than this page, which strands the reader partway down. Make the
+   frame inert and let the page own vertical scrolling. Keyed on pointer, not
+   width: a mouse user in a narrow window has no such problem and should keep
+   a live frame. The max-width arm is a fallback and keeps the behaviour
+   reachable when testing by resizing. */
+@media (pointer: coarse), (max-width:860px){
+  .only-desk{display:none}
+  .only-mob{display:block}
+  .frame-hit iframe{pointer-events:none}
+
+  /* backdrop-filter re-samples and re-blurs everything behind the bar on every
+     scrolled frame, which is a well-known source of scroll jank on phones. The
+     bar is 86% opaque already, so a flat colour is visually near-identical. */
+  .topbar{backdrop-filter:none;background:#101f3b}
+}
+@media (max-width:560px){
+  .topbar-actions{width:100%;gap:10px}
+  .topbar-actions .btn{flex:1;justify-content:center;min-height:44px}
+}
+</style>
+</head>
+<body>
+
+<div style="min-height:100vh;background:radial-gradient(1200px 600px at 50% -10%,#16305c 0%,#0b1930 60%);padding:0 0 64px">
+
+  <div class="topbar">
+    <div style="max-width:1320px;margin:0 auto;padding:14px clamp(16px,3vw,32px);display:flex;align-items:center;gap:20px;flex-wrap:wrap">
+      <div style="display:grid;gap:2px;margin-right:auto">
+        <span style="font:700 10.5px/1 'Inter',sans-serif;letter-spacing:.26em;text-transform:uppercase;color:#e05c22">Website Preview</span>
+        <span style="font-family:'Anton',Impact,sans-serif;font-size:20px;letter-spacing:.6px;text-transform:uppercase;color:#f8f7f3">Blue Collar Fishing Guide</span>
+      </div>
+      <div class="topbar-actions">
+        <a href="/" target="_blank" rel="noopener" class="btn btn-primary">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"></path></svg>Full Site
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <p class="only-desk" style="max-width:1320px;margin:0 auto;padding:26px clamp(16px,3vw,32px) 0;font-size:14.5px;line-height:1.6;color:#b9c8e0">
+    Here is the site as it looks on a phone. This preview is live &mdash; scroll it, tap
+    through it, open a lake. <strong style="color:#f8f7f3;font-weight:600">Full Site</strong>
+    opens the real thing in a new tab, and it fits itself to whatever you open it on &mdash;
+    the wide layout on a computer, this one on a phone.
+  </p>
+  <p class="only-mob" style="max-width:1320px;margin:0 auto;padding:26px clamp(16px,3vw,32px) 0;font-size:15px;line-height:1.6;color:#b9c8e0">
+    Here is the site as it looks on a phone. Tap
+    <strong style="color:#f8f7f3;font-weight:600">Full Site</strong> up top to open the real
+    thing and have a proper scroll around.
+  </p>
+
+  <div id="stage" class="stage" style="max-width:1320px;margin:0 auto;padding:22px clamp(16px,3vw,32px) 0;display:flex;gap:clamp(24px,3vw,48px);align-items:flex-start;justify-content:center;flex-wrap:nowrap">
+
+    <figure class="frame-fig" style="margin:0;flex:0 0 auto">
+      <figcaption class="frame-cap" style="display:flex;align-items:baseline;gap:10px;margin-bottom:14px">
+        <span style="font:500 13px/1 'Oswald',sans-serif;letter-spacing:1.6px;text-transform:uppercase;color:#f8f7f3">Mobile</span>
+        <span style="font-size:12px;color:#8ea3c6">How it looks on a phone</span>
+      </figcaption>
+      <div class="frame-hit">
+      <div id="mobBox">
+        <div id="mobShell" class="frame-shell" style="width:414px;padding:12px;border-radius:50px;background:#0e1a30;border:1px solid rgba(169,190,223,.22);box-shadow:0 40px 80px -40px rgba(0,0,0,.85)">
+          <div style="position:relative;width:390px;height:844px;border-radius:38px;overflow:hidden;background:#f8f7f3">
+            <iframe src="/?preview=1" loading="lazy" title="Mobile preview" style="width:390px;height:844px;border:none;display:block;background:#f8f7f3"></iframe>
+            <div style="position:absolute;top:10px;left:50%;transform:translateX(-50%);width:112px;height:28px;border-radius:999px;background:#0e1a30;pointer-events:none"></div>
+            <div style="position:absolute;bottom:7px;left:50%;transform:translateX(-50%);width:130px;height:5px;border-radius:999px;background:rgba(14,34,68,.4);pointer-events:none"></div>
+          </div>
+        </div>
+      </div>
+      </div>
+    </figure>
+
+  </div>
+
+  <div style="max-width:900px;margin:44px auto 0;padding:0 clamp(16px,3vw,32px)">
+    <h2 style="font:600 15px/1 'Oswald',sans-serif;letter-spacing:1.8px;text-transform:uppercase;color:#a9bedf;margin:0 0 18px">What's different on a phone</h2>
+    <div class="cards">
+      <div style="background:rgba(169,190,223,.08);border:1px solid rgba(169,190,223,.16);border-radius:12px;padding:16px 18px">
+        <h3 style="font:600 14px/1.2 'Oswald',sans-serif;letter-spacing:1px;text-transform:uppercase;color:#f8f7f3;margin:0 0 7px">Photos you can flick through</h3>
+        <p style="margin:0;font-size:13.5px;line-height:1.6;color:#b9c8e0">Trip photos sit in a neat row you swipe sideways with your thumb, instead of running one after another down a very long page. Tap any photo to see it full size.</p>
+      </div>
+      <div style="background:rgba(169,190,223,.08);border:1px solid rgba(169,190,223,.16);border-radius:12px;padding:16px 18px">
+        <h3 style="font:600 14px/1.2 'Oswald',sans-serif;letter-spacing:1px;text-transform:uppercase;color:#f8f7f3;margin:0 0 7px">Lakes open one at a time</h3>
+        <p style="margin:0;font-size:13.5px;line-height:1.6;color:#b9c8e0">The eight lakes are folded up so you can see them all at a glance. Tap a lake on the map, or its name underneath, and it opens. Nothing was cut &mdash; the acreage, drive times, and photos are all still there.</p>
+      </div>
+      <div style="background:rgba(169,190,223,.08);border:1px solid rgba(169,190,223,.16);border-radius:12px;padding:16px 18px">
+        <h3 style="font:600 14px/1.2 'Oswald',sans-serif;letter-spacing:1px;text-transform:uppercase;color:#f8f7f3;margin:0 0 7px">An opening photo that fits</h3>
+        <p style="margin:0;font-size:13.5px;line-height:1.6;color:#b9c8e0">On a phone the opening photo fills the screen with the headline sitting over it. On a computer it keeps the original side-by-side layout.</p>
+      </div>
+      <div style="background:rgba(169,190,223,.08);border:1px solid rgba(169,190,223,.16);border-radius:12px;padding:16px 18px">
+        <h3 style="font:600 14px/1.2 'Oswald',sans-serif;letter-spacing:1px;text-transform:uppercase;color:#f8f7f3;margin:0 0 7px">Easy to call and book</h3>
+        <p style="margin:0;font-size:13.5px;line-height:1.6;color:#b9c8e0">A Call and Book a Trip bar stays put at the bottom of the screen, so booking is always one tap away. Every button is sized to be comfortable to hit, and the form won't zoom in on you when you start typing.</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  var stage = document.getElementById('stage');
+  var box = document.getElementById('mobBox');
+  var shell = document.getElementById('mobShell');
+
+  /* The phone frame is a fixed 414x870 mock. Show it at 1:1 whenever it fits
+     and shrink it only on screens narrower than that, never scaling it up.
+     The box is sized to the scaled footprint so the surrounding layout still
+     reserves the right space. */
+  function fit() {
+    // Collapse the box first so the stage measures the space available to it,
+    // not the space the frame is currently occupying.
+    box.style.width = '0px';
+    box.style.height = '0px';
+    box.style.overflow = 'visible';
+    shell.style.transform = 'none';
+
+    var w = shell.offsetWidth;
+    var h = shell.offsetHeight;
+
+    // getBoundingClientRect rather than clientWidth: the latter rounds to whole
+    // pixels, which can size the frame fractionally too wide. Floor for the
+    // same reason.
+    var cs = getComputedStyle(stage);
+    var rect = stage.getBoundingClientRect();
+    var avail = rect.width - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+    var scale = Math.min(1, avail / w);
+
+    shell.style.transform = 'scale(' + scale + ')';
+    box.style.width = Math.floor(w * scale) + 'px';
+    box.style.height = Math.floor(h * scale) + 'px';
+  }
+
+  fit();
+  window.addEventListener('resize', fit);
+  window.addEventListener('orientationchange', fit);
+  // Web fonts can change the caption metrics; re-fit once they settle.
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
+})();
+</script>
+
+</body>
+</html>

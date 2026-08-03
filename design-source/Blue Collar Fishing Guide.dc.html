@@ -470,64 +470,14 @@ button,input,select,textarea{font-family:inherit}
 
 <section id="book" style="padding:clamp(44px,6vw,80px) 0">
   <div style="max-width:1180px;margin:0 auto;padding:0 clamp(18px,4vw,40px)">
-    <div data-r="book" style="display:grid;grid-template-columns:1fr 1.1fr 1fr;gap:40px;align-items:start">
-      <div>
-        <span style="display:inline-block;font:700 12px/1 'Inter',sans-serif;letter-spacing:.26em;text-transform:uppercase;color:#1d3059">Availability</span>
-        <h2 style="font:600 clamp(24px,3vw,30px)/1.1 'Oswald',sans-serif;letter-spacing:.5px;text-transform:uppercase;color:#1d3059;margin:14px 0 10px">Next 90 Days</h2>
-        <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:center;font-size:13px;color:#5c6470;margin-bottom:16px">
-          <span style="display:inline-flex;align-items:center;gap:7px"><i style="width:12px;height:12px;border-radius:3px;background:#2e7d4f;display:inline-block"></i> Open</span>
-          <span style="display:inline-flex;align-items:center;gap:7px"><i style="width:12px;height:12px;border-radius:3px;background:#c0392b;display:inline-block"></i> Booked</span>
-          <span style="flex:1 1 100%">Dates are kept up to date by hand; confirm when booking.</span>
-        </div>
-        <div style="display:grid;gap:20px;max-width:420px">
-          <sc-for list="{{ months }}" as="m" hint-placeholder-count="3">
-            <div>
-              <h3 style="font:600 14px/1 'Oswald',sans-serif;letter-spacing:1.5px;text-transform:uppercase;color:#1d3059;margin:0 0 10px">{{ m.label }}</h3>
-              <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px">
-                <sc-for list="{{ m.cells }}" as="c" hint-placeholder-count="35">
-                  <span style="height:34px;display:flex;align-items:center;justify-content:center;border-radius:5px;font:400 12.5px/1 'Oswald',sans-serif;background:{{ c.bg }};color:{{ c.fg }}" title="{{ c.title }}">{{ c.n }}</span>
-                </sc-for>
-              </div>
-            </div>
-          </sc-for>
-        </div>
-      </div>
-
-      <div>
-        <span style="display:inline-block;font:700 12px/1 'Inter',sans-serif;letter-spacing:.26em;text-transform:uppercase;color:#1d3059">Send An Inquiry</span>
+    <div data-r="book" style="display:grid;grid-template-columns:1.45fr 1fr;gap:40px;align-items:stretch">
+      <div style="display:flex;flex-direction:column">
+        <span style="display:inline-block;font:700 12px/1 'Inter',sans-serif;letter-spacing:.26em;text-transform:uppercase;color:#1d3059">Reserve Your Date</span>
         <h2 style="font:600 clamp(24px,3vw,30px)/1.1 'Oswald',sans-serif;letter-spacing:.5px;text-transform:uppercase;color:#1d3059;margin:14px 0 18px">Book Your Trip</h2>
-        <form onSubmit="{{ submit }}" style="display:grid;gap:16px">
-          <label style="display:grid;gap:7px"><span style="font:500 13px/1 'Oswald',sans-serif;letter-spacing:1px;text-transform:uppercase;color:#1d3059">Name</span><input type="text" name="name" required style="font-size:16px;padding:13px 14px;border:1px solid rgba(14,34,68,.18);border-radius:8px;background:#fff;color:#22293a;width:100%;min-height:48px"></label>
-          <label style="display:grid;gap:7px"><span style="font:500 13px/1 'Oswald',sans-serif;letter-spacing:1px;text-transform:uppercase;color:#1d3059">Email</span><input type="email" name="email" required inputmode="email" style="font-size:16px;padding:13px 14px;border:1px solid rgba(14,34,68,.18);border-radius:8px;background:#fff;color:#22293a;width:100%;min-height:48px"></label>
-          <label style="display:grid;gap:7px"><span style="font:500 13px/1 'Oswald',sans-serif;letter-spacing:1px;text-transform:uppercase;color:#1d3059">Trip Package</span>
-            <select name="trip" value="{{ trip }}" onChange="{{ setTrip }}" style="font-size:16px;padding:13px 14px;border:1px solid rgba(14,34,68,.18);border-radius:8px;background:#fff;color:#22293a;width:100%;min-height:48px">
-              <option value="half">Half-Day (4 hours)</option>
-              <option value="full">Full-Day (8 hours)</option>
-              <option value="nights">Summer Nights (6:00 PM &ndash; 10:00 PM)</option>
-              <option value="unsure">Not sure yet / unique request</option>
-            </select>
-          </label>
-          <label style="display:grid;gap:7px"><span style="font:500 13px/1 'Oswald',sans-serif;letter-spacing:1px;text-transform:uppercase;color:#1d3059">Experience</span>
-            <select name="experience" style="font-size:16px;padding:13px 14px;border:1px solid rgba(14,34,68,.18);border-radius:8px;background:#fff;color:#22293a;width:100%;min-height:48px">
-              <option value="beginner">Beginner (what's a fish?)</option>
-              <option value="intermediate">Intermediate (I know what a bass is)</option>
-              <option value="expert">Expert (I can outfish the guide)</option>
-            </select>
-          </label>
-          <label style="display:grid;gap:7px"><span style="font:500 13px/1 'Oswald',sans-serif;letter-spacing:1px;text-transform:uppercase;color:#1d3059">Preferred Lake</span>
-            <select name="lake" style="font-size:16px;padding:13px 14px;border:1px solid rgba(14,34,68,.18);border-radius:8px;background:#fff;color:#22293a;width:100%;min-height:48px">
-              <option>Canyon Lake</option><option>Lake Travis</option><option>Lady Bird Lake</option><option>Lake LBJ</option><option>Lake Austin</option><option>Lake Belton</option><option>Stillhouse Hollow</option><option>Lake Buchanan</option><option>Guide's Choice</option>
-            </select>
-          </label>
-          <label style="display:grid;gap:7px"><span style="font:500 13px/1 'Oswald',sans-serif;letter-spacing:1px;text-transform:uppercase;color:#1d3059">Message</span><textarea name="message" rows="5" required style="font-size:16px;padding:13px 14px;border:1px solid rgba(14,34,68,.18);border-radius:8px;background:#fff;color:#22293a;width:100%;resize:vertical"></textarea></label>
-          <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
-            <button type="submit" style="display:inline-flex;align-items:center;justify-content:center;min-height:52px;padding:0 28px;background:#1d3059;color:#fff;border:none;border-radius:6px;font:500 14px/1 'Oswald',sans-serif;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer">Send Message</button>
-            <span style="font-size:13px;color:#5c6470">Opens your email app with the message ready to send.</span>
-          </div>
-        </form>
+        <div style="width:100%;flex:0 0 auto;min-height:460px;border-radius:12px;overflow:hidden" data-fillout-id="tH92xfAJ2nus" data-fillout-embed-type="standard" data-fillout-inherit-parameters="true" data-fillout-dynamic-resize="true"></div>
       </div>
 
-      <div>
+      <div style="display:flex;flex-direction:column">
         <span style="display:inline-block;font:700 12px/1 'Inter',sans-serif;letter-spacing:.26em;text-transform:uppercase;color:#1d3059">Find Us</span>
         <h2 style="font:600 clamp(24px,3vw,30px)/1.1 'Oswald',sans-serif;letter-spacing:.5px;text-transform:uppercase;color:#1d3059;margin:14px 0 16px">Contact Details</h2>
         <ul style="list-style:none;display:grid;gap:10px;margin:0 0 22px;padding:0">
@@ -540,7 +490,7 @@ button,input,select,textarea{font-family:inherit}
           <li>Instagram, <a href="https://instagram.com/bluecollarfishingguide" target="_blank" rel="noopener" data-tap style="text-decoration:underline;text-underline-offset:2px">@bluecollarfishingguide</a></li>
           <li>Facebook, <a href="#book" data-tap style="text-decoration:underline;text-underline-offset:2px">@bluecollarfishingguide</a></li>
         </ul>
-        <img src="bcfg/hero/hero-04.jpg" alt="On the water" loading="lazy" style="width:100%;aspect-ratio:3/2;object-fit:cover;object-position:center 25%;border-radius:12px">
+        <img src="bcfg/hero/hero-04.jpg" alt="On the water" loading="lazy" style="width:100%;flex:1;min-height:220px;object-fit:cover;object-position:center 25%;border-radius:12px">
       </div>
     </div>
   </div>
@@ -616,6 +566,12 @@ class Component extends DCLogic {
     }, 5000);
     this.onKey = e => { if (e.key === 'Escape') this.setState({ lb: null, nav: false }); };
     document.addEventListener('keydown', this.onKey);
+    if (!document.querySelector('script[src^="https://server.fillout.com/embed/v1/"]')) {
+      const s = document.createElement('script');
+      s.src = 'https://server.fillout.com/embed/v1/';
+      s.async = true;
+      document.body.appendChild(s);
+    }
   }
   componentWillUnmount() { clearInterval(this.timer); document.removeEventListener('keydown', this.onKey); }
 
@@ -636,44 +592,6 @@ class Component extends DCLogic {
     return out;
   }
 
-  calendar() {
-    const today = new Date(); today.setHours(0, 0, 0, 0);
-    const end = new Date(today); end.setDate(end.getDate() + 89);
-    const booked = {}; BOOKED.forEach(d => { booked[d] = true; });
-    const names = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-    const dows = ['S','M','T','W','T','F','S'];
-    const key = d => d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
-    const months = [];
-    let m = new Date(today.getFullYear(), today.getMonth(), 1);
-    while (m <= end) {
-      const cells = dows.map((d, i) => ({ n: d, bg: 'transparent', fg: '#5c6470', title: '', key: 'dow' + i }));
-      for (let b = 0; b < m.getDay(); b++) cells.push({ n: '', bg: 'transparent', fg: 'transparent', title: '', key: 'pad' + b });
-      const last = new Date(m.getFullYear(), m.getMonth() + 1, 0).getDate();
-      for (let day = 1; day <= last; day++) {
-        const cur = new Date(m.getFullYear(), m.getMonth(), day);
-        let bg = '#2e7d4f', fg = '#fff', title = 'Open';
-        if (cur < today || cur > end) { bg = '#eef0f3'; fg = '#5c6470'; title = ''; }
-        else if (booked[key(cur)]) { bg = '#c0392b'; title = 'Booked'; }
-        cells.push({ n: day, bg, fg, title, key: 'd' + day });
-      }
-      months.push({ label: names[m.getMonth()] + ' ' + m.getFullYear(), cells, key: m.getFullYear() + '-' + m.getMonth() });
-      m = new Date(m.getFullYear(), m.getMonth() + 1, 1);
-    }
-    return months;
-  }
-
-  submit(e) {
-    e.preventDefault();
-    const f = e.target;
-    const val = n => (f.elements[n] ? f.elements[n].value : '');
-    const txt = n => { const el = f.elements[n]; return el && el.options ? el.options[el.selectedIndex].text : ''; };
-    const body = 'Name: ' + val('name') + '\nEmail: ' + val('email') + '\nTrip: ' + txt('trip') +
-      '\nExperience: ' + txt('experience') + '\nPreferred lake: ' + val('lake') + '\n\n' + val('message');
-    location.href = 'mailto:bluecollarfishingguide@gmail.com?subject=' +
-      encodeURIComponent('Trip inquiry from ' + val('name')) + '&body=' + encodeURIComponent(body);
-    return false;
-  }
-
   renderVals() {
     const v = {
       navMax: this.state.nav ? '420px' : '0px',
@@ -683,13 +601,9 @@ class Component extends DCLogic {
       opA: this.state.showA ? 1 : 0, opB: this.state.showA ? 0 : 1,
       lb: this.state.lb,
       closeLb: () => this.setState({ lb: null }),
-      trip: this.state.trip,
-      setTrip: e => this.setState({ trip: e.target.value }),
       pickHalf: () => this.setState({ trip: 'half' }),
       pickFull: () => this.setState({ trip: 'full' }),
       pickNights: () => this.setState({ trip: 'nights' }),
-      submit: e => this.submit(e),
-      months: this.calendar(),
       pins: LAKES.map(l => ({ key: l.id, name: l.name, full: l.full, left: l.left, top: l.top, go: () => this.go(l.id) })),
       strip: [
         { key: 'a', src: 'bcfg/canyon/canyon-02.jpg', cap: 'Canyon Lake', pos: 'center top' },

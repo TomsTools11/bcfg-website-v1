@@ -23,7 +23,7 @@ import { fileURLToPath } from 'node:url';
 
 const ROOT = dirname(fileURLToPath(import.meta.url));
 const ASSET_DIR = join(ROOT, 'bcfg');
-const PAGES = ['site/index.html', 'index.html'];
+const PAGES = ['index.html', 'preview.html'];
 const ASSET_EXT = /\.(jpe?g|png|svg|webp|gif|avif|ico)$/i;
 
 const pad = (n) => String(n).padStart(2, '0');
