@@ -76,6 +76,13 @@ or three sentences, and set `from` to a hometown or the lake they fished.
 The reviews are also deliberately left out of the page's structured data. Review
 markup fed to Google has to describe real reviews.
 
+**Lake write-ups** — the eight panels in "The Scene" are plain HTML, one
+`<section data-lake="…">` each, and safe to edit directly. Beside the chart the
+pins and the chip row pick which one shows; on a phone all eight are on the
+page and picking one scrolls to it. They are authored visible and the script
+hides the ones it is not showing, so a reader without JavaScript gets all
+eight.
+
 **Lake photos** — drop files into `bcfg/<lake>/` named `<lake>-01.jpg`,
 `<lake>-02.jpg`, … then update that lake's `n` in the `LAKES` table to match the
 number of photos. Lake Austin is at `n: 0` and shows a "photo coming soon"
@@ -175,7 +182,9 @@ jargon.
 - The chart in "The Scene" uses Esri World Imagery tiles loaded at runtime from
   `server.arcgisonline.com`. Attribution is displayed on the map. This is a
   third-party runtime dependency — if those tiles ever move, the map background
-  goes blank while the pins keep working.
+  goes blank while the pins keep working. The lake write-ups beside the chart
+  are plain HTML and do not touch those tiles, so a tile outage costs the map
+  background and nothing else.
 - The booking form is served from this page and has no third-party dependency
   of its own — the Fillout embed that used to be the second one is gone. It
   does still need JavaScript: the fields render without it, but nothing checks
