@@ -14,6 +14,8 @@
     - Reviews: see "EDIT REVIEWS" in the script at the bottom. Every quote
       shipped today is a placeholder and says so on the card.
     - Lake photos: see the LAKES table in the script at the bottom.
+    - Lake write-ups: the eight panels in "The Scene". Plain text in this
+      page; the chart's pins and the chip row pick between them.
     - Hero photos: drop numbered files in bcfg/hero/ and update HERO_COUNT.
     - Header logo size: the .brand-logo rule in the stylesheet.
 
@@ -156,7 +158,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box}
-html{scroll-behavior:smooth;scroll-padding-top:80px;-webkit-text-size-adjust:100%}
+html{scroll-behavior:smooth;scroll-padding-top:114px;-webkit-text-size-adjust:100%}
 body{margin:0;background:#f8f7f3;color:#22293a;font-family:'Inter',system-ui,sans-serif;line-height:1.65;-webkit-font-smoothing:antialiased;overflow-x:hidden}
 img{display:block;max-width:100%}
 a{color:#1d3059;text-decoration:none}
@@ -170,10 +172,12 @@ input::placeholder{color:#98a0ad}
 :focus-visible{outline:2px solid #e05c22;outline-offset:2px}
 /* Header logo — the one number to change if it wants to be bigger again. The
    mark has no transparent margin of its own (its artwork runs edge to edge),
-   so the height set here is the height you see. The header's vertical padding
-   was trimmed from 8px to 4px to absorb most of the growth: 52px -> 65px is a
-   25% bigger logo for 5px more bar. */
-.brand-logo{height:65px;width:auto}
+   so the height set here is the height you see, and the bar is this plus its
+   8px of padding. It has grown twice: 52px -> 65px, then 65px -> 97.5px.
+   Anything set here has to be paid for twice more, because the header is
+   sticky and everything that jumps to an anchor has to clear it — see
+   scroll-padding-top above and the offset in select() at the bottom. */
+.brand-logo{height:97.5px;width:auto}
 
 /* BOOKING FORM — the rest of the form is styled inline beside its markup, the
    way the rest of this page is. These three rules are here because they are
@@ -217,6 +221,14 @@ input::placeholder{color:#98a0ad}
      still when the form is submitted. Only while the two are side by side —
      stacked on a phone this would just be a hole under the confirmation. */
   [data-bookcard]{min-height:640px}
+  /* Eight pills are wider than the chart they sit under, and the sideways
+     scroller they live in is a phone affordance. */
+  #lakeChips{flex-wrap:wrap;padding-top:12px}
+  /* The tallest lake sets the floor, so nothing on the page moves because
+     someone picked a different one. Lake Austin is the short one, having no
+     photographs yet. Same trick as [data-bookcard] above and scoped the same
+     way: stacked on a phone this would only leave a gap. */
+  #lakeDossier{min-height:610px}
 }
 @media (max-width:900px){
   [data-desk]{display:none!important}
@@ -235,16 +247,26 @@ input::placeholder{color:#98a0ad}
   .hero-title h1{font-size:clamp(36px,11vw,52px);color:#f8f7f3;margin:0}
   [data-r=two]{grid-template-columns:1fr!important;gap:28px!important}
   [data-r=book]{grid-template-columns:1fr!important;gap:40px!important}
+  /* minmax(0,…) here for the same reason as the inline style it overrides: a
+     bare 1fr cannot shrink under its content, and the photo strip is wider
+     than any phone. */
+  [data-r=scene]{grid-template-columns:minmax(0,1fr)!important;gap:20px!important}
+  /* Every lake is on screen at once here, so a reader can keep scrolling
+     instead of working a control to see each one. This overrides the
+     display:none the script puts on the panels it is not showing, which is
+     only the right behaviour beside the chart. */
+  [data-lake]{display:block!important}
   [data-r=foot]{grid-template-columns:1fr!important}
 }
 @media (max-width:720px){
   [data-r=three]{grid-template-columns:1fr!important}
-  [data-r=drive]{grid-template-columns:1fr!important;gap:8px!important}
-  [data-r=drive]>div{display:flex;align-items:center;justify-content:space-between;gap:12px}
-  [data-r=drive]>div>span{margin:0!important}
 }
 @media (max-width:560px){
   [data-pinlabel]{display:none!important}
+  /* The lake you picked keeps its name, so the chart still says where you are
+     once there is no room for all eight. Two attributes beat one, which is
+     what it takes to get past the !important above. */
+  [data-pinlabel][data-on]{display:inline-block!important}
   /* Email and phone sit side by side until the card is too narrow to hold a
      phone number and its label at once. */
   [data-r=pair]{grid-template-columns:1fr!important}
@@ -352,192 +374,163 @@ input::placeholder{color:#98a0ad}
   <div style="max-width:1180px;margin:0 auto;padding:0 clamp(18px,4vw,40px)">
     <span style="display:inline-block;font:700 12px/1 'Inter',sans-serif;letter-spacing:.26em;text-transform:uppercase;color:#1d3059">The Water Where We Work</span>
     <h2 style="font:600 clamp(28px,3.6vw,36px)/1.1 'Oswald',sans-serif;letter-spacing:.5px;text-transform:uppercase;color:#1d3059;margin:14px 0 12px">The Scene</h2>
-    <p style="max-width:640px;margin:0 0 24px;color:#5c6470">Every lake we work sits within about an hour and a half of Austin or San Antonio. Tap a lake on the map for drive times from each airport.</p>
+    <p style="max-width:640px;margin:0 0 24px;color:#5c6470">Every lake we work sits within about an hour and a half of Austin or San Antonio. Pick a lake on the map, or from the row underneath it, and its write-up, drive times, and photos come up with it.</p>
 
-    <div id="chart" style="position:relative;border:2px solid #1d3059;border-radius:8px;overflow:hidden;box-shadow:0 24px 50px -24px rgba(14,34,68,.35);max-width:760px;margin:0 auto 16px">
-      <div aria-hidden="true" style="display:grid;grid-template-columns:repeat(3,1fr);line-height:0"><img src="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/9/209/115" alt="" style="width:100%"><img src="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/9/209/116" alt="" style="width:100%"><img src="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/9/209/117" alt="" style="width:100%"><img src="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/9/210/115" alt="" style="width:100%"><img src="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/9/210/116" alt="" style="width:100%"><img src="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/9/210/117" alt="" style="width:100%"><img src="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/9/211/115" alt="" style="width:100%"><img src="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/9/211/116" alt="" style="width:100%"><img src="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/9/211/117" alt="" style="width:100%"></div>
-      <div style="position:absolute;left:12px;top:12px;background:rgba(248,247,243,.94);border:1px solid #1d3059;box-shadow:2px 2px 0 rgba(14,34,68,.3);padding:3px">
-        <div style="border:1px solid rgba(29,48,89,.4);padding:6px 14px;text-align:center;font-family:Georgia,serif;color:#1d3059">
-          <div style="font-size:9px;letter-spacing:2.5px">CHART No. 1</div>
-          <div style="font-size:14px;font-weight:700;letter-spacing:1.4px;margin:2px 0">CENTRAL TEXAS</div>
-          <div style="font-size:10px;font-style:italic;opacity:.8">Bass Waters &amp; Approaches</div>
+    <!-- The chart and the lake write-ups are one thing: pick a lake on the
+         map or in the row under it and it comes up alongside, rather than
+         opening underneath and taking the map off the screen.
+
+         Beside the chart the script shows one panel at a time. Stacked on a
+         phone the stylesheet puts all eight back and picking one scrolls to
+         it, because a reader browsing eight lakes on a phone would rather
+         keep scrolling than work a control for each one. -->
+    <!-- minmax(0,…) rather than a bare fr on both tracks: an fr track cannot
+         shrink below its content's minimum, and the write-up's drive-time rows
+         and photo strip are wide enough to have shoved the chart down to a
+         thumbnail. -->
+    <div data-r="scene" style="display:grid;grid-template-columns:minmax(0,1.12fr) minmax(0,.88fr);gap:28px;align-items:start">
+      <div>
+        <div id="chart" style="position:relative;border:2px solid #1d3059;border-radius:8px;overflow:hidden;box-shadow:0 24px 50px -24px rgba(14,34,68,.35)">
+          <div aria-hidden="true" style="display:grid;grid-template-columns:repeat(3,1fr);line-height:0"><img src="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/9/209/115" alt="" style="width:100%"><img src="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/9/209/116" alt="" style="width:100%"><img src="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/9/209/117" alt="" style="width:100%"><img src="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/9/210/115" alt="" style="width:100%"><img src="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/9/210/116" alt="" style="width:100%"><img src="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/9/210/117" alt="" style="width:100%"><img src="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/9/211/115" alt="" style="width:100%"><img src="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/9/211/116" alt="" style="width:100%"><img src="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/9/211/117" alt="" style="width:100%"></div>
+          <div style="position:absolute;left:12px;top:12px;background:rgba(248,247,243,.94);border:1px solid #1d3059;box-shadow:2px 2px 0 rgba(14,34,68,.3);padding:3px">
+            <div style="border:1px solid rgba(29,48,89,.4);padding:6px 14px;text-align:center;font-family:Georgia,serif;color:#1d3059">
+              <div style="font-size:9px;letter-spacing:2.5px">CHART No. 1</div>
+              <div style="font-size:14px;font-weight:700;letter-spacing:1.4px;margin:2px 0">CENTRAL TEXAS</div>
+              <div style="font-size:10px;font-style:italic;opacity:.8">Bass Waters &amp; Approaches</div>
+            </div>
+          </div>
+          <div style="position:absolute;left:48.4%;top:91%;transform:translate(-50%,-50%);pointer-events:none;display:flex;align-items:center;gap:6px">
+            <span style="width:8px;height:8px;border-radius:50%;background:#f8f7f3;border:2px solid #1d3059;display:block"></span>
+            <span data-pinlabel style="font-family:Georgia,serif;font-style:italic;font-size:11px;color:#1d3059;background:rgba(248,247,243,.9);padding:0 5px;border:1px solid rgba(29,48,89,.3);white-space:nowrap">New Braunfels</span>
+          </div>
+          <div style="position:absolute;left:69.7%;top:64.3%;transform:translate(-50%,-50%);pointer-events:none;display:flex;align-items:center;gap:4px;color:#f8f7f3;white-space:nowrap;filter:drop-shadow(0 1px 2px rgba(0,0,0,.8))"><svg width="13" height="13" viewBox="0 0 24 24" fill="#f8f7f3"><path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z"></path></svg><span style="font-family:Georgia,serif;font-style:italic;font-size:11px;font-weight:700">AUS</span></div>
+          <div style="position:absolute;left:31.8%;top:96%;transform:translate(-50%,-50%);pointer-events:none;display:flex;align-items:center;gap:4px;color:#f8f7f3;white-space:nowrap;filter:drop-shadow(0 1px 2px rgba(0,0,0,.8))"><svg width="13" height="13" viewBox="0 0 24 24" fill="#f8f7f3"><path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z"></path></svg><span style="font-family:Georgia,serif;font-style:italic;font-size:11px;font-weight:700">SAT</span></div>
+          <div style="position:absolute;left:62.2%;top:16.1%;transform:translate(-50%,-50%);pointer-events:none;display:flex;align-items:center;gap:4px;color:#f8f7f3;white-space:nowrap;filter:drop-shadow(0 1px 2px rgba(0,0,0,.8))"><svg width="13" height="13" viewBox="0 0 24 24" fill="#f8f7f3"><path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z"></path></svg><span style="font-family:Georgia,serif;font-style:italic;font-size:11px;font-weight:700">GRK</span></div>
+          <!-- Lake pins are injected here from the LAKES table -->
+          <span style="position:absolute;right:6px;bottom:5px;font-size:9px;color:rgba(248,247,243,.85);background:rgba(14,34,68,.55);padding:1px 6px;border-radius:3px">Imagery &copy; Esri World Imagery</span>
         </div>
+        <div id="lakeChips" data-hs style="display:flex;gap:8px;padding:2px 0 0;margin:0 -4px"></div>
       </div>
-      <div style="position:absolute;left:48.4%;top:91%;transform:translate(-50%,-50%);pointer-events:none;display:flex;align-items:center;gap:6px">
-        <span style="width:8px;height:8px;border-radius:50%;background:#f8f7f3;border:2px solid #1d3059;display:block"></span>
-        <span data-pinlabel style="font-family:Georgia,serif;font-style:italic;font-size:11px;color:#1d3059;background:rgba(248,247,243,.9);padding:0 5px;border:1px solid rgba(29,48,89,.3);white-space:nowrap">New Braunfels</span>
-      </div>
-      <div style="position:absolute;left:69.7%;top:64.3%;transform:translate(-50%,-50%);pointer-events:none;display:flex;align-items:center;gap:4px;color:#f8f7f3;white-space:nowrap;filter:drop-shadow(0 1px 2px rgba(0,0,0,.8))"><svg width="13" height="13" viewBox="0 0 24 24" fill="#f8f7f3"><path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z"></path></svg><span style="font-family:Georgia,serif;font-style:italic;font-size:11px;font-weight:700">AUS</span></div>
-      <div style="position:absolute;left:31.8%;top:96%;transform:translate(-50%,-50%);pointer-events:none;display:flex;align-items:center;gap:4px;color:#f8f7f3;white-space:nowrap;filter:drop-shadow(0 1px 2px rgba(0,0,0,.8))"><svg width="13" height="13" viewBox="0 0 24 24" fill="#f8f7f3"><path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z"></path></svg><span style="font-family:Georgia,serif;font-style:italic;font-size:11px;font-weight:700">SAT</span></div>
-      <div style="position:absolute;left:62.2%;top:16.1%;transform:translate(-50%,-50%);pointer-events:none;display:flex;align-items:center;gap:4px;color:#f8f7f3;white-space:nowrap;filter:drop-shadow(0 1px 2px rgba(0,0,0,.8))"><svg width="13" height="13" viewBox="0 0 24 24" fill="#f8f7f3"><path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z"></path></svg><span style="font-family:Georgia,serif;font-style:italic;font-size:11px;font-weight:700">GRK</span></div>
-      <!-- Lake pins are injected here from the LAKES table -->
-      <span style="position:absolute;right:6px;bottom:5px;font-size:9px;color:rgba(248,247,243,.85);background:rgba(14,34,68,.55);padding:1px 6px;border-radius:3px">Imagery &copy; Esri World Imagery</span>
-    </div>
 
-    <div id="lakeChips" data-hs style="display:flex;gap:8px;padding:2px 0 14px;margin:0 -4px"></div>
-
-    <div style="display:grid;gap:12px">
-
-      <div id="lake-canyon" style="background:#fff;border:1px solid rgba(14,34,68,.14);border-radius:12px;overflow:hidden">
-        <button data-acc="canyon" aria-expanded="true" aria-controls="body-canyon" style="width:100%;display:flex;align-items:center;gap:14px;text-align:left;background:none;border:none;padding:16px 18px;cursor:pointer">
-          <span style="flex:1;display:grid;gap:3px">
-            <span style="font:600 11px/1 'Oswald',sans-serif;letter-spacing:1.8px;text-transform:uppercase;color:#1d3059">Clear Water</span>
-            <span style="font:600 21px/1.15 'Oswald',sans-serif;letter-spacing:.5px;text-transform:uppercase;color:#1d3059">Canyon Lake</span>
-            <span style="font-size:14.5px;color:#5c6470;line-height:1.5">Gin-clear and unforgiving, the lake that teaches you finesse.</span>
-          </span>
-          <span data-sign="canyon" style="flex:0 0 34px;height:34px;border-radius:50%;background:#eef0f3;color:#1d3059;display:flex;align-items:center;justify-content:center;font:600 18px/1 'Oswald',sans-serif">&minus;</span>
-        </button>
-        <div id="body-canyon" data-body="canyon" style="padding:0 18px 18px">
+      <!-- Authored visible, seven of them hidden by the script on load, so a
+           reader without JavaScript gets all eight write-ups in full. -->
+      <!-- minmax(0,…) again, one level down: a grid item will not shrink under
+           its own content either, so without this the panels keep the photo
+           strip's full width and hang out of the column. -->
+      <div id="lakeDossier" style="display:grid;grid-template-columns:minmax(0,1fr);gap:12px;align-content:start">
+        <section data-lake="canyon" id="lake-canyon" aria-labelledby="name-canyon" style="background:#fff;border:1px solid rgba(14,34,68,.14);border-radius:12px;padding:18px">
+          <span style="display:block;font:600 11px/1 'Oswald',sans-serif;letter-spacing:1.8px;text-transform:uppercase;color:#1d3059;margin-bottom:5px">Clear Water</span>
+          <h3 id="name-canyon" style="font:600 21px/1.15 'Oswald',sans-serif;letter-spacing:.5px;text-transform:uppercase;color:#1d3059;margin:0 0 7px">Canyon Lake</h3>
+          <p style="font-size:14.5px;color:#5c6470;line-height:1.5;margin:0 0 14px">Gin-clear and unforgiving, the lake that teaches you finesse.</p>
           <div style="display:flex;flex-wrap:wrap;gap:6px 16px;font:500 12px/1.4 'Oswald',sans-serif;letter-spacing:1px;text-transform:uppercase;color:#1d3059;margin-bottom:14px"><span>8,308 acres</span><span style="color:#5c6470">Deepest lake in Texas at 140+ feet</span></div>
-          <div data-r="drive" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px">
-            <div style="background:#f8f7f3;border-radius:8px;padding:11px 13px"><span style="display:block;font:500 11px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:#5c6470;margin-bottom:6px">Austin (AUS)</span><span style="font:600 15px/1.2 'Oswald',sans-serif;color:#1d3059">51 mi &middot; ~55 min</span></div>
-            <div style="background:#f8f7f3;border-radius:8px;padding:11px 13px"><span style="display:block;font:500 11px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:#5c6470;margin-bottom:6px">San Antonio (SAT)</span><span style="font:600 15px/1.2 'Oswald',sans-serif;color:#1d3059">43 mi &middot; ~45 min</span></div>
-            <div style="background:#f8f7f3;border-radius:8px;padding:11px 13px"><span style="display:block;font:500 11px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:#5c6470;margin-bottom:6px">Killeen (GRK)</span><span style="font:600 15px/1.2 'Oswald',sans-serif;color:#1d3059">110 mi &middot; ~1 hr 45 min</span></div>
+          <div style="display:grid;gap:8px;margin:0 0 14px">
+          <div style="background:#f8f7f3;border-radius:8px;padding:11px 13px;display:flex;align-items:center;justify-content:space-between;gap:12px"><span style="font:500 11px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:#5c6470">Austin (AUS)</span><span style="font:600 15px/1.2 'Oswald',sans-serif;color:#1d3059">51 mi &middot; ~55 min</span></div>
+          <div style="background:#f8f7f3;border-radius:8px;padding:11px 13px;display:flex;align-items:center;justify-content:space-between;gap:12px"><span style="font:500 11px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:#5c6470">San Antonio (SAT)</span><span style="font:600 15px/1.2 'Oswald',sans-serif;color:#1d3059">43 mi &middot; ~45 min</span></div>
+          <div style="background:#f8f7f3;border-radius:8px;padding:11px 13px;display:flex;align-items:center;justify-content:space-between;gap:12px"><span style="font:500 11px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:#5c6470">Killeen (GRK)</span><span style="font:600 15px/1.2 'Oswald',sans-serif;color:#1d3059">110 mi &middot; ~1 hr 45 min</span></div>
           </div>
           <div data-hs data-gallery="canyon" style="display:flex;gap:8px;padding-bottom:8px"></div>
-        </div>
-      </div>
+          <a href="#book" style="display:inline-flex;align-items:center;justify-content:center;min-height:48px;margin-top:4px;padding:0 22px;background:#1d3059;color:#fff;border-radius:6px;font:500 13px/1 'Oswald',sans-serif;letter-spacing:1.4px;text-transform:uppercase">Book Canyon Lake</a>
+        </section>
 
-      <div id="lake-travis" style="background:#fff;border:1px solid rgba(14,34,68,.14);border-radius:12px;overflow:hidden">
-        <button data-acc="travis" aria-expanded="false" aria-controls="body-travis" style="width:100%;display:flex;align-items:center;gap:14px;text-align:left;background:none;border:none;padding:16px 18px;cursor:pointer">
-          <span style="flex:1;display:grid;gap:3px">
-            <span style="font:600 11px/1 'Oswald',sans-serif;letter-spacing:1.8px;text-transform:uppercase;color:#1d3059">Big Water</span>
-            <span style="font:600 21px/1.15 'Oswald',sans-serif;letter-spacing:.5px;text-transform:uppercase;color:#1d3059">Lake Travis</span>
-            <span style="font-size:14.5px;color:#5c6470;line-height:1.5">Deep Highland Lakes water with a summer schooling bite worth the drive.</span>
-          </span>
-          <span data-sign="travis" style="flex:0 0 34px;height:34px;border-radius:50%;background:#eef0f3;color:#1d3059;display:flex;align-items:center;justify-content:center;font:600 18px/1 'Oswald',sans-serif">+</span>
-        </button>
-        <div id="body-travis" data-body="travis" style="padding:0 18px 18px;display:none">
+        <section data-lake="travis" id="lake-travis" aria-labelledby="name-travis" style="background:#fff;border:1px solid rgba(14,34,68,.14);border-radius:12px;padding:18px">
+          <span style="display:block;font:600 11px/1 'Oswald',sans-serif;letter-spacing:1.8px;text-transform:uppercase;color:#1d3059;margin-bottom:5px">Big Water</span>
+          <h3 id="name-travis" style="font:600 21px/1.15 'Oswald',sans-serif;letter-spacing:.5px;text-transform:uppercase;color:#1d3059;margin:0 0 7px">Lake Travis</h3>
+          <p style="font-size:14.5px;color:#5c6470;line-height:1.5;margin:0 0 14px">Deep Highland Lakes water with a summer schooling bite worth the drive.</p>
           <div style="display:flex;flex-wrap:wrap;gap:6px 16px;font:500 12px/1.4 'Oswald',sans-serif;letter-spacing:1px;text-transform:uppercase;color:#1d3059;margin-bottom:14px"><span>18,622 acres</span><span style="color:#5c6470">63 miles of winding Colorado River canyon</span></div>
-          <div data-r="drive" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px">
-            <div style="background:#f8f7f3;border-radius:8px;padding:11px 13px"><span style="display:block;font:500 11px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:#5c6470;margin-bottom:6px">Austin (AUS)</span><span style="font:600 15px/1.2 'Oswald',sans-serif;color:#1d3059">35 mi &middot; ~45 min</span></div>
-            <div style="background:#f8f7f3;border-radius:8px;padding:11px 13px"><span style="display:block;font:500 11px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:#5c6470;margin-bottom:6px">San Antonio (SAT)</span><span style="font:600 15px/1.2 'Oswald',sans-serif;color:#1d3059">90 mi &middot; ~1 hr 30 min</span></div>
-            <div style="background:#f8f7f3;border-radius:8px;padding:11px 13px"><span style="display:block;font:500 11px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:#5c6470;margin-bottom:6px">Killeen (GRK)</span><span style="font:600 15px/1.2 'Oswald',sans-serif;color:#1d3059">60 mi &middot; ~1 hr 5 min</span></div>
+          <div style="display:grid;gap:8px;margin:0 0 14px">
+          <div style="background:#f8f7f3;border-radius:8px;padding:11px 13px;display:flex;align-items:center;justify-content:space-between;gap:12px"><span style="font:500 11px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:#5c6470">Austin (AUS)</span><span style="font:600 15px/1.2 'Oswald',sans-serif;color:#1d3059">35 mi &middot; ~45 min</span></div>
+          <div style="background:#f8f7f3;border-radius:8px;padding:11px 13px;display:flex;align-items:center;justify-content:space-between;gap:12px"><span style="font:500 11px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:#5c6470">San Antonio (SAT)</span><span style="font:600 15px/1.2 'Oswald',sans-serif;color:#1d3059">90 mi &middot; ~1 hr 30 min</span></div>
+          <div style="background:#f8f7f3;border-radius:8px;padding:11px 13px;display:flex;align-items:center;justify-content:space-between;gap:12px"><span style="font:500 11px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:#5c6470">Killeen (GRK)</span><span style="font:600 15px/1.2 'Oswald',sans-serif;color:#1d3059">60 mi &middot; ~1 hr 5 min</span></div>
           </div>
           <div data-hs data-gallery="travis" style="display:flex;gap:8px;padding-bottom:8px"></div>
-        </div>
-      </div>
+          <a href="#book" style="display:inline-flex;align-items:center;justify-content:center;min-height:48px;margin-top:4px;padding:0 22px;background:#1d3059;color:#fff;border-radius:6px;font:500 13px/1 'Oswald',sans-serif;letter-spacing:1.4px;text-transform:uppercase">Book Lake Travis</a>
+        </section>
 
-      <div id="lake-ladybird" style="background:#fff;border:1px solid rgba(14,34,68,.14);border-radius:12px;overflow:hidden">
-        <button data-acc="ladybird" aria-expanded="false" aria-controls="body-ladybird" style="width:100%;display:flex;align-items:center;gap:14px;text-align:left;background:none;border:none;padding:16px 18px;cursor:pointer">
-          <span style="flex:1;display:grid;gap:3px">
-            <span style="font:600 11px/1 'Oswald',sans-serif;letter-spacing:1.8px;text-transform:uppercase;color:#1d3059">In-Town Water</span>
-            <span style="font:600 21px/1.15 'Oswald',sans-serif;letter-spacing:.5px;text-transform:uppercase;color:#1d3059">Lady Bird Lake</span>
-            <span style="font-size:14.5px;color:#5c6470;line-height:1.5">Big, educated bass right through the middle of downtown Austin.</span>
-          </span>
-          <span data-sign="ladybird" style="flex:0 0 34px;height:34px;border-radius:50%;background:#eef0f3;color:#1d3059;display:flex;align-items:center;justify-content:center;font:600 18px/1 'Oswald',sans-serif">+</span>
-        </button>
-        <div id="body-ladybird" data-body="ladybird" style="padding:0 18px 18px;display:none">
+        <section data-lake="ladybird" id="lake-ladybird" aria-labelledby="name-ladybird" style="background:#fff;border:1px solid rgba(14,34,68,.14);border-radius:12px;padding:18px">
+          <span style="display:block;font:600 11px/1 'Oswald',sans-serif;letter-spacing:1.8px;text-transform:uppercase;color:#1d3059;margin-bottom:5px">In-Town Water</span>
+          <h3 id="name-ladybird" style="font:600 21px/1.15 'Oswald',sans-serif;letter-spacing:.5px;text-transform:uppercase;color:#1d3059;margin:0 0 7px">Lady Bird Lake</h3>
+          <p style="font-size:14.5px;color:#5c6470;line-height:1.5;margin:0 0 14px">Big, educated bass right through the middle of downtown Austin.</p>
           <div style="display:flex;flex-wrap:wrap;gap:6px 16px;font:500 12px/1.4 'Oswald',sans-serif;letter-spacing:1px;text-transform:uppercase;color:#1d3059;margin-bottom:14px"><span>416 acres</span><span style="color:#5c6470">No gas motors allowed, so it fishes quiet</span></div>
-          <div data-r="drive" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px">
-            <div style="background:#f8f7f3;border-radius:8px;padding:11px 13px"><span style="display:block;font:500 11px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:#5c6470;margin-bottom:6px">Austin (AUS)</span><span style="font:600 15px/1.2 'Oswald',sans-serif;color:#1d3059">8 mi &middot; ~15 min</span></div>
-            <div style="background:#f8f7f3;border-radius:8px;padding:11px 13px"><span style="display:block;font:500 11px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:#5c6470;margin-bottom:6px">San Antonio (SAT)</span><span style="font:600 15px/1.2 'Oswald',sans-serif;color:#1d3059">75 mi &middot; ~1 hr 15 min</span></div>
-            <div style="background:#f8f7f3;border-radius:8px;padding:11px 13px"><span style="display:block;font:500 11px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:#5c6470;margin-bottom:6px">Killeen (GRK)</span><span style="font:600 15px/1.2 'Oswald',sans-serif;color:#1d3059">70 mi &middot; ~1 hr 10 min</span></div>
+          <div style="display:grid;gap:8px;margin:0 0 14px">
+          <div style="background:#f8f7f3;border-radius:8px;padding:11px 13px;display:flex;align-items:center;justify-content:space-between;gap:12px"><span style="font:500 11px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:#5c6470">Austin (AUS)</span><span style="font:600 15px/1.2 'Oswald',sans-serif;color:#1d3059">8 mi &middot; ~15 min</span></div>
+          <div style="background:#f8f7f3;border-radius:8px;padding:11px 13px;display:flex;align-items:center;justify-content:space-between;gap:12px"><span style="font:500 11px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:#5c6470">San Antonio (SAT)</span><span style="font:600 15px/1.2 'Oswald',sans-serif;color:#1d3059">75 mi &middot; ~1 hr 15 min</span></div>
+          <div style="background:#f8f7f3;border-radius:8px;padding:11px 13px;display:flex;align-items:center;justify-content:space-between;gap:12px"><span style="font:500 11px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:#5c6470">Killeen (GRK)</span><span style="font:600 15px/1.2 'Oswald',sans-serif;color:#1d3059">70 mi &middot; ~1 hr 10 min</span></div>
           </div>
           <div data-hs data-gallery="ladybird" style="display:flex;gap:8px;padding-bottom:8px"></div>
-        </div>
-      </div>
+          <a href="#book" style="display:inline-flex;align-items:center;justify-content:center;min-height:48px;margin-top:4px;padding:0 22px;background:#1d3059;color:#fff;border-radius:6px;font:500 13px/1 'Oswald',sans-serif;letter-spacing:1.4px;text-transform:uppercase">Book Lady Bird Lake</a>
+        </section>
 
-      <div id="lake-lbj" style="background:#fff;border:1px solid rgba(14,34,68,.14);border-radius:12px;overflow:hidden">
-        <button data-acc="lbj" aria-expanded="false" aria-controls="body-lbj" style="width:100%;display:flex;align-items:center;gap:14px;text-align:left;background:none;border:none;padding:16px 18px;cursor:pointer">
-          <span style="flex:1;display:grid;gap:3px">
-            <span style="font:600 11px/1 'Oswald',sans-serif;letter-spacing:1.8px;text-transform:uppercase;color:#1d3059">Big Bass</span>
-            <span style="font:600 21px/1.15 'Oswald',sans-serif;letter-spacing:.5px;text-transform:uppercase;color:#1d3059">Lake LBJ</span>
-            <span style="font-size:14.5px;color:#5c6470;line-height:1.5">Constant-level dock water with a legit shot at a giant.</span>
-          </span>
-          <span data-sign="lbj" style="flex:0 0 34px;height:34px;border-radius:50%;background:#eef0f3;color:#1d3059;display:flex;align-items:center;justify-content:center;font:600 18px/1 'Oswald',sans-serif">+</span>
-        </button>
-        <div id="body-lbj" data-body="lbj" style="padding:0 18px 18px;display:none">
+        <section data-lake="lbj" id="lake-lbj" aria-labelledby="name-lbj" style="background:#fff;border:1px solid rgba(14,34,68,.14);border-radius:12px;padding:18px">
+          <span style="display:block;font:600 11px/1 'Oswald',sans-serif;letter-spacing:1.8px;text-transform:uppercase;color:#1d3059;margin-bottom:5px">Big Bass</span>
+          <h3 id="name-lbj" style="font:600 21px/1.15 'Oswald',sans-serif;letter-spacing:.5px;text-transform:uppercase;color:#1d3059;margin:0 0 7px">Lake LBJ</h3>
+          <p style="font-size:14.5px;color:#5c6470;line-height:1.5;margin:0 0 14px">Constant-level dock water with a legit shot at a giant.</p>
           <div style="display:flex;flex-wrap:wrap;gap:6px 16px;font:500 12px/1.4 'Oswald',sans-serif;letter-spacing:1px;text-transform:uppercase;color:#1d3059;margin-bottom:14px"><span>6,534 acres</span><span style="color:#5c6470">Held at a constant level year-round</span></div>
-          <div data-r="drive" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px">
-            <div style="background:#f8f7f3;border-radius:8px;padding:11px 13px"><span style="display:block;font:500 11px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:#5c6470;margin-bottom:6px">Austin (AUS)</span><span style="font:600 15px/1.2 'Oswald',sans-serif;color:#1d3059">62 mi &middot; ~1 hr 10 min</span></div>
-            <div style="background:#f8f7f3;border-radius:8px;padding:11px 13px"><span style="display:block;font:500 11px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:#5c6470;margin-bottom:6px">San Antonio (SAT)</span><span style="font:600 15px/1.2 'Oswald',sans-serif;color:#1d3059">95 mi &middot; ~1 hr 40 min</span></div>
-            <div style="background:#f8f7f3;border-radius:8px;padding:11px 13px"><span style="display:block;font:500 11px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:#5c6470;margin-bottom:6px">Killeen (GRK)</span><span style="font:600 15px/1.2 'Oswald',sans-serif;color:#1d3059">70 mi &middot; ~1 hr 20 min</span></div>
+          <div style="display:grid;gap:8px;margin:0 0 14px">
+          <div style="background:#f8f7f3;border-radius:8px;padding:11px 13px;display:flex;align-items:center;justify-content:space-between;gap:12px"><span style="font:500 11px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:#5c6470">Austin (AUS)</span><span style="font:600 15px/1.2 'Oswald',sans-serif;color:#1d3059">62 mi &middot; ~1 hr 10 min</span></div>
+          <div style="background:#f8f7f3;border-radius:8px;padding:11px 13px;display:flex;align-items:center;justify-content:space-between;gap:12px"><span style="font:500 11px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:#5c6470">San Antonio (SAT)</span><span style="font:600 15px/1.2 'Oswald',sans-serif;color:#1d3059">95 mi &middot; ~1 hr 40 min</span></div>
+          <div style="background:#f8f7f3;border-radius:8px;padding:11px 13px;display:flex;align-items:center;justify-content:space-between;gap:12px"><span style="font:500 11px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:#5c6470">Killeen (GRK)</span><span style="font:600 15px/1.2 'Oswald',sans-serif;color:#1d3059">70 mi &middot; ~1 hr 20 min</span></div>
           </div>
           <div data-hs data-gallery="lbj" style="display:flex;gap:8px;padding-bottom:8px"></div>
-        </div>
-      </div>
+          <a href="#book" style="display:inline-flex;align-items:center;justify-content:center;min-height:48px;margin-top:4px;padding:0 22px;background:#1d3059;color:#fff;border-radius:6px;font:500 13px/1 'Oswald',sans-serif;letter-spacing:1.4px;text-transform:uppercase">Book Lake LBJ</a>
+        </section>
 
-      <div id="lake-austin" style="background:#fff;border:1px solid rgba(14,34,68,.14);border-radius:12px;overflow:hidden">
-        <button data-acc="austin" aria-expanded="false" aria-controls="body-austin" style="width:100%;display:flex;align-items:center;gap:14px;text-align:left;background:none;border:none;padding:16px 18px;cursor:pointer">
-          <span style="flex:1;display:grid;gap:3px">
-            <span style="font:600 11px/1 'Oswald',sans-serif;letter-spacing:1.8px;text-transform:uppercase;color:#1d3059">Big Bass</span>
-            <span style="font:600 21px/1.15 'Oswald',sans-serif;letter-spacing:.5px;text-transform:uppercase;color:#1d3059">Lake Austin</span>
-            <span style="font-size:14.5px;color:#5c6470;line-height:1.5">Grass, docks, and some of the biggest largemouth in Texas.</span>
-          </span>
-          <span data-sign="austin" style="flex:0 0 34px;height:34px;border-radius:50%;background:#eef0f3;color:#1d3059;display:flex;align-items:center;justify-content:center;font:600 18px/1 'Oswald',sans-serif">+</span>
-        </button>
-        <div id="body-austin" data-body="austin" style="padding:0 18px 18px;display:none">
+        <section data-lake="austin" id="lake-austin" aria-labelledby="name-austin" style="background:#fff;border:1px solid rgba(14,34,68,.14);border-radius:12px;padding:18px">
+          <span style="display:block;font:600 11px/1 'Oswald',sans-serif;letter-spacing:1.8px;text-transform:uppercase;color:#1d3059;margin-bottom:5px">Big Bass</span>
+          <h3 id="name-austin" style="font:600 21px/1.15 'Oswald',sans-serif;letter-spacing:.5px;text-transform:uppercase;color:#1d3059;margin:0 0 7px">Lake Austin</h3>
+          <p style="font-size:14.5px;color:#5c6470;line-height:1.5;margin:0 0 14px">Grass, docks, and some of the biggest largemouth in Texas.</p>
           <div style="display:flex;flex-wrap:wrap;gap:6px 16px;font:500 12px/1.4 'Oswald',sans-serif;letter-spacing:1px;text-transform:uppercase;color:#1d3059;margin-bottom:14px"><span>1,599 acres</span><span style="color:#5c6470">Has produced 13-pound-plus ShareLunker bass</span></div>
-          <div data-r="drive" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px">
-            <div style="background:#f8f7f3;border-radius:8px;padding:11px 13px"><span style="display:block;font:500 11px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:#5c6470;margin-bottom:6px">Austin (AUS)</span><span style="font:600 15px/1.2 'Oswald',sans-serif;color:#1d3059">15 mi &middot; ~25 min</span></div>
-            <div style="background:#f8f7f3;border-radius:8px;padding:11px 13px"><span style="display:block;font:500 11px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:#5c6470;margin-bottom:6px">San Antonio (SAT)</span><span style="font:600 15px/1.2 'Oswald',sans-serif;color:#1d3059">80 mi &middot; ~1 hr 20 min</span></div>
-            <div style="background:#f8f7f3;border-radius:8px;padding:11px 13px"><span style="display:block;font:500 11px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:#5c6470;margin-bottom:6px">Killeen (GRK)</span><span style="font:600 15px/1.2 'Oswald',sans-serif;color:#1d3059">75 mi &middot; ~1 hr 15 min</span></div>
+          <div style="display:grid;gap:8px;margin:0 0 14px">
+          <div style="background:#f8f7f3;border-radius:8px;padding:11px 13px;display:flex;align-items:center;justify-content:space-between;gap:12px"><span style="font:500 11px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:#5c6470">Austin (AUS)</span><span style="font:600 15px/1.2 'Oswald',sans-serif;color:#1d3059">15 mi &middot; ~25 min</span></div>
+          <div style="background:#f8f7f3;border-radius:8px;padding:11px 13px;display:flex;align-items:center;justify-content:space-between;gap:12px"><span style="font:500 11px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:#5c6470">San Antonio (SAT)</span><span style="font:600 15px/1.2 'Oswald',sans-serif;color:#1d3059">80 mi &middot; ~1 hr 20 min</span></div>
+          <div style="background:#f8f7f3;border-radius:8px;padding:11px 13px;display:flex;align-items:center;justify-content:space-between;gap:12px"><span style="font:500 11px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:#5c6470">Killeen (GRK)</span><span style="font:600 15px/1.2 'Oswald',sans-serif;color:#1d3059">75 mi &middot; ~1 hr 15 min</span></div>
           </div>
           <div style="border:1px dashed rgba(14,34,68,.28);border-radius:8px;padding:22px;text-align:center;font:500 12px/1.5 'Oswald',sans-serif;letter-spacing:1.6px;text-transform:uppercase;color:#5c6470;background:repeating-linear-gradient(45deg,#f8f7f3,#f8f7f3 10px,#eef0f3 10px,#eef0f3 20px)">Lake Austin photo coming soon</div>
-        </div>
-      </div>
+          <a href="#book" style="display:inline-flex;align-items:center;justify-content:center;min-height:48px;margin-top:4px;padding:0 22px;background:#1d3059;color:#fff;border-radius:6px;font:500 13px/1 'Oswald',sans-serif;letter-spacing:1.4px;text-transform:uppercase">Book Lake Austin</a>
+        </section>
 
-      <div id="lake-belton" style="background:#fff;border:1px solid rgba(14,34,68,.14);border-radius:12px;overflow:hidden">
-        <button data-acc="belton" aria-expanded="false" aria-controls="body-belton" style="width:100%;display:flex;align-items:center;gap:14px;text-align:left;background:none;border:none;padding:16px 18px;cursor:pointer">
-          <span style="flex:1;display:grid;gap:3px">
-            <span style="font:600 11px/1 'Oswald',sans-serif;letter-spacing:1.8px;text-transform:uppercase;color:#1d3059">Smallmouth</span>
-            <span style="font:600 21px/1.15 'Oswald',sans-serif;letter-spacing:.5px;text-transform:uppercase;color:#1d3059">Lake Belton</span>
-            <span style="font-size:14.5px;color:#5c6470;line-height:1.5">Our smallmouth water, brown fish over clear Hill Country rock.</span>
-          </span>
-          <span data-sign="belton" style="flex:0 0 34px;height:34px;border-radius:50%;background:#eef0f3;color:#1d3059;display:flex;align-items:center;justify-content:center;font:600 18px/1 'Oswald',sans-serif">+</span>
-        </button>
-        <div id="body-belton" data-body="belton" style="padding:0 18px 18px;display:none">
+        <section data-lake="belton" id="lake-belton" aria-labelledby="name-belton" style="background:#fff;border:1px solid rgba(14,34,68,.14);border-radius:12px;padding:18px">
+          <span style="display:block;font:600 11px/1 'Oswald',sans-serif;letter-spacing:1.8px;text-transform:uppercase;color:#1d3059;margin-bottom:5px">Smallmouth</span>
+          <h3 id="name-belton" style="font:600 21px/1.15 'Oswald',sans-serif;letter-spacing:.5px;text-transform:uppercase;color:#1d3059;margin:0 0 7px">Lake Belton</h3>
+          <p style="font-size:14.5px;color:#5c6470;line-height:1.5;margin:0 0 14px">Our smallmouth water, brown fish over clear Hill Country rock.</p>
           <div style="display:flex;flex-wrap:wrap;gap:6px 16px;font:500 12px/1.4 'Oswald',sans-serif;letter-spacing:1px;text-transform:uppercase;color:#1d3059;margin-bottom:14px"><span>12,385 acres</span><span style="color:#5c6470">One of the best smallmouth fisheries in Texas</span></div>
-          <div data-r="drive" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px">
-            <div style="background:#f8f7f3;border-radius:8px;padding:11px 13px"><span style="display:block;font:500 11px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:#5c6470;margin-bottom:6px">Austin (AUS)</span><span style="font:600 15px/1.2 'Oswald',sans-serif;color:#1d3059">73 mi &middot; ~1 hr 10 min</span></div>
-            <div style="background:#f8f7f3;border-radius:8px;padding:11px 13px"><span style="display:block;font:500 11px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:#5c6470;margin-bottom:6px">San Antonio (SAT)</span><span style="font:600 15px/1.2 'Oswald',sans-serif;color:#1d3059">130 mi &middot; ~1 hr 55 min</span></div>
-            <div style="background:#f8f7f3;border-radius:8px;padding:11px 13px"><span style="display:block;font:500 11px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:#5c6470;margin-bottom:6px">Killeen (GRK)</span><span style="font:600 15px/1.2 'Oswald',sans-serif;color:#1d3059">12 mi &middot; ~20 min</span></div>
+          <div style="display:grid;gap:8px;margin:0 0 14px">
+          <div style="background:#f8f7f3;border-radius:8px;padding:11px 13px;display:flex;align-items:center;justify-content:space-between;gap:12px"><span style="font:500 11px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:#5c6470">Austin (AUS)</span><span style="font:600 15px/1.2 'Oswald',sans-serif;color:#1d3059">73 mi &middot; ~1 hr 10 min</span></div>
+          <div style="background:#f8f7f3;border-radius:8px;padding:11px 13px;display:flex;align-items:center;justify-content:space-between;gap:12px"><span style="font:500 11px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:#5c6470">San Antonio (SAT)</span><span style="font:600 15px/1.2 'Oswald',sans-serif;color:#1d3059">130 mi &middot; ~1 hr 55 min</span></div>
+          <div style="background:#f8f7f3;border-radius:8px;padding:11px 13px;display:flex;align-items:center;justify-content:space-between;gap:12px"><span style="font:500 11px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:#5c6470">Killeen (GRK)</span><span style="font:600 15px/1.2 'Oswald',sans-serif;color:#1d3059">12 mi &middot; ~20 min</span></div>
           </div>
           <div data-hs data-gallery="belton" style="display:flex;gap:8px;padding-bottom:8px"></div>
-        </div>
-      </div>
+          <a href="#book" style="display:inline-flex;align-items:center;justify-content:center;min-height:48px;margin-top:4px;padding:0 22px;background:#1d3059;color:#fff;border-radius:6px;font:500 13px/1 'Oswald',sans-serif;letter-spacing:1.4px;text-transform:uppercase">Book Lake Belton</a>
+        </section>
 
-      <div id="lake-stillhouse" style="background:#fff;border:1px solid rgba(14,34,68,.14);border-radius:12px;overflow:hidden">
-        <button data-acc="stillhouse" aria-expanded="false" aria-controls="body-stillhouse" style="width:100%;display:flex;align-items:center;gap:14px;text-align:left;background:none;border:none;padding:16px 18px;cursor:pointer">
-          <span style="flex:1;display:grid;gap:3px">
-            <span style="font:600 11px/1 'Oswald',sans-serif;letter-spacing:1.8px;text-transform:uppercase;color:#1d3059">Sleeper Water</span>
-            <span style="font:600 21px/1.15 'Oswald',sans-serif;letter-spacing:.5px;text-transform:uppercase;color:#1d3059">Stillhouse Hollow</span>
-            <span style="font-size:14.5px;color:#5c6470;line-height:1.5">Belton's quieter neighbor, clear, grassy, and full of quality fish.</span>
-          </span>
-          <span data-sign="stillhouse" style="flex:0 0 34px;height:34px;border-radius:50%;background:#eef0f3;color:#1d3059;display:flex;align-items:center;justify-content:center;font:600 18px/1 'Oswald',sans-serif">+</span>
-        </button>
-        <div id="body-stillhouse" data-body="stillhouse" style="padding:0 18px 18px;display:none">
+        <section data-lake="stillhouse" id="lake-stillhouse" aria-labelledby="name-stillhouse" style="background:#fff;border:1px solid rgba(14,34,68,.14);border-radius:12px;padding:18px">
+          <span style="display:block;font:600 11px/1 'Oswald',sans-serif;letter-spacing:1.8px;text-transform:uppercase;color:#1d3059;margin-bottom:5px">Sleeper Water</span>
+          <h3 id="name-stillhouse" style="font:600 21px/1.15 'Oswald',sans-serif;letter-spacing:.5px;text-transform:uppercase;color:#1d3059;margin:0 0 7px">Stillhouse Hollow</h3>
+          <p style="font-size:14.5px;color:#5c6470;line-height:1.5;margin:0 0 14px">Belton's quieter neighbor, clear, grassy, and full of quality fish.</p>
           <div style="display:flex;flex-wrap:wrap;gap:6px 16px;font:500 12px/1.4 'Oswald',sans-serif;letter-spacing:1px;text-transform:uppercase;color:#1d3059;margin-bottom:14px"><span>6,430 acres</span><span style="color:#5c6470">Known for hydrilla beds that hold big fish</span></div>
-          <div data-r="drive" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px">
-            <div style="background:#f8f7f3;border-radius:8px;padding:11px 13px"><span style="display:block;font:500 11px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:#5c6470;margin-bottom:6px">Austin (AUS)</span><span style="font:600 15px/1.2 'Oswald',sans-serif;color:#1d3059">65 mi &middot; ~1 hr</span></div>
-            <div style="background:#f8f7f3;border-radius:8px;padding:11px 13px"><span style="display:block;font:500 11px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:#5c6470;margin-bottom:6px">San Antonio (SAT)</span><span style="font:600 15px/1.2 'Oswald',sans-serif;color:#1d3059">125 mi &middot; ~1 hr 50 min</span></div>
-            <div style="background:#f8f7f3;border-radius:8px;padding:11px 13px"><span style="display:block;font:500 11px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:#5c6470;margin-bottom:6px">Killeen (GRK)</span><span style="font:600 15px/1.2 'Oswald',sans-serif;color:#1d3059">10 mi &middot; ~15 min</span></div>
+          <div style="display:grid;gap:8px;margin:0 0 14px">
+          <div style="background:#f8f7f3;border-radius:8px;padding:11px 13px;display:flex;align-items:center;justify-content:space-between;gap:12px"><span style="font:500 11px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:#5c6470">Austin (AUS)</span><span style="font:600 15px/1.2 'Oswald',sans-serif;color:#1d3059">65 mi &middot; ~1 hr</span></div>
+          <div style="background:#f8f7f3;border-radius:8px;padding:11px 13px;display:flex;align-items:center;justify-content:space-between;gap:12px"><span style="font:500 11px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:#5c6470">San Antonio (SAT)</span><span style="font:600 15px/1.2 'Oswald',sans-serif;color:#1d3059">125 mi &middot; ~1 hr 50 min</span></div>
+          <div style="background:#f8f7f3;border-radius:8px;padding:11px 13px;display:flex;align-items:center;justify-content:space-between;gap:12px"><span style="font:500 11px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:#5c6470">Killeen (GRK)</span><span style="font:600 15px/1.2 'Oswald',sans-serif;color:#1d3059">10 mi &middot; ~15 min</span></div>
           </div>
           <div data-hs data-gallery="stillhouse" style="display:flex;gap:8px;padding-bottom:8px"></div>
-        </div>
-      </div>
+          <a href="#book" style="display:inline-flex;align-items:center;justify-content:center;min-height:48px;margin-top:4px;padding:0 22px;background:#1d3059;color:#fff;border-radius:6px;font:500 13px/1 'Oswald',sans-serif;letter-spacing:1.4px;text-transform:uppercase">Book Stillhouse Hollow</a>
+        </section>
 
-      <div id="lake-buchanan" style="background:#fff;border:1px solid rgba(14,34,68,.14);border-radius:12px;overflow:hidden">
-        <button data-acc="buchanan" aria-expanded="false" aria-controls="body-buchanan" style="width:100%;display:flex;align-items:center;gap:14px;text-align:left;background:none;border:none;padding:16px 18px;cursor:pointer">
-          <span style="flex:1;display:grid;gap:3px">
-            <span style="font:600 11px/1 'Oswald',sans-serif;letter-spacing:1.8px;text-transform:uppercase;color:#1d3059">Highland Lakes</span>
-            <span style="font:600 21px/1.15 'Oswald',sans-serif;letter-spacing:.5px;text-transform:uppercase;color:#1d3059">Lake Buchanan</span>
-            <span style="font-size:14.5px;color:#5c6470;line-height:1.5">Big open water at the top of the chain, wind-blown rock and stout largemouth.</span>
-          </span>
-          <span data-sign="buchanan" style="flex:0 0 34px;height:34px;border-radius:50%;background:#eef0f3;color:#1d3059;display:flex;align-items:center;justify-content:center;font:600 18px/1 'Oswald',sans-serif">+</span>
-        </button>
-        <div id="body-buchanan" data-body="buchanan" style="padding:0 18px 18px;display:none">
+        <section data-lake="buchanan" id="lake-buchanan" aria-labelledby="name-buchanan" style="background:#fff;border:1px solid rgba(14,34,68,.14);border-radius:12px;padding:18px">
+          <span style="display:block;font:600 11px/1 'Oswald',sans-serif;letter-spacing:1.8px;text-transform:uppercase;color:#1d3059;margin-bottom:5px">Highland Lakes</span>
+          <h3 id="name-buchanan" style="font:600 21px/1.15 'Oswald',sans-serif;letter-spacing:.5px;text-transform:uppercase;color:#1d3059;margin:0 0 7px">Lake Buchanan</h3>
+          <p style="font-size:14.5px;color:#5c6470;line-height:1.5;margin:0 0 14px">Big open water at the top of the chain, wind-blown rock and stout largemouth.</p>
           <div style="display:flex;flex-wrap:wrap;gap:6px 16px;font:500 12px/1.4 'Oswald',sans-serif;letter-spacing:1px;text-transform:uppercase;color:#1d3059;margin-bottom:14px"><span>22,333 acres</span><span style="color:#5c6470">Largest of the Highland Lakes</span></div>
-          <div data-r="drive" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px">
-            <div style="background:#f8f7f3;border-radius:8px;padding:11px 13px"><span style="display:block;font:500 11px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:#5c6470;margin-bottom:6px">Austin (AUS)</span><span style="font:600 15px/1.2 'Oswald',sans-serif;color:#1d3059">75 mi &middot; ~1 hr 25 min</span></div>
-            <div style="background:#f8f7f3;border-radius:8px;padding:11px 13px"><span style="display:block;font:500 11px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:#5c6470;margin-bottom:6px">San Antonio (SAT)</span><span style="font:600 15px/1.2 'Oswald',sans-serif;color:#1d3059">115 mi &middot; ~1 hr 55 min</span></div>
-            <div style="background:#f8f7f3;border-radius:8px;padding:11px 13px"><span style="display:block;font:500 11px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:#5c6470;margin-bottom:6px">Killeen (GRK)</span><span style="font:600 15px/1.2 'Oswald',sans-serif;color:#1d3059">65 mi &middot; ~1 hr 15 min</span></div>
+          <div style="display:grid;gap:8px;margin:0 0 14px">
+          <div style="background:#f8f7f3;border-radius:8px;padding:11px 13px;display:flex;align-items:center;justify-content:space-between;gap:12px"><span style="font:500 11px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:#5c6470">Austin (AUS)</span><span style="font:600 15px/1.2 'Oswald',sans-serif;color:#1d3059">75 mi &middot; ~1 hr 25 min</span></div>
+          <div style="background:#f8f7f3;border-radius:8px;padding:11px 13px;display:flex;align-items:center;justify-content:space-between;gap:12px"><span style="font:500 11px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:#5c6470">San Antonio (SAT)</span><span style="font:600 15px/1.2 'Oswald',sans-serif;color:#1d3059">115 mi &middot; ~1 hr 55 min</span></div>
+          <div style="background:#f8f7f3;border-radius:8px;padding:11px 13px;display:flex;align-items:center;justify-content:space-between;gap:12px"><span style="font:500 11px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:#5c6470">Killeen (GRK)</span><span style="font:600 15px/1.2 'Oswald',sans-serif;color:#1d3059">65 mi &middot; ~1 hr 15 min</span></div>
           </div>
           <div data-hs data-gallery="buchanan" style="display:flex;gap:8px;padding-bottom:8px"></div>
-        </div>
+          <a href="#book" style="display:inline-flex;align-items:center;justify-content:center;min-height:48px;margin-top:4px;padding:0 22px;background:#1d3059;color:#fff;border-radius:6px;font:500 13px/1 'Oswald',sans-serif;letter-spacing:1.4px;text-transform:uppercase">Book Lake Buchanan</a>
+        </section>
       </div>
-
+    </div>
     </div>
     <p style="font-size:13px;color:#5c6470;margin:16px 0 0">Distances and times are approximate, measured to the nearest public boat ramp in normal traffic.</p>
   </div>
@@ -1253,42 +1246,90 @@ input::placeholder{color:#98a0ad}
     }
   })();
 
-  /* ---------- Lake accordion ---------------------------------------- */
+  /* ---------- Lake selection ----------------------------------------- */
 
-  var open = 'canyon';
+  var selected = 'canyon';
 
-  function render() {
+  /* The pins and the chips are the same control twice over, and this is what
+     they do. Beside the chart, picking a lake swaps which write-up is showing
+     and the page does not move. Stacked on a phone the stylesheet has every
+     panel on screen already, so picking one scrolls to it instead.
+
+     matchMedia is read when a control is clicked rather than listened to: the
+     CSS decides on its own what is visible at any width, so there is nothing
+     to keep in step on resize. */
+  var narrow = window.matchMedia('(max-width:900px)');
+  var SCENE_CONTROLS = {};
+
+  /* Which lake you picked, said on the chart itself. Painted here rather than
+     in the stylesheet because it changes as you click, the same reason the
+     booking form's morning and afternoon buttons are painted in bfPaintSlots.
+     aria-current carries it for a screen reader: these stay plain buttons at
+     every width rather than tabs, because on a phone every panel is already
+     showing and a tab that reveals nothing would be a lie. */
+  function paintScene() {
     LAKES.forEach(function (lake) {
-      var isOpen = open === lake.id;
-      var body = $('[data-body="' + lake.id + '"]');
-      var sign = $('[data-sign="' + lake.id + '"]');
-      var head = $('[data-acc="' + lake.id + '"]');
-      if (body) body.style.display = isOpen ? 'block' : 'none';
-      if (sign) sign.innerHTML = isOpen ? '&minus;' : '+';
-      if (head) head.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      var pair = SCENE_CONTROLS[lake.id];
+      if (!pair) return;
+      var on = lake.id === selected;
+
+      var dot = pair.pin.firstElementChild;
+      dot.style.width = on ? '16px' : '12px';
+      dot.style.height = on ? '16px' : '12px';
+      dot.style.borderWidth = on ? '3px' : '2px';
+      dot.style.boxShadow = on
+        ? '0 0 0 4px rgba(224,92,34,.35),0 2px 8px rgba(0,0,0,.5)'
+        : '0 2px 8px rgba(0,0,0,.5)';
+      pair.pin.style.zIndex = on ? '2' : '1';
+
+      var label = pair.pin.lastElementChild;
+      if (on) label.setAttribute('data-on', '');
+      else label.removeAttribute('data-on');
+
+      pair.chip.style.background = on ? '#1d3059' : '#fff';
+      pair.chip.style.color = on ? '#fff' : '#1d3059';
+      pair.chip.style.borderColor = on ? '#1d3059' : 'rgba(14,34,68,.18)';
+
+      if (on) {
+        pair.pin.setAttribute('aria-current', 'true');
+        pair.chip.setAttribute('aria-current', 'true');
+        /* Pick a lake on the chart and its chip may be off the end of the
+           rail, which then reads as though nothing is selected. Nudge it into
+           view. Only the rail's own sideways scroll is touched, never the
+           page's, and on a computer the chips wrap so this never fires. */
+        if (chips && chips.scrollWidth > chips.clientWidth) {
+          var left = pair.chip.offsetLeft;
+          var wide = pair.chip.offsetWidth;
+          if (left < chips.scrollLeft ||
+              left + wide > chips.scrollLeft + chips.clientWidth) {
+            chips.scrollLeft = left - (chips.clientWidth - wide) / 2;
+          }
+        }
+      } else {
+        pair.pin.removeAttribute('aria-current');
+        pair.chip.removeAttribute('aria-current');
+      }
     });
   }
 
-  $$('[data-acc]').forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      var id = btn.getAttribute('data-acc');
-      open = (open === id) ? null : id;
-      render();
+  function select(id, viaClick) {
+    selected = id;
+    LAKES.forEach(function (lake) {
+      var panel = $('[data-lake="' + lake.id + '"]');
+      if (panel) panel.style.display = (lake.id === id) ? 'block' : 'none';
     });
-  });
-
-  function go(id) {
-    open = id;
-    render();
-    setTimeout(function () {
+    paintScene();
+    if (viaClick && narrow.matches) {
       var el = document.getElementById('lake-' + id);
       if (el) {
         window.scrollTo({
-          top: el.getBoundingClientRect().top + window.pageYOffset - 90,
+          /* Clears the sticky header, which is as tall as .brand-logo plus
+             its padding. Keep this in step with scroll-padding-top. */
+          top: el.getBoundingClientRect().top + window.pageYOffset - 122,
           behavior: 'smooth'
         });
       }
-    }, 60);
+    }
   }
 
   /* ---------- Map pins + lake chips ---------------------------------- */
@@ -1310,7 +1351,8 @@ input::placeholder{color:#98a0ad}
       '<span data-pinlabel style="font-family:Georgia,serif;font-style:italic;font-size:11px;color:#1d3059;' +
       'white-space:nowrap;background:rgba(248,247,243,.92);padding:0 5px;border:1px solid rgba(29,48,89,.3)"></span>';
     pin.lastElementChild.textContent = lake.name;
-    pin.addEventListener('click', function () { go(lake.id); });
+    pin.setAttribute('aria-controls', 'lake-' + lake.id);
+    pin.addEventListener('click', function () { select(lake.id, true); });
     if (chart) chart.insertBefore(pin, attribution);
 
     var chip = document.createElement('button');
@@ -1319,11 +1361,14 @@ input::placeholder{color:#98a0ad}
       'border:1px solid rgba(14,34,68,.18);background:#fff;color:#1d3059;' +
       "font:500 13px/1 'Oswald',sans-serif;letter-spacing:1.1px;text-transform:uppercase;cursor:pointer";
     chip.textContent = lake.full;
-    chip.addEventListener('click', function () { go(lake.id); });
+    chip.setAttribute('aria-controls', 'lake-' + lake.id);
+    chip.addEventListener('click', function () { select(lake.id, true); });
     if (chips) chips.appendChild(chip);
+
+    SCENE_CONTROLS[lake.id] = { pin: pin, chip: chip };
   });
 
-  render();
+  select(selected, false);
 })();
 </script>
 
