@@ -6,9 +6,11 @@
 
   HOW TO EDIT
     - Text: the copy between tags is safe to change.
-    - Booking form: hosted by Fillout and edited at fillout.com, not here.
-      The page only carries the embed div in the "Book Your Trip" section;
-      questions, available dates and where answers go all live at Fillout.
+    - Booking form: hand-built and lives here, in the "Book Your Trip"
+      section plus the BOOKING FORM block in the script at the bottom.
+      NOT WIRED UP YET: a submitted request is checked and confirmed on
+      screen, but nothing is sent anywhere. The phone number and email are
+      the booking path that works. See HAND-OFF POINT in that script block.
     - Reviews: see "EDIT REVIEWS" in the script at the bottom. Every quote
       shipped today is a placeholder and says so on the card.
     - Lake photos: see the LAKES table in the script at the bottom.
@@ -160,6 +162,7 @@ img{display:block;max-width:100%}
 a{color:#1d3059;text-decoration:none}
 a:hover{color:#0e2244}
 button,input,select,textarea{font-family:inherit}
+input::placeholder{color:#98a0ad}
 [data-hs]{overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch}
 [data-hs]::-webkit-scrollbar{height:6px}
 [data-hs]::-webkit-scrollbar-thumb{background:rgba(14,34,68,.22);border-radius:99px}
@@ -171,6 +174,15 @@ button,input,select,textarea{font-family:inherit}
    was trimmed from 8px to 4px to absorb most of the growth: 52px -> 65px is a
    25% bigger logo for 5px more bar. */
 .brand-logo{height:65px;width:auto}
+
+/* BOOKING FORM — the rest of the form is styled inline beside its markup, the
+   way the rest of this page is. These three rules are here because they are
+   the states an inline style cannot reach. The selected morning/afternoon
+   button is not among them: which one is on changes as you click, so the
+   script sets those colours directly. */
+.bf-field:focus{border-color:#1d3059;background:#fff;outline:none}
+.bf-field:focus-visible{outline:2px solid #e05c22;outline-offset:2px}
+.bf-submit:hover{background:#0e2244}
 
 /* HERO — one <h1> in two layouts.
    The heading used to exist twice, once inside the phone hero where it sits
@@ -197,7 +209,15 @@ button,input,select,textarea{font-family:inherit}
    heading is actually over the photo. */
 .hero-scrim{display:none;position:absolute;inset:0;
   background:linear-gradient(180deg,rgba(14,34,68,.4) 0%,rgba(14,34,68,.06) 34%,rgba(14,34,68,.88) 100%)}
-@media (min-width:901px){[data-mob]{display:none!important}}
+@media (min-width:901px){
+  [data-mob]{display:none!important}
+  /* The booking form is about 600px tall and the confirmation that replaces
+     it is about 370px, and the contact photo beside them is sized to whatever
+     the column leaves over. Holding a floor under the pair keeps that photo
+     still when the form is submitted. Only while the two are side by side —
+     stacked on a phone this would just be a hole under the confirmation. */
+  [data-bookcard]{min-height:640px}
+}
 @media (max-width:900px){
   [data-desk]{display:none!important}
   [data-tap]{display:inline-flex;align-items:center;min-height:44px}
@@ -223,13 +243,19 @@ button,input,select,textarea{font-family:inherit}
   [data-r=drive]>div{display:flex;align-items:center;justify-content:space-between;gap:12px}
   [data-r=drive]>div>span{margin:0!important}
 }
-@media (max-width:560px){[data-pinlabel]{display:none!important}}
+@media (max-width:560px){
+  [data-pinlabel]{display:none!important}
+  /* Email and phone sit side by side until the card is too narrow to hold a
+     phone number and its label at once. */
+  [data-r=pair]{grid-template-columns:1fr!important}
+}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition-duration:.01ms!important}}
 </style>
-<!-- The booking embed reserves 460px for a form that only a script can fill.
-     With scripting off that is a tall empty box, so collapse it and let the
-     noscript note in that section stand in its place. -->
-<noscript><style>[data-fillout-id]{display:none!important}</style></noscript>
+<!-- The booking form's fields render without a script, but the script is what
+     validates them and does something with the answers — without it a submit
+     would reload the page and drop what was typed. So with scripting off,
+     hide the form and let the noscript note in that section stand in for it. -->
+<noscript><style>[data-booking-form]{display:none!important}</style></noscript>
 </head>
 <body>
 
@@ -628,22 +654,104 @@ button,input,select,textarea{font-family:inherit}
       <div style="display:flex;flex-direction:column">
         <span style="display:inline-block;font:700 12px/1 'Inter',sans-serif;letter-spacing:.26em;text-transform:uppercase;color:#1d3059">Reserve Your Date</span>
         <h2 style="font:600 clamp(24px,3vw,30px)/1.1 'Oswald',sans-serif;letter-spacing:.5px;text-transform:uppercase;color:#1d3059;margin:14px 0 18px">Book Your Trip</h2>
-        <!-- Booking form, hosted by Fillout. The form itself — its questions,
-             the dates it offers, and where the answers go — is edited at
-             fillout.com, not here; this page only says where to put it. The
-             script below the div is what turns it into the form.
+        <!-- Booking form. Hand-built and served from this page, replacing the
+             Fillout embed that used to sit here: the markup is below, and the
+             behaviour — validation, the date read-back, and what happens on
+             submit — is the BOOKING FORM block in the script at the bottom.
 
-             This is a third-party runtime dependency: if Fillout is down or
-             blocked, the box stays empty, and the phone number and email in
-             the next column are how someone still reaches Chris. The noscript
-             note says the same thing for anyone browsing without JavaScript.
+             NOT WIRED UP YET. Submitting checks the answers and shows the
+             confirmation card below, but nothing is sent to anyone; see
+             HAND-OFF POINT in that script block. Until it is connected, the
+             phone number and email in the next column are the only booking
+             path that actually reaches Chris.
 
-             EDIT: to point this at a different form, change data-fillout-id to
-             the new form's ID. -->
-        <div style="width:100%;flex:0 0 auto;min-height:460px;border-radius:12px;overflow:hidden" data-fillout-id="tH92xfAJ2nus" data-fillout-embed-type="standard" data-fillout-inherit-parameters="true" data-fillout-dynamic-resize="true"></div>
-        <script src="https://server.fillout.com/embed/v1/" async></script>
+             The two cards are siblings and only one is on screen at a time:
+             the script hides this form and unhides #bookSent on a good submit,
+             and swaps them back on "Send Another Request". data-bookcard holds
+             the column steady across that swap; see the stylesheet. -->
+        <div data-bookcard style="flex:0 0 auto">
+          <form data-booking-form novalidate style="background:#fff;border:1px solid rgba(14,34,68,.14);border-radius:12px;padding:clamp(20px,4vw,30px)">
+
+            <div style="display:flex;align-items:center;gap:12px;margin-bottom:18px">
+              <span style="font:600 11px/1 'Oswald',sans-serif;letter-spacing:1.8px;text-transform:uppercase;color:#1d3059">Your Contact Info</span>
+              <span style="flex:1;height:1px;background:rgba(14,34,68,.14)"></span>
+            </div>
+
+            <div style="display:grid;gap:16px;margin-bottom:30px">
+              <div>
+                <label for="bfName" style="display:block;font:500 11px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:#5c6470;margin-bottom:7px">Full Name</label>
+                <input class="bf-field" id="bfName" name="name" type="text" autocomplete="name" placeholder="First and last name" aria-describedby="bfNameErr" style="width:100%;min-height:52px;padding:0 14px;background:#f8f7f3;border:1px solid rgba(14,34,68,.22);border-radius:6px;color:#22293a;font-size:16px">
+                <span id="bfNameErr" style="display:none;font-size:12.5px;line-height:1.4;color:#e05c22;margin-top:6px"></span>
+              </div>
+              <div data-r="pair" style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+                <div>
+                  <label for="bfEmail" style="display:block;font:500 11px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:#5c6470;margin-bottom:7px">Email</label>
+                  <input class="bf-field" id="bfEmail" name="email" type="email" inputmode="email" autocomplete="email" placeholder="you@email.com" aria-describedby="bfEmailErr" style="width:100%;min-height:52px;padding:0 14px;background:#f8f7f3;border:1px solid rgba(14,34,68,.22);border-radius:6px;color:#22293a;font-size:16px">
+                  <span id="bfEmailErr" style="display:none;font-size:12.5px;line-height:1.4;color:#e05c22;margin-top:6px"></span>
+                </div>
+                <div>
+                  <label for="bfPhone" style="display:block;font:500 11px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:#5c6470;margin-bottom:7px">Phone Number</label>
+                  <input class="bf-field" id="bfPhone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="(512) 555-0134" aria-describedby="bfPhoneErr" style="width:100%;min-height:52px;padding:0 14px;background:#f8f7f3;border:1px solid rgba(14,34,68,.22);border-radius:6px;color:#22293a;font-size:16px">
+                  <span id="bfPhoneErr" style="display:none;font-size:12.5px;line-height:1.4;color:#e05c22;margin-top:6px"></span>
+                </div>
+              </div>
+            </div>
+
+            <div style="display:flex;align-items:center;gap:12px;margin-bottom:18px">
+              <span style="font:600 11px/1 'Oswald',sans-serif;letter-spacing:1.8px;text-transform:uppercase;color:#1d3059">When You Want to Fish</span>
+              <span style="flex:1;height:1px;background:rgba(14,34,68,.14)"></span>
+            </div>
+
+            <div style="display:grid;gap:22px;margin-bottom:30px">
+              <div>
+                <label for="bfDate" style="display:block;font:500 11px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:#5c6470;margin-bottom:7px">Trip Date</label>
+                <!-- min= is set by the script to today, so the picker cannot
+                     offer a date that has already been. -->
+                <input class="bf-field" id="bfDate" name="date" type="date" aria-describedby="bfDateErr" style="width:100%;min-height:52px;padding:0 14px;background:#f8f7f3;border:1px solid rgba(14,34,68,.22);border-radius:6px;color:#22293a;font-size:16px">
+                <!-- Reads the chosen date back in words. A date field shows
+                     11/06/2026; this says which day of the week that is. -->
+                <span id="bfDateLong" style="display:none;font:500 12px/1.4 'Oswald',sans-serif;letter-spacing:1.1px;text-transform:uppercase;color:#1d3059;margin-top:8px"></span>
+                <span id="bfDateErr" style="display:none;font-size:12.5px;line-height:1.4;color:#e05c22;margin-top:6px"></span>
+              </div>
+
+              <div>
+                <span id="bfSlotLabel" style="display:block;font:500 11px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:#5c6470;margin-bottom:7px">Time of Day</span>
+                <div role="radiogroup" aria-labelledby="bfSlotLabel" aria-describedby="bfSlotErr" style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+                  <button type="button" role="radio" aria-checked="false" data-slot="am" style="display:flex;flex-direction:column;align-items:flex-start;gap:3px;min-height:64px;padding:12px 16px;border-radius:6px;cursor:pointer;text-align:left;border:2px solid rgba(14,34,68,.22);background:#f8f7f3;color:#1d3059">
+                    <span style="font:600 15px/1.1 'Oswald',sans-serif;letter-spacing:1.2px;text-transform:uppercase">Morning</span>
+                    <span style="font-size:12.5px;line-height:1.3;opacity:.75">Sunrise start</span>
+                  </button>
+                  <button type="button" role="radio" aria-checked="false" data-slot="pm" style="display:flex;flex-direction:column;align-items:flex-start;gap:3px;min-height:64px;padding:12px 16px;border-radius:6px;cursor:pointer;text-align:left;border:2px solid rgba(14,34,68,.22);background:#f8f7f3;color:#1d3059">
+                    <span style="font:600 15px/1.1 'Oswald',sans-serif;letter-spacing:1.2px;text-transform:uppercase">Afternoon</span>
+                    <span style="font-size:12.5px;line-height:1.3;opacity:.75">Midday to evening</span>
+                  </button>
+                </div>
+                <span id="bfSlotErr" style="display:none;font-size:12.5px;line-height:1.4;color:#e05c22;margin-top:6px"></span>
+              </div>
+            </div>
+
+            <button class="bf-submit" type="submit" style="width:100%;display:flex;align-items:center;justify-content:center;min-height:54px;background:#1d3059;color:#fff;border:none;border-radius:6px;font:500 14px/1 'Oswald',sans-serif;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;box-shadow:0 12px 26px -12px rgba(14,34,68,.7)">Submit Request</button>
+            <p style="margin:14px 0 0;font-size:13px;line-height:1.5;color:#5c6470;text-align:center">Your request goes straight to Chris. Nothing is charged here.</p>
+          </form>
+
+          <!-- Confirmation, in place of the form once a request is in. hidden
+               rather than display:none so it stays that way with scripting
+               off. tabindex lets the script move focus here on the swap, so a
+               keyboard lands on the confirmation instead of back at the top
+               of the page. -->
+          <div id="bookSent" hidden tabindex="-1" style="background:#fff;border:1px solid rgba(14,34,68,.14);border-radius:12px;padding:clamp(24px,4vw,36px)">
+            <span style="display:block;font:600 11px/1 'Oswald',sans-serif;letter-spacing:1.8px;text-transform:uppercase;color:#1d3059;margin-bottom:12px">Request Sent</span>
+            <h3 style="font:600 22px/1.15 'Oswald',sans-serif;letter-spacing:.5px;text-transform:uppercase;color:#1d3059;margin:0 0 12px">Thanks, <span id="bfSentName"></span></h3>
+            <p style="margin:0 0 20px;color:#5c6470;text-wrap:pretty">We have you down for <span id="bfSentWhen"></span>. Chris will confirm by phone or email before the trip is booked.</p>
+            <div style="display:grid;gap:8px;background:#f8f7f3;border-radius:8px;padding:16px 18px;margin-bottom:22px">
+              <div style="display:flex;justify-content:space-between;gap:16px"><span style="font:500 11px/1.4 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:#5c6470">Email</span><span id="bfSentEmail" style="font-size:14.5px;word-break:break-word"></span></div>
+              <div style="display:flex;justify-content:space-between;gap:16px"><span style="font:500 11px/1.4 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:#5c6470">Phone</span><span id="bfSentPhone" style="font-size:14.5px"></span></div>
+            </div>
+            <button type="button" id="bfAgain" style="display:inline-flex;align-items:center;justify-content:center;min-height:50px;padding:0 26px;border:2px solid #1d3059;background:none;color:#1d3059;border-radius:6px;font:500 14px/1 'Oswald',sans-serif;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer">Send Another Request</button>
+          </div>
+        </div>
         <noscript>
-          <p style="margin:0;padding:20px;border:1px solid rgba(14,34,68,.18);border-radius:12px;background:#fff">The booking form needs JavaScript to load. To set up a trip, call <a href="tel:+15127617639" style="text-decoration:underline;text-underline-offset:2px">512-761-7639</a> or email <a href="mailto:bluecollarfishingguide@gmail.com" style="text-decoration:underline;text-underline-offset:2px;word-break:break-word">bluecollarfishingguide@gmail.com</a>.</p>
+          <p style="margin:0;padding:20px;border:1px solid rgba(14,34,68,.18);border-radius:12px;background:#fff">The booking form needs JavaScript to send a request. To set up a trip, call <a href="tel:+15127617639" style="text-decoration:underline;text-underline-offset:2px">512-761-7639</a> or email <a href="mailto:bluecollarfishingguide@gmail.com" style="text-decoration:underline;text-underline-offset:2px;word-break:break-word">bluecollarfishingguide@gmail.com</a>.</p>
         </noscript>
       </div>
 
@@ -902,6 +1010,196 @@ button,input,select,textarea{font-family:inherit}
       })(src));
       rail.appendChild(btn);
     }
+  });
+
+  /* ---------- Booking form ------------------------------------------- */
+
+  /* The "Book Your Trip" form. It checks the answers, formats the phone
+     number, reads the chosen date back in words, and swaps itself for the
+     confirmation card.
+
+     WHAT IT DOES NOT DO IS SEND ANYTHING. A submitted request goes as far as
+     the confirmation on screen and stops there: it is not emailed, stored, or
+     posted anywhere, and closing the tab loses it. Wiring that up is the next
+     piece of work — see HAND-OFF POINT in bookForm's submit handler below,
+     which is where a finished request is sitting ready to go. Until then the
+     phone number and email beside the form are the booking path that works. */
+
+  var MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'];
+  var DAY_NAMES = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday',
+    'Friday', 'Saturday'];
+  var BF_FIELDS = ['Name', 'Email', 'Phone', 'Date', 'Slot'];
+  var BF_ON = { border: '#1d3059', bg: '#1d3059', fg: '#fff' };
+  var BF_OFF = { border: 'rgba(14,34,68,.22)', bg: '#f8f7f3', fg: '#1d3059' };
+
+  var bookForm = $('[data-booking-form]');
+  var bookSent = $('#bookSent');
+  var dateEl = $('#bfDate');
+  var phoneEl = $('#bfPhone');
+  var slot = null;   /* 'am', 'pm', or null until one is picked */
+  var asked = {};    /* fields the reader has finished with, so errors are fair */
+
+  /* Digits only, capped at ten — a US number, which is all the form asks for. */
+  function bfDigits(v) { return (v || '').replace(/\D/g, '').slice(0, 10); }
+
+  function bfPhone(v) {
+    var d = bfDigits(v);
+    if (d.length <= 3) return d;
+    if (d.length <= 6) return '(' + d.slice(0, 3) + ') ' + d.slice(3);
+    return '(' + d.slice(0, 3) + ') ' + d.slice(3, 6) + '-' + d.slice(6);
+  }
+
+  /* Today as YYYY-MM-DD, which is the format a date input speaks. Assembled
+     from the local parts rather than toISOString(), which is UTC and would
+     call it tomorrow for anyone in Texas after six in the evening. */
+  function bfToday() {
+    var d = new Date();
+    return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
+  }
+
+  /* '2026-11-06' -> 'Friday, November 6, 2026'. Split by hand, because a bare
+     YYYY-MM-DD handed to new Date() is read as UTC and lands a day early. */
+  function bfLongDate(iso) {
+    var p = (iso || '').split('-');
+    if (p.length !== 3) return '';
+    var d = new Date(+p[0], +p[1] - 1, +p[2]);
+    if (isNaN(d.getTime())) return '';
+    return DAY_NAMES[d.getDay()] + ', ' + MONTH_NAMES[d.getMonth()] + ' ' +
+      d.getDate() + ', ' + d.getFullYear();
+  }
+
+  /* One rule per field. Returns what is wrong, or '' when the field is fine. */
+  function bfCheck(field) {
+    if (field === 'Name') {
+      return $('#bfName').value.trim() ? '' : 'Please tell us your name.';
+    }
+    if (field === 'Email') {
+      var email = $('#bfEmail').value.trim();
+      if (!email) return 'Please add an email address.';
+      return /^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i.test(email) ? '' : 'That email does not look right.';
+    }
+    if (field === 'Phone') {
+      if (!phoneEl.value.trim()) return 'Please add a phone number.';
+      return bfDigits(phoneEl.value).length === 10 ? '' : 'Enter a 10-digit phone number.';
+    }
+    if (field === 'Date') {
+      /* min= keeps the picker off past dates, but it does not stop one being
+         typed straight into the field, so the rule is checked here too. */
+      if (!dateEl.value) return 'Pick a date for your trip.';
+      return dateEl.value < bfToday() ? 'Pick a date in the future.' : '';
+    }
+    if (field === 'Slot') return slot ? '' : 'Choose morning or afternoon.';
+    return '';
+  }
+
+  /* Puts one field's message on screen, or takes it away. Stays quiet until
+     that field has been left once or the form has been submitted, so nothing
+     turns red while it is still being filled in. */
+  function bfMark(field, force) {
+    if (force) asked[field] = true;
+    if (!asked[field]) return '';
+    var msg = bfCheck(field);
+    var out = $('#bf' + field + 'Err');
+    out.textContent = msg;
+    out.style.display = msg ? 'block' : 'none';
+    var input = $('#bf' + field);
+    if (input) input.setAttribute('aria-invalid', msg ? 'true' : 'false');
+    return msg;
+  }
+
+  function bfPaintSlots() {
+    $$('[data-slot]').forEach(function (btn) {
+      var on = btn.getAttribute('data-slot') === slot;
+      var c = on ? BF_ON : BF_OFF;
+      btn.style.borderColor = c.border;
+      btn.style.background = c.bg;
+      btn.style.color = c.fg;
+      btn.setAttribute('aria-checked', on ? 'true' : 'false');
+    });
+  }
+
+  dateEl.min = bfToday();
+
+  $$('[data-slot]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      slot = btn.getAttribute('data-slot');
+      bfPaintSlots();
+      bfMark('Slot', true);
+    });
+  });
+
+  ['Name', 'Email', 'Phone'].forEach(function (field) {
+    $('#bf' + field).addEventListener('blur', function () { bfMark(field, true); });
+  });
+
+  phoneEl.addEventListener('input', function () {
+    /* Only reformat while typing at the end. Rewriting the value drops the
+       caret to the end, which would fight anyone fixing a digit mid-number. */
+    if (phoneEl.selectionStart !== phoneEl.value.length) return;
+    phoneEl.value = bfPhone(phoneEl.value);
+  });
+
+  dateEl.addEventListener('change', function () {
+    var long = bfLongDate(dateEl.value);
+    var out = $('#bfDateLong');
+    out.textContent = long;
+    out.style.display = long ? 'block' : 'none';
+    bfMark('Date', true);
+  });
+
+  bookForm.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var bad = BF_FIELDS.filter(function (field) { return bfMark(field, true); });
+    if (bad.length) {
+      /* Land on the first thing that needs fixing. Slot has no input of its
+         own, so it takes the reader to the morning button. */
+      var first = $('#bf' + bad[0]) || $('[data-slot]');
+      if (first) first.focus();
+      return;
+    }
+
+    var payload = {
+      name: $('#bfName').value.trim(),
+      email: $('#bfEmail').value.trim(),
+      phone: bfPhone(phoneEl.value),
+      date: dateEl.value,
+      timeSlot: slot === 'am' ? 'Morning' : 'Afternoon'
+    };
+
+    /* HAND-OFF POINT. `payload` is a checked, formatted booking request, and
+       right now nothing whatsoever happens to it — the lines below only draw
+       the confirmation. Sending it somewhere (an Apps Script web app writing
+       to a Google Sheet, an email service, a form endpoint) is what turns
+       this page's form into a real one, and it needs three things this block
+       does not have yet: a submitting state on the button, an error state for
+       when the send fails, and the confirmation held back until it lands. */
+
+    $('#bfSentName').textContent = payload.name.split(' ')[0];
+    $('#bfSentWhen').textContent = bfLongDate(payload.date) + ', ' + payload.timeSlot.toLowerCase();
+    $('#bfSentEmail').textContent = payload.email;
+    $('#bfSentPhone').textContent = payload.phone;
+    bookForm.style.display = 'none';
+    bookSent.hidden = false;
+    bookSent.focus();
+  });
+
+  $('#bfAgain').addEventListener('click', function () {
+    bookForm.reset();
+    slot = null;
+    asked = {};
+    bfPaintSlots();
+    BF_FIELDS.forEach(function (field) {
+      var out = $('#bf' + field + 'Err');
+      out.textContent = '';
+      out.style.display = 'none';
+      var input = $('#bf' + field);
+      if (input) input.removeAttribute('aria-invalid');
+    });
+    $('#bfDateLong').style.display = 'none';
+    bookSent.hidden = true;
+    bookForm.style.display = '';
+    $('#bfName').focus();
   });
 
   /* ---------- Reviews ------------------------------------------------ */
