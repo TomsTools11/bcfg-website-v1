@@ -31,27 +31,35 @@ Every push to `main` redeploys automatically.
 All of the content that changes regularly lives in the `<script>` block at the
 bottom of `index.html`, marked with `EDIT` comments.
 
-**Booking form** — the "Book Your Trip" section is a form hosted by
-[Fillout](https://fillout.com), embedded as a single empty div:
+**Booking form** — the "Book Your Trip" section is a form built into this page.
+It asks for a name, an email, a phone number, a trip date, and morning or
+afternoon, and it lives in two places in `index.html`: the markup inside
+`<section id="book">`, and the `Booking form` block in the script at the bottom.
 
-```html
-<div ... data-fillout-id="tH92xfAJ2nus" data-fillout-embed-type="standard"
-     data-fillout-inherit-parameters="true" data-fillout-dynamic-resize="true"></div>
-<script src="https://server.fillout.com/embed/v1/" async></script>
-```
+> ### ⚠️ The form does not send anything yet
+>
+> A submitted request is checked, formatted, and confirmed on screen — and
+> that is the end of it. Nothing is emailed, stored, or posted anywhere, and
+> closing the tab loses it. **Until this is connected, the phone number and
+> email beside the form are the only booking path that reaches Chris.**
+>
+> The form is on the page so the design can be reviewed. Connecting it is the
+> next piece of work: see `HAND-OFF POINT` in the submit handler, where a
+> finished request sits ready to go. Three things go with it — a submitting
+> state on the button, an error state for when the send fails, and holding the
+> confirmation back until the request actually lands.
 
-**The questions, the dates offered, and where the answers go are all edited at
-fillout.com, not in this repo.** Nothing about the form lives here except the
-form's ID. To point the page at a different form, change `data-fillout-id`.
+The design came from Claude Design ("Custom booking form design") and replaced
+a [Fillout](https://fillout.com) embed, which is why the site no longer loads
+anything from `server.fillout.com`. Before Fillout it was a hand-built
+availability calendar and a `mailto:` form; the `BOOKED` date table that fed
+that calendar is still gone, and this form does not offer or block dates.
 
-`dynamic-resize` lets the embed grow to whatever height the form needs, and the
-contact photo beside it stretches to match, so the two columns end level.
-`inherit-parameters` passes any query string on the page URL through to the
-form, which is how a prefill link (`/?trip=half-day`) would reach it.
-
-This replaced a hand-built availability calendar and a `mailto:` inquiry form.
-Both are gone, along with the `BOOKED` date table that fed the calendar — the
-booked-dates list now lives in Fillout's scheduling, not in this file.
+Styling is inline beside the markup like the rest of the page. The exceptions
+are in the stylesheet, because an inline style cannot reach them: `.bf-field`
+focus, `.bf-submit` hover, `[data-r=pair]` stacking email and phone under
+560px, and `[data-bookcard]`, which holds the column's height steady when the
+form swaps for the shorter confirmation so the photo beside it does not jump.
 
 **Reviews** — the "What Anglers Say" cards come from `REVIEWS`. Four to six
 reads best: three across on a computer, stacked on a phone. Keep a quote to two
@@ -168,9 +176,9 @@ jargon.
   `server.arcgisonline.com`. Attribution is displayed on the map. This is a
   third-party runtime dependency — if those tiles ever move, the map background
   goes blank while the pins keep working.
-- The booking form is a Fillout embed, loaded at runtime from
-  `server.fillout.com`. This is the second third-party runtime dependency, and
-  the more important one: if Fillout is down or blocked, there is no form. The
-  phone number and email sit in the next column for exactly that reason, and a
-  `noscript` note points at them for anyone browsing without JavaScript.
+- The booking form is served from this page and has no third-party dependency
+  of its own — the Fillout embed that used to be the second one is gone. It
+  does still need JavaScript: the fields render without it, but nothing checks
+  or sends them, so a `noscript` rule hides the form and a note in its place
+  points at the phone number and email.
 - Fonts (Anton, Inter, Oswald) load from Google Fonts.
