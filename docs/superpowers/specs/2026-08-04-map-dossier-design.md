@@ -105,25 +105,27 @@ Travis / Lake Austin / Lady Bird cluster cannot produce overlapping labels.
 
 ## Accessibility
 
-The wide layout is the tabs pattern by definition: a row of controls, one panel
+The wide layout is arguably the tabs pattern: a row of controls, one panel
 visible at a time, panel adjacent to controls. The narrow layout is not — every
-panel is on screen and the chips are jump links.
+panel is on screen and the chips are jump links. Tab semantics would therefore
+have to be applied and stripped as the viewport crosses 900px, which means a
+`matchMedia` listener rewriting roles on resize.
 
-So the roles follow the layout. A `matchMedia('(max-width:900px)')` listener
-applies tab semantics to the chips and panels in the wide layout
-(`role="tablist"`/`tab"`/`tabpanel"`, `aria-selected`, roving tabindex, arrow
-keys, manual activation) and strips them in the narrow one, leaving plain
-buttons and plain articles. Roles are only ever applied by script — a stack of
-articles is the correct semantics for a page with no JS, so nothing claims to
-be a tab in the markup.
+Not doing that. The chips and pins stay plain `<button>`s in both layouts,
+carrying `aria-current="true"` when selected and `aria-controls` pointing at
+the panel they show. `aria-current` is exactly "the current item in a set",
+which is true in both layouts, and it announces on activation. What is lost
+against real tabs is arrow-key movement across the chips and a "3 of 8"
+position announcement; what is gained is that one set of behaviour holds at
+every width, with no resize listener to get out of step with the CSS. For a
+section that has to work identically on a phone and a computer, that trade is
+the right way round.
 
-The pins are not tabs in either layout. Two tablists driving one set of panels
-would be wrong. They stay injected `<button>`s with the `aria-label` they
-already have and gain `aria-current="true"` when selected.
+The pins are not tabs in either layout — two tablists driving one set of panels
+would be wrong regardless. They keep the `aria-label` they already have.
 
-Focus is not moved on selection in the wide layout — manual-activation tabs
-leave focus on the tab, and taking it would cost a reader their place in a row
-they are browsing. In the narrow layout the scroll is the feedback.
+Focus is not moved on selection. Taking it would cost a reader their place in a
+row they are browsing, and in the narrow layout the scroll is the feedback.
 
 ## What goes
 
@@ -145,10 +147,12 @@ The intro line still promises drive times and should mention the panel.
 ## Risks
 
 - **Content-height jitter.** Swapping lakes in the wide layout changes the
-  dossier's height. The chart is tall enough to dominate the row, and fixed
-  thumbnails plus row-style drive times keep the variance small; if it still
-  moves, a `min-height` on the dossier, the same fix `[data-bookcard]` uses for
-  the booking form swap.
+  dossier's height. Rather than ship it and see, the dossier gets a `min-height`
+  in the wide layout from the outset — the same fix `[data-bookcard]` uses for
+  the booking form swap, and the same reason: nothing on the page should move
+  because someone picked a different lake. Measure the tallest panel and set the
+  floor there. The rule is scoped to the wide layout; stacked on a phone it
+  would only leave a gap.
 - **Chip row on desktop.** Eight pills are about 1000px and the left column is
   roughly 640px. They wrap above 900px and stay a `[data-hs]` scroller below.
 - **The `[data-on]` specificity override** needs checking at exactly 560px.
