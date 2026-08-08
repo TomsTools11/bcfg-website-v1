@@ -13,6 +13,7 @@ preview.html                 Preview page — the site in a phone frame
 bcfg/                        All photography and logos (107 files)
 vercel.json                  Redirects for old URLs, cache headers for /bcfg/*
 design-source/               Original Claude Design files — reference only
+docs/booking-backend/        The booking form's Apps Script code + deploy runbook
 ```
 
 ## Deploying to Vercel
@@ -32,22 +33,34 @@ All of the content that changes regularly lives in the `<script>` block at the
 bottom of `index.html`, marked with `EDIT` comments.
 
 **Booking form** — the "Book Your Trip" section is a form built into this page.
-It asks for a name, an email, a phone number, a trip date, and morning or
-afternoon, and it lives in two places in `index.html`: the markup inside
-`<section id="book">`, and the `Booking form` block in the script at the bottom.
+It asks for a name, an email, a phone number, a trip date, an optional backup
+date, full day or half day, and a skill level, and it lives in two places in
+`index.html`: the markup inside `<section id="book">`, and the `Booking form`
+block in the script at the bottom.
 
-> ### ⚠️ The form does not send anything yet
->
-> A submitted request is checked, formatted, and confirmed on screen — and
-> that is the end of it. Nothing is emailed, stored, or posted anywhere, and
-> closing the tab loses it. **Until this is connected, the phone number and
-> email beside the form are the only booking path that reaches Chris.**
->
-> The form is on the page so the design can be reviewed. Connecting it is the
-> next piece of work: see `HAND-OFF POINT` in the submit handler, where a
-> finished request sits ready to go. Three things go with it — a submitting
-> state on the button, an error state for when the send fails, and holding the
-> confirmation back until the request actually lands.
+### How the form sends
+
+A submitted request is POSTed as JSON to a **Google Apps Script web app** in
+Chris's own Google account, which appends a row to the "BCFG Booking Requests"
+Sheet, emails the submitter a confirmation from Chris's Gmail, and puts a HOLD
+event on Chris's calendar. The code and the step-by-step deployment runbook are
+in [`docs/booking-backend/`](docs/booking-backend/); the web app's `/exec` URL
+is the `APPS_SCRIPT_URL` constant in the script block, with the deployment
+notes beside it. **Redeploys of the Apps Script must go through Manage
+deployments → Edit → New version** — a *New deployment* mints a new URL and
+strands the site on the old one.
+
+The body goes as `text/plain` (a CORS "simple" request — Apps Script cannot
+answer a preflight) and the web app always answers JSON: `{"ok":true}` or
+`{"ok":false,"error":…}`. The form trusts only that body. Three states hang off
+it: the button reads **Sending…** and refuses a second submit while a request
+is in flight; a failure or 15-second timeout shows an error strip with the
+phone number and keeps every answer in place; and the confirmation card only
+appears once the request has actually landed.
+
+Spam is handled server-side off two signals the form sends along: a hidden
+`website` honeypot field and `t`, the milliseconds the page had been open.
+Requests that fail either check are quietly accepted and dropped.
 
 The design came from Claude Design ("Custom booking form design") and replaced
 a [Fillout](https://fillout.com) embed, which is why the site no longer loads
@@ -57,9 +70,10 @@ that calendar is still gone, and this form does not offer or block dates.
 
 Styling is inline beside the markup like the rest of the page. The exceptions
 are in the stylesheet, because an inline style cannot reach them: `.bf-field`
-focus, `.bf-submit` hover, `[data-r=pair]` stacking email and phone under
-560px, and `[data-bookcard]`, which holds the column's height steady when the
-form swaps for the shorter confirmation so the photo beside it does not jump.
+focus, `.bf-submit` hover, `[data-r=pair]` stacking email/phone and the two
+date fields under 560px, and `[data-bookcard]`, which holds the column's
+height steady when the form swaps for the shorter confirmation so the photo
+beside it does not jump.
 
 **Reviews** — the "What Anglers Say" cards come from `REVIEWS`. Four to six
 reads best: three across on a computer, stacked on a phone. Keep a quote to two
@@ -185,9 +199,12 @@ jargon.
   goes blank while the pins keep working. The lake write-ups beside the chart
   are plain HTML and do not touch those tiles, so a tile outage costs the map
   background and nothing else.
-- The booking form is served from this page and has no third-party dependency
-  of its own — the Fillout embed that used to be the second one is gone. It
-  does still need JavaScript: the fields render without it, but nothing checks
-  or sends them, so a `noscript` rule hides the form and a note in its place
+- The booking form is served from this page and has exactly one runtime
+  dependency of its own: the Google Apps Script web app it submits to (the
+  Fillout embed that used to be the second one is gone). The page renders and
+  validates without that endpoint — only the send needs it, and a failed send
+  shows the error strip pointing at the phone number and email. The form does
+  still need JavaScript: the fields render without it, but nothing checks or
+  sends them, so a `noscript` rule hides the form and a note in its place
   points at the phone number and email.
 - Fonts (Anton, Inter, Oswald) load from Google Fonts.
