@@ -8,9 +8,11 @@
     - Text: the copy between tags is safe to change.
     - Booking form: hand-built and lives here, in the "Book Your Trip"
       section plus the BOOKING FORM block in the script at the bottom.
-      NOT WIRED UP YET: a submitted request is checked and confirmed on
-      screen, but nothing is sent anywhere. The phone number and email are
-      the booking path that works. See HAND-OFF POINT in that script block.
+      A submitted request is POSTed to a Google Apps Script web app — the
+      URL is the APPS_SCRIPT_URL constant in that block, with a comment
+      saying where it comes from (and docs/booking-backend/ has the code
+      and the runbook). If the send fails, the form says so and points at
+      the phone number instead of pretending it worked.
     - Reviews: see "EDIT REVIEWS" in the script at the bottom. Every quote
       shipped today is a placeholder and says so on the card.
     - Lake photos: see the LAKES table in the script at the bottom.
@@ -181,7 +183,7 @@ input::placeholder{color:#98a0ad}
 
 /* BOOKING FORM — the rest of the form is styled inline beside its markup, the
    way the rest of this page is. These three rules are here because they are
-   the states an inline style cannot reach. The selected morning/afternoon
+   the states an inline style cannot reach. The selected full-day/half-day
    button is not among them: which one is on changes as you click, so the
    script sets those colours directly. */
 .bf-field:focus{border-color:#1d3059;background:#fff;outline:none}
@@ -215,12 +217,12 @@ input::placeholder{color:#98a0ad}
   background:linear-gradient(180deg,rgba(14,34,68,.4) 0%,rgba(14,34,68,.06) 34%,rgba(14,34,68,.88) 100%)}
 @media (min-width:901px){
   [data-mob]{display:none!important}
-  /* The booking form is about 600px tall and the confirmation that replaces
-     it is about 370px, and the contact photo beside them is sized to whatever
+  /* The booking form is about 720px tall and the confirmation that replaces
+     it is about 450px, and the contact photo beside them is sized to whatever
      the column leaves over. Holding a floor under the pair keeps that photo
      still when the form is submitted. Only while the two are side by side —
      stacked on a phone this would just be a hole under the confirmation. */
-  [data-bookcard]{min-height:640px}
+  [data-bookcard]{min-height:760px}
   /* Eight pills are wider than the chart they sit under, and the sideways
      scroller they live in is a phone affordance. */
   #lakeChips{flex-wrap:wrap;padding-top:12px}
@@ -652,18 +654,25 @@ input::placeholder{color:#98a0ad}
              behaviour — validation, the date read-back, and what happens on
              submit — is the BOOKING FORM block in the script at the bottom.
 
-             NOT WIRED UP YET. Submitting checks the answers and shows the
-             confirmation card below, but nothing is sent to anyone; see
-             HAND-OFF POINT in that script block. Until it is connected, the
-             phone number and email in the next column are the only booking
-             path that actually reaches Chris.
+             A good submit POSTs the request to the Apps Script web app named
+             by APPS_SCRIPT_URL in that script block. While it is in flight
+             the button reads "Sending…"; if the send fails, #bfFail appears
+             under the button with the phone number and every answer stays
+             put; the confirmation card only shows once the request lands.
 
              The two cards are siblings and only one is on screen at a time:
-             the script hides this form and unhides #bookSent on a good submit,
-             and swaps them back on "Send Another Request". data-bookcard holds
-             the column steady across that swap; see the stylesheet. -->
+             the script hides this form and unhides #bookSent on a landed
+             submit, and swaps them back on "Send Another Request".
+             data-bookcard holds the column steady across that swap; see the
+             stylesheet. -->
         <div data-bookcard style="flex:0 0 auto">
           <form data-booking-form novalidate style="background:#fff;border:1px solid rgba(14,34,68,.14);border-radius:12px;padding:clamp(20px,4vw,30px)">
+            <!-- Honeypot. No real reader sees, tabs to, or autofills this
+                 field; a form-filling bot fills every input it finds. The
+                 Apps Script quietly drops any request where "website" has a
+                 value. Off-screen rather than display:none because the dumber
+                 bots skip fields that are display:none. -->
+            <input id="bfWebsite" name="website" type="text" tabindex="-1" aria-hidden="true" autocomplete="off" style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden">
 
             <div style="display:flex;align-items:center;gap:12px;margin-bottom:18px">
               <span style="font:600 11px/1 'Oswald',sans-serif;letter-spacing:1.8px;text-transform:uppercase;color:#1d3059">Your Contact Info</span>
@@ -691,39 +700,73 @@ input::placeholder{color:#98a0ad}
             </div>
 
             <div style="display:flex;align-items:center;gap:12px;margin-bottom:18px">
-              <span style="font:600 11px/1 'Oswald',sans-serif;letter-spacing:1.8px;text-transform:uppercase;color:#1d3059">When You Want to Fish</span>
+              <span style="font:600 11px/1 'Oswald',sans-serif;letter-spacing:1.8px;text-transform:uppercase;color:#1d3059">Your Trip</span>
               <span style="flex:1;height:1px;background:rgba(14,34,68,.14)"></span>
             </div>
 
             <div style="display:grid;gap:22px;margin-bottom:30px">
-              <div>
-                <label for="bfDate" style="display:block;font:500 11px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:#5c6470;margin-bottom:7px">Trip Date</label>
-                <!-- min= is set by the script to today, so the picker cannot
-                     offer a date that has already been. -->
-                <input class="bf-field" id="bfDate" name="date" type="date" aria-describedby="bfDateErr" style="width:100%;min-height:52px;padding:0 14px;background:#f8f7f3;border:1px solid rgba(14,34,68,.22);border-radius:6px;color:#22293a;font-size:16px">
-                <!-- Reads the chosen date back in words. A date field shows
-                     11/06/2026; this says which day of the week that is. -->
-                <span id="bfDateLong" style="display:none;font:500 12px/1.4 'Oswald',sans-serif;letter-spacing:1.1px;text-transform:uppercase;color:#1d3059;margin-top:8px"></span>
-                <span id="bfDateErr" style="display:none;font-size:12.5px;line-height:1.4;color:#e05c22;margin-top:6px"></span>
+              <div data-r="pair" style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+                <div>
+                  <label for="bfDate" style="display:block;font:500 11px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:#5c6470;margin-bottom:7px">Trip Date</label>
+                  <!-- min= is set by the script to today, so the picker cannot
+                       offer a date that has already been. -->
+                  <input class="bf-field" id="bfDate" name="date" type="date" aria-describedby="bfDateErr" style="width:100%;min-height:52px;padding:0 14px;background:#f8f7f3;border:1px solid rgba(14,34,68,.22);border-radius:6px;color:#22293a;font-size:16px">
+                  <!-- Reads the chosen date back in words. A date field shows
+                       11/06/2026; this says which day of the week that is. -->
+                  <span id="bfDateLong" style="display:none;font:500 12px/1.4 'Oswald',sans-serif;letter-spacing:1.1px;text-transform:uppercase;color:#1d3059;margin-top:8px"></span>
+                  <span id="bfDateErr" style="display:none;font-size:12.5px;line-height:1.4;color:#e05c22;margin-top:6px"></span>
+                </div>
+                <div>
+                  <label for="bfAlt" style="display:block;font:500 11px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:#5c6470;margin-bottom:7px">Alternate Date</label>
+                  <!-- Optional backup, in case the first choice is taken. Same
+                       min=today as the field beside it, set by the script. -->
+                  <input class="bf-field" id="bfAlt" name="altDate" type="date" aria-describedby="bfAltHelp bfAltErr" style="width:100%;min-height:52px;padding:0 14px;background:#f8f7f3;border:1px solid rgba(14,34,68,.22);border-radius:6px;color:#22293a;font-size:16px">
+                  <span id="bfAltHelp" style="display:block;font-size:12.5px;line-height:1.4;color:#5c6470;margin-top:6px">Optional &mdash; in case your first date doesn&rsquo;t work.</span>
+                  <span id="bfAltLong" style="display:none;font:500 12px/1.4 'Oswald',sans-serif;letter-spacing:1.1px;text-transform:uppercase;color:#1d3059;margin-top:8px"></span>
+                  <span id="bfAltErr" style="display:none;font-size:12.5px;line-height:1.4;color:#e05c22;margin-top:6px"></span>
+                </div>
               </div>
 
               <div>
-                <span id="bfSlotLabel" style="display:block;font:500 11px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:#5c6470;margin-bottom:7px">Time of Day</span>
+                <span id="bfSlotLabel" style="display:block;font:500 11px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:#5c6470;margin-bottom:7px">Trip Length</span>
                 <div role="radiogroup" aria-labelledby="bfSlotLabel" aria-describedby="bfSlotErr" style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-                  <button type="button" role="radio" aria-checked="false" data-slot="am" style="display:flex;flex-direction:column;align-items:flex-start;gap:3px;min-height:64px;padding:12px 16px;border-radius:6px;cursor:pointer;text-align:left;border:2px solid rgba(14,34,68,.22);background:#f8f7f3;color:#1d3059">
-                    <span style="font:600 15px/1.1 'Oswald',sans-serif;letter-spacing:1.2px;text-transform:uppercase">Morning</span>
-                    <span style="font-size:12.5px;line-height:1.3;opacity:.75">Sunrise start</span>
+                  <button type="button" role="radio" aria-checked="false" data-slot="full" style="display:flex;flex-direction:column;align-items:flex-start;gap:3px;min-height:64px;padding:12px 16px;border-radius:6px;cursor:pointer;text-align:left;border:2px solid rgba(14,34,68,.22);background:#f8f7f3;color:#1d3059">
+                    <span style="font:600 15px/1.1 'Oswald',sans-serif;letter-spacing:1.2px;text-transform:uppercase">Full Day</span>
+                    <span style="font-size:12.5px;line-height:1.3;opacity:.75">Eight hours</span>
                   </button>
-                  <button type="button" role="radio" aria-checked="false" data-slot="pm" style="display:flex;flex-direction:column;align-items:flex-start;gap:3px;min-height:64px;padding:12px 16px;border-radius:6px;cursor:pointer;text-align:left;border:2px solid rgba(14,34,68,.22);background:#f8f7f3;color:#1d3059">
-                    <span style="font:600 15px/1.1 'Oswald',sans-serif;letter-spacing:1.2px;text-transform:uppercase">Afternoon</span>
-                    <span style="font-size:12.5px;line-height:1.3;opacity:.75">Midday to evening</span>
+                  <button type="button" role="radio" aria-checked="false" data-slot="half" style="display:flex;flex-direction:column;align-items:flex-start;gap:3px;min-height:64px;padding:12px 16px;border-radius:6px;cursor:pointer;text-align:left;border:2px solid rgba(14,34,68,.22);background:#f8f7f3;color:#1d3059">
+                    <span style="font:600 15px/1.1 'Oswald',sans-serif;letter-spacing:1.2px;text-transform:uppercase">Half Day</span>
+                    <span style="font-size:12.5px;line-height:1.3;opacity:.75">Four hours</span>
                   </button>
                 </div>
                 <span id="bfSlotErr" style="display:none;font-size:12.5px;line-height:1.4;color:#e05c22;margin-top:6px"></span>
               </div>
+
+              <div>
+                <label for="bfSkill" style="display:block;font:500 11px/1 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:#5c6470;margin-bottom:7px">What Is Your Skill Level?</label>
+                <!-- Native select, drawn to match the text fields: appearance
+                     off, the chevron is an inline SVG so nothing is fetched.
+                     It starts placeholder-grey; the script darkens it once a
+                     real choice is made, the same way input::placeholder pales
+                     the other fields. font-size stays 16px or iOS zooms. -->
+                <select class="bf-field" id="bfSkill" name="skill" aria-describedby="bfSkillErr" style="width:100%;min-height:52px;padding:0 38px 0 14px;background:#f8f7f3;border:1px solid rgba(14,34,68,.22);border-radius:6px;color:#98a0ad;font-size:16px;appearance:none;-webkit-appearance:none;background-image:url(&quot;data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%231d3059' stroke-width='2'/%3E%3C/svg%3E&quot;);background-repeat:no-repeat;background-position:right 14px center">
+                  <option value="">Select one</option>
+                  <option value="Beginner">Beginner</option>
+                  <option value="Novice">Novice</option>
+                  <option value="Expert">Expert</option>
+                </select>
+                <span id="bfSkillErr" style="display:none;font-size:12.5px;line-height:1.4;color:#e05c22;margin-top:6px"></span>
+              </div>
             </div>
 
-            <button class="bf-submit" type="submit" style="width:100%;display:flex;align-items:center;justify-content:center;min-height:54px;background:#1d3059;color:#fff;border:none;border-radius:6px;font:500 14px/1 'Oswald',sans-serif;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;box-shadow:0 12px 26px -12px rgba(14,34,68,.7)">Submit Request</button>
+            <button class="bf-submit" type="submit" id="bfSubmit" style="width:100%;display:flex;align-items:center;justify-content:center;min-height:54px;background:#1d3059;color:#fff;border:none;border-radius:6px;font:500 14px/1 'Oswald',sans-serif;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;box-shadow:0 12px 26px -12px rgba(14,34,68,.7)">Submit Request</button>
+            <!-- Error strip. Hidden until a send fails; role=alert so the
+                 failure is announced without moving focus off the form. The
+                 reader's answers are still in the fields — nothing is cleared
+                 on a failure. display:none toggled by the script rather than
+                 hidden, since an element with an inline display would ignore
+                 the attribute. -->
+            <p id="bfFail" role="alert" style="display:none;margin:14px 0 0;padding:12px 14px;border:1px solid rgba(224,92,34,.45);border-radius:6px;background:rgba(224,92,34,.07);font-size:13.5px;line-height:1.5;color:#e05c22">Something went wrong &mdash; call or text Chris at <a href="tel:+15127617639" style="color:inherit;text-decoration:underline;text-underline-offset:2px;white-space:nowrap">512-761-7639</a>, or try again.</p>
             <p style="margin:14px 0 0;font-size:13px;line-height:1.5;color:#5c6470;text-align:center">Your request goes straight to Chris. Nothing is charged here.</p>
           </form>
 
@@ -735,10 +778,15 @@ input::placeholder{color:#98a0ad}
           <div id="bookSent" hidden tabindex="-1" style="background:#fff;border:1px solid rgba(14,34,68,.14);border-radius:12px;padding:clamp(24px,4vw,36px)">
             <span style="display:block;font:600 11px/1 'Oswald',sans-serif;letter-spacing:1.8px;text-transform:uppercase;color:#1d3059;margin-bottom:12px">Request Sent</span>
             <h3 style="font:600 22px/1.15 'Oswald',sans-serif;letter-spacing:.5px;text-transform:uppercase;color:#1d3059;margin:0 0 12px">Thanks, <span id="bfSentName"></span></h3>
-            <p style="margin:0 0 20px;color:#5c6470;text-wrap:pretty">We have you down for <span id="bfSentWhen"></span>. Chris will confirm by phone or email before the trip is booked.</p>
+            <p style="margin:0 0 20px;color:#5c6470;text-wrap:pretty">Your request is in for <span id="bfSentWhen"></span>. Chris will confirm by phone or email before the trip is booked.</p>
             <div style="display:grid;gap:8px;background:#f8f7f3;border-radius:8px;padding:16px 18px;margin-bottom:22px">
               <div style="display:flex;justify-content:space-between;gap:16px"><span style="font:500 11px/1.4 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:#5c6470">Email</span><span id="bfSentEmail" style="font-size:14.5px;word-break:break-word"></span></div>
               <div style="display:flex;justify-content:space-between;gap:16px"><span style="font:500 11px/1.4 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:#5c6470">Phone</span><span id="bfSentPhone" style="font-size:14.5px"></span></div>
+              <!-- Only shows when a backup date was given. Off state is the
+                   default because display:flex is set by the script, not
+                   inline — hidden would lose to an inline display. -->
+              <div id="bfSentAltRow" style="display:none;justify-content:space-between;gap:16px"><span style="font:500 11px/1.4 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:#5c6470">Backup Date</span><span id="bfSentAlt" style="font-size:14.5px;text-align:right"></span></div>
+              <div style="display:flex;justify-content:space-between;gap:16px"><span style="font:500 11px/1.4 'Oswald',sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:#5c6470">Skill Level</span><span id="bfSentSkill" style="font-size:14.5px"></span></div>
             </div>
             <button type="button" id="bfAgain" style="display:inline-flex;align-items:center;justify-content:center;min-height:50px;padding:0 26px;border:2px solid #1d3059;background:none;color:#1d3059;border-radius:6px;font:500 14px/1 'Oswald',sans-serif;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer">Send Another Request</button>
           </div>
@@ -1008,30 +1056,54 @@ input::placeholder{color:#98a0ad}
   /* ---------- Booking form ------------------------------------------- */
 
   /* The "Book Your Trip" form. It checks the answers, formats the phone
-     number, reads the chosen date back in words, and swaps itself for the
-     confirmation card.
+     number, reads the chosen dates back in words, and on submit POSTs the
+     request to the Apps Script web app named below. While the request is in
+     flight the button reads "Sending…" and refuses a second submit; if the
+     send fails or times out, #bfFail appears with the phone number and every
+     answer stays put; the confirmation card only shows once the web app has
+     answered {"ok":true} — a request that did not land is never shown as
+     sent. */
 
-     WHAT IT DOES NOT DO IS SEND ANYTHING. A submitted request goes as far as
-     the confirmation on screen and stops there: it is not emailed, stored, or
-     posted anywhere, and closing the tab loses it. Wiring that up is the next
-     piece of work — see HAND-OFF POINT in bookForm's submit handler below,
-     which is where a finished request is sitting ready to go. Until then the
-     phone number and email beside the form are the booking path that works. */
+  /* EDIT: the Google Apps Script web app that receives a booking request —
+     see docs/booking-backend/RUNBOOK.md for how it is deployed. In the Apps
+     Script editor: Deploy -> Web app, execute as Me, access "Anyone", and
+     paste the /exec URL here. Redeploys must go through Manage deployments ->
+     Edit -> New version: a NEW deployment mints a NEW URL and strands this
+     page on the old one. The request body is JSON in a text/plain POST — a
+     "simple" request, so the browser sends it without the CORS preflight that
+     Apps Script cannot answer. The web app must answer {"ok":true}; anything
+     else is treated as a failed send. While this is a placeholder the form
+     fails safe: the error strip points the reader at the phone number, and
+     nothing pretends to send. */
+  /* DEMO deployment: lives in tom@s3labs.tech's account and feeds the
+     "BCFG Booking Requests (DEMO)" sheet there. Swap for the /exec URL from
+     Chris's account at launch — deployment steps in docs/booking-backend/. */
+  var APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzpV3Sh5Kc3_bto0HHD8B2HdSkV56PlxfQXGa6_5fsCY9876pnMbBYY7ONlfcpw3J2vaQ/exec';
+  var BF_TIMEOUT_MS = 15000;
+  /* When the page loaded, so a submission can say how long its form took to
+     fill. The Apps Script quietly drops anything under a few seconds — a
+     person cannot fill seven fields that fast, but a bot can. */
+  var bfLoadedAt = new Date().getTime();
 
   var MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June',
     'July', 'August', 'September', 'October', 'November', 'December'];
   var DAY_NAMES = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday',
     'Friday', 'Saturday'];
-  var BF_FIELDS = ['Name', 'Email', 'Phone', 'Date', 'Slot'];
+  var BF_FIELDS = ['Name', 'Email', 'Phone', 'Date', 'Alt', 'Slot', 'Skill'];
   var BF_ON = { border: '#1d3059', bg: '#1d3059', fg: '#fff' };
   var BF_OFF = { border: 'rgba(14,34,68,.22)', bg: '#f8f7f3', fg: '#1d3059' };
 
   var bookForm = $('[data-booking-form]');
   var bookSent = $('#bookSent');
   var dateEl = $('#bfDate');
+  var altEl = $('#bfAlt');
   var phoneEl = $('#bfPhone');
-  var slot = null;   /* 'am', 'pm', or null until one is picked */
-  var asked = {};    /* fields the reader has finished with, so errors are fair */
+  var skillEl = $('#bfSkill');
+  var submitBtn = $('#bfSubmit');
+  var failEl = $('#bfFail');
+  var slot = null;      /* 'full', 'half', or null until one is picked */
+  var asked = {};       /* fields the reader has finished with, so errors are fair */
+  var bfSending = false; /* true while a request is in flight */
 
   /* Digits only, capped at ten — a US number, which is all the form asks for. */
   function bfDigits(v) { return (v || '').replace(/\D/g, '').slice(0, 10); }
@@ -1082,7 +1154,16 @@ input::placeholder{color:#98a0ad}
       if (!dateEl.value) return 'Pick a date for your trip.';
       return dateEl.value < bfToday() ? 'Pick a date in the future.' : '';
     }
-    if (field === 'Slot') return slot ? '' : 'Choose morning or afternoon.';
+    if (field === 'Alt') {
+      /* Optional, so empty is fine — the rules only apply once something is
+         in it. A backup identical to the first choice is no backup at all. */
+      if (!altEl.value) return '';
+      if (altEl.value < bfToday()) return 'Pick a backup date in the future.';
+      return altEl.value === dateEl.value ?
+        'Your backup date matches your first choice — pick a different day.' : '';
+    }
+    if (field === 'Slot') return slot ? '' : 'Choose full day or half day.';
+    if (field === 'Skill') return skillEl.value ? '' : 'Pick a skill level.';
     return '';
   }
 
@@ -1113,6 +1194,7 @@ input::placeholder{color:#98a0ad}
   }
 
   dateEl.min = bfToday();
+  altEl.min = bfToday();
 
   $$('[data-slot]').forEach(function (btn) {
     btn.addEventListener('click', function () {
@@ -1139,14 +1221,37 @@ input::placeholder{color:#98a0ad}
     out.textContent = long;
     out.style.display = long ? 'block' : 'none';
     bfMark('Date', true);
+    /* No force: only re-judges the matches-your-first-choice rule if the
+       reader has already been in the backup field. */
+    bfMark('Alt');
+  });
+
+  altEl.addEventListener('change', function () {
+    var long = bfLongDate(altEl.value);
+    $('#bfAltLong').textContent = long;
+    $('#bfAltLong').style.display = long ? 'block' : 'none';
+    /* The helper line and the read-back take the same slot: whichever one
+       applies is the one on screen. */
+    $('#bfAltHelp').style.display = long ? 'none' : 'block';
+    bfMark('Alt', true);
+  });
+
+  skillEl.addEventListener('change', function () {
+    /* Placeholder-grey until a real choice is made — a select has no
+       ::placeholder of its own, so the script does what input::placeholder
+       does for the text fields. */
+    skillEl.style.color = skillEl.value ? '#22293a' : '#98a0ad';
+    bfMark('Skill', true);
   });
 
   bookForm.addEventListener('submit', function (e) {
     e.preventDefault();
+    if (bfSending) return; /* Enter on a field can re-fire while in flight */
+
     var bad = BF_FIELDS.filter(function (field) { return bfMark(field, true); });
     if (bad.length) {
       /* Land on the first thing that needs fixing. Slot has no input of its
-         own, so it takes the reader to the morning button. */
+         own, so it takes the reader to the full-day button. */
       var first = $('#bf' + bad[0]) || $('[data-slot]');
       if (first) first.focus();
       return;
@@ -1157,24 +1262,74 @@ input::placeholder{color:#98a0ad}
       email: $('#bfEmail').value.trim(),
       phone: bfPhone(phoneEl.value),
       date: dateEl.value,
-      timeSlot: slot === 'am' ? 'Morning' : 'Afternoon'
+      altDate: altEl.value, /* '' when the reader gave no backup */
+      tripLength: slot === 'full' ? 'Full Day' : 'Half Day',
+      skill: skillEl.value,
+      website: $('#bfWebsite').value, /* honeypot — '' from a person */
+      t: new Date().getTime() - bfLoadedAt /* ms on page; see bfLoadedAt */
     };
 
-    /* HAND-OFF POINT. `payload` is a checked, formatted booking request, and
-       right now nothing whatsoever happens to it — the lines below only draw
-       the confirmation. Sending it somewhere (an Apps Script web app writing
-       to a Google Sheet, an email service, a form endpoint) is what turns
-       this page's form into a real one, and it needs three things this block
-       does not have yet: a submitting state on the button, an error state for
-       when the send fails, and the confirmation held back until it lands. */
+    /* Submitting state: one request at a time, the button says so, and the
+       answers stay where they are. */
+    bfSending = true;
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Sending…';
+    submitBtn.style.opacity = '.55';
+    failEl.style.display = 'none';
 
-    $('#bfSentName').textContent = payload.name.split(' ')[0];
-    $('#bfSentWhen').textContent = bfLongDate(payload.date) + ', ' + payload.timeSlot.toLowerCase();
-    $('#bfSentEmail').textContent = payload.email;
-    $('#bfSentPhone').textContent = payload.phone;
-    bookForm.style.display = 'none';
-    bookSent.hidden = false;
-    bookSent.focus();
+    var settled = false;
+    function bfSettle() { /* shared restore; whoever calls it second is a no-op */
+      if (settled) return false;
+      settled = true;
+      clearTimeout(timer);
+      bfSending = false;
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Submit Request';
+      submitBtn.style.opacity = '';
+      return true;
+    }
+    function bfFailed() {
+      if (!bfSettle()) return;
+      failEl.style.display = 'block'; /* role=alert announces it */
+      submitBtn.focus(); /* disabling can have dropped keyboard focus */
+    }
+    function bfLanded() {
+      if (!bfSettle()) return;
+      $('#bfSentName').textContent = payload.name.split(' ')[0];
+      $('#bfSentWhen').textContent = bfLongDate(payload.date) + ', ' + payload.tripLength.toLowerCase();
+      $('#bfSentEmail').textContent = payload.email;
+      $('#bfSentPhone').textContent = payload.phone;
+      $('#bfSentAlt').textContent = bfLongDate(payload.altDate);
+      $('#bfSentAltRow').style.display = payload.altDate ? 'flex' : 'none';
+      $('#bfSentSkill').textContent = payload.skill;
+      bookForm.style.display = 'none';
+      bookSent.hidden = false;
+      bookSent.focus();
+    }
+    /* The race: the timer and the fetch each try to settle, and bfSettle's
+       flag makes the loser a no-op. The fetch itself is not aborted — ES5 has
+       no clean way to, and no need: a success after the timeout is ignored. */
+    var timer = setTimeout(bfFailed, BF_TIMEOUT_MS);
+
+    if (!window.fetch) { bfFailed(); return; } /* ancient browser: fail honestly */
+
+    /* No headers option on purpose: a string body defaults to text/plain,
+       which keeps this a "simple" request the browser sends without the CORS
+       preflight Apps Script cannot answer. The web app 302s to
+       googleusercontent.com; fetch follows it and the final response is
+       readable. Only the parsed body is trusted — Apps Script answers 200
+       even for its own error pages, so res.ok alone proves nothing. */
+    fetch(APPS_SCRIPT_URL, {
+      method: 'POST',
+      body: JSON.stringify(payload)
+    }).then(function (res) {
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      return res.text();
+    }).then(function (text) {
+      var data = JSON.parse(text); /* an HTML error page throws here */
+      if (data && data.ok === true) bfLanded();
+      else bfFailed();
+    }).catch(bfFailed);
   });
 
   $('#bfAgain').addEventListener('click', function () {
@@ -1190,6 +1345,13 @@ input::placeholder{color:#98a0ad}
       if (input) input.removeAttribute('aria-invalid');
     });
     $('#bfDateLong').style.display = 'none';
+    $('#bfAltLong').style.display = 'none';
+    $('#bfAltHelp').style.display = 'block';
+    skillEl.style.color = '#98a0ad';
+    failEl.style.display = 'none';
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Submit Request';
+    submitBtn.style.opacity = '';
     bookSent.hidden = true;
     bookForm.style.display = '';
     $('#bfName').focus();
